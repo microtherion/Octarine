@@ -8,6 +8,9 @@
 
 import Cocoa
 
+let OCTOPART_API_KEY = "d0347dc3"
+let OctarineSession = NSURLSession(configuration:NSURLSessionConfiguration.defaultSessionConfiguration())
+
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
 
@@ -163,5 +166,42 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         return .TerminateNow
     }
 
+    dynamic var searchResults = [[String: String]]()
+
+    @IBAction func searchComponents(sender: NSSearchField!) {
+        let urlComponents = NSURLComponents(string: "https://octopart.com/api/v3/parts/search")!
+        urlComponents.queryItems = [
+            NSURLQueryItem(name: "apikey", value: OCTOPART_API_KEY),
+            NSURLQueryItem(name: "q", value: sender.stringValue),
+            NSURLQueryItem(name: "limit", value: "100")
+        ]
+
+        let task = OctarineSession.dataTaskWithURL(urlComponents.URL!) { (data: NSData?, response: NSURLResponse?, error: NSError?) in
+            let response = try? NSJSONSerialization.JSONObjectWithData(data!, options: [])
+            var newResults = [[String: String]]()
+            if response != nil {
+                let results    = response!["results"] as! [[String: AnyObject]]
+                for result in results {
+                    let item = result["item"] as! [String: AnyObject]
+                    let manu = item["manufacturer"] as! [String: AnyObject]
+
+                    let newItem = [
+                        "uid":  item["uid"] as? String ?? "",
+                        "part": item["mpn"] as? String ?? "",
+                        "manu": manu["name"] as? String ?? "",
+                        "desc": result["snippet"] as? String ?? "",
+                        "murl": manu["homepage_url"] as? String ?? "",
+                        "purl": item["octopart_url"] as? String ?? ""
+                    ]
+                    newResults.append(newItem)
+                }
+            }
+            print(newResults)
+            dispatch_async(dispatch_get_main_queue(), {
+                self.searchResults = newResults
+            })
+        }
+        task.resume()
+    }
 }
 
