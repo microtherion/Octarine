@@ -16,6 +16,7 @@
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <customObject id="Voe-Tx-rLC" customClass="AppDelegate" customModule="Octarine" customModuleProvider="target">
             <connections>
+                <outlet property="searchController" destination="7hJ-8R-Ym9" id="xqX-Zu-cQz"/>
                 <outlet property="window" destination="QvC-M9-y7g" id="gIp-Ho-8D9"/>
             </connections>
         </customObject>
@@ -699,7 +700,7 @@
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
                                                                 <outlineView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" selectionHighlightStyle="sourceList" multipleSelection="NO" autosaveColumns="NO" rowSizeStyle="automatic" viewBased="YES" indentationPerLevel="16" outlineTableColumn="FaV-GJ-yf9" id="kmE-J0-Kwn">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="341" height="0.0"/>
+                                                                    <rect key="frame" x="0.0" y="0.0" width="341" height="244"/>
                                                                     <autoresizingMask key="autoresizingMask"/>
                                                                     <size key="intercellSpacing" width="3" height="2"/>
                                                                     <color key="backgroundColor" name="_sourceListBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -781,9 +782,39 @@
                                                     <constraint firstItem="TDt-Lc-ge1" firstAttribute="top" secondItem="Y3z-16-fg3" secondAttribute="top" id="Yby-gA-Tjz"/>
                                                 </constraints>
                                             </customView>
-                                            <customView fixedFrame="YES" id="S5h-Zq-X6X">
+                                            <customView ambiguous="YES" misplaced="YES" id="S5h-Zq-X6X">
                                                 <rect key="frame" x="0.0" y="246.5" width="339" height="256.5"/>
                                                 <autoresizingMask key="autoresizingMask"/>
+                                                <subviews>
+                                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ZTJ-lQ-NEx">
+                                                        <rect key="frame" x="122" y="4.5" width="110" height="24"/>
+                                                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Powered by" id="0GG-8B-MVa">
+                                                            <font key="font" metaFont="systemSemibold" size="20"/>
+                                                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                                        </textFieldCell>
+                                                    </textField>
+                                                    <button misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wzm-th-9bt">
+                                                        <rect key="frame" x="238" y="1.5" width="100" height="30"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="30" id="7SL-zd-rGc"/>
+                                                            <constraint firstAttribute="width" constant="100" id="VSW-0z-mch"/>
+                                                        </constraints>
+                                                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="blue-octopart-logo" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="Dxx-dQ-5pf">
+                                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                            <font key="font" metaFont="system"/>
+                                                        </buttonCell>
+                                                        <connections>
+                                                            <action selector="goToOctopart:" target="Voe-Tx-rLC" id="qN0-dn-u8B"/>
+                                                        </connections>
+                                                    </button>
+                                                </subviews>
+                                                <constraints>
+                                                    <constraint firstAttribute="trailing" secondItem="wzm-th-9bt" secondAttribute="trailing" constant="5" id="8iD-M6-gng"/>
+                                                    <constraint firstItem="wzm-th-9bt" firstAttribute="leading" secondItem="ZTJ-lQ-NEx" secondAttribute="trailing" constant="8" symbolic="YES" id="IW6-zG-2JZ"/>
+                                                    <constraint firstAttribute="bottom" secondItem="wzm-th-9bt" secondAttribute="bottom" constant="5" id="Wi9-PB-hj1"/>
+                                                    <constraint firstItem="wzm-th-9bt" firstAttribute="centerY" secondItem="ZTJ-lQ-NEx" secondAttribute="centerY" id="nVu-YX-5pv"/>
+                                                </constraints>
                                             </customView>
                                         </subviews>
                                         <holdingPriorities>
@@ -847,7 +878,7 @@
                                                                                 </tableHeaderCell>
                                                                                 <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" title="Text Cell" id="J40-jr-GlG">
                                                                                     <font key="font" metaFont="system"/>
-                                                                                    <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                                                    <color key="textColor" red="0.0" green="0.50196081400000003" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                                                     <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                                                 </textFieldCell>
                                                                                 <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
@@ -863,7 +894,7 @@
                                                                                 </tableHeaderCell>
                                                                                 <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" title="Text Cell" id="XPA-w3-bsN">
                                                                                     <font key="font" metaFont="system"/>
-                                                                                    <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                                                    <color key="textColor" red="0.0" green="0.50196081400000003" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                                                     <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                                                 </textFieldCell>
                                                                                 <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
@@ -888,6 +919,9 @@
                                                                                 </connections>
                                                                             </tableColumn>
                                                                         </tableColumns>
+                                                                        <connections>
+                                                                            <action trigger="doubleAction" selector="followComponentLink:" target="Voe-Tx-rLC" id="ot9-cR-WFf"/>
+                                                                        </connections>
                                                                     </tableView>
                                                                 </subviews>
                                                                 <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -990,5 +1024,6 @@
     </objects>
     <resources>
         <image name="NSActionTemplate" width="14" height="14"/>
+        <image name="blue-octopart-logo" width="201.60000610351562" height="45.599998474121094"/>
     </resources>
 </document>

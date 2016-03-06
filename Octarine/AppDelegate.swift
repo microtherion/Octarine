@@ -15,7 +15,7 @@ let OctarineSession = NSURLSession(configuration:NSURLSessionConfiguration.defau
 class AppDelegate: NSObject, NSApplicationDelegate {
 
     @IBOutlet weak var window: NSWindow!
-
+    @IBOutlet weak var searchController : NSArrayController!
 
     func applicationDidFinishLaunching(aNotification: NSNotification) {
         // Insert code here to initialize your application
@@ -202,6 +202,26 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             })
         }
         task.resume()
+    }
+
+    @IBAction func followComponentLink(sender: NSTableView!) {
+        let item = (searchController.arrangedObjects as! [[String: String]])[sender.clickedRow]
+        var url  : NSURL?
+        switch sender.clickedColumn {
+        case 0:
+            url = NSURL(string: item["purl"]!)
+        case 1:
+            url = NSURL(string: item["murl"]!)
+        default:
+            break
+        }
+        if url != nil {
+            NSWorkspace.sharedWorkspace().openURL(url!)
+        }
+    }
+
+    @IBAction func goToOctopart(sender: AnyObject!) {
+        NSWorkspace.sharedWorkspace().openURL(NSURL(string:"https://octopart.com")!)
     }
 }
 

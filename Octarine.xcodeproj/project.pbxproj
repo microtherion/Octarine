@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		95946F501C8BEDE000B56725 /* blue-octopart-logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 95946F4F1C8BEDE000B56725 /* blue-octopart-logo.png */; };
 		95E5B3301C8BB2F20099F479 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95E5B32F1C8BB2F20099F479 /* AppDelegate.swift */; };
 		95E5B3331C8BB2F20099F479 /* Octarine.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 95E5B3311C8BB2F20099F479 /* Octarine.xcdatamodeld */; };
 		95E5B3351C8BB2F20099F479 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 95E5B3341C8BB2F20099F479 /* Assets.xcassets */; };
@@ -34,6 +35,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		95946F4F1C8BEDE000B56725 /* blue-octopart-logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "blue-octopart-logo.png"; path = "Artwork/blue-octopart-logo.png"; sourceTree = SOURCE_ROOT; };
 		95E5B32C1C8BB2F20099F479 /* Octarine.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Octarine.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		95E5B32F1C8BB2F20099F479 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		95E5B3321C8BB2F20099F479 /* Octarine.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Octarine.xcdatamodel; sourceTree = "<group>"; };
@@ -75,11 +77,21 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		95946F511C8BEDE900B56725 /* Images */ = {
+			isa = PBXGroup;
+			children = (
+				95946F4F1C8BEDE000B56725 /* blue-octopart-logo.png */,
+			);
+			name = Images;
+			path = Octarine;
+			sourceTree = "<group>";
+		};
 		95E5B3231C8BB2F20099F479 = {
 			isa = PBXGroup;
 			children = (
 				95E5B35B1C8BB6EF0099F479 /* Quartz.framework */,
 				95E5B32E1C8BB2F20099F479 /* Octarine */,
+				95946F511C8BEDE900B56725 /* Images */,
 				95E5B3411C8BB2F20099F479 /* OctarineTests */,
 				95E5B34C1C8BB2F20099F479 /* OctarineUITests */,
 				95E5B32D1C8BB2F20099F479 /* Products */,
@@ -230,6 +242,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				95946F501C8BEDE000B56725 /* blue-octopart-logo.png in Resources */,
 				95E5B3351C8BB2F20099F479 /* Assets.xcassets in Resources */,
 				95E5B3381C8BB2F20099F479 /* MainMenu.xib in Resources */,
 			);
@@ -479,6 +492,7 @@
 				95E5B3541C8BB2F20099F479 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		95E5B3551C8BB2F20099F479 /* Build configuration list for PBXNativeTarget "OctarineTests" */ = {
 			isa = XCConfigurationList;
@@ -487,6 +501,7 @@
 				95E5B3571C8BB2F20099F479 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		95E5B3581C8BB2F20099F479 /* Build configuration list for PBXNativeTarget "OctarineUITests" */ = {
 			isa = XCConfigurationList;
@@ -495,6 +510,7 @@
 				95E5B35A1C8BB2F20099F479 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 
