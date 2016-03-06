@@ -13,6 +13,7 @@
 		95E5B3381C8BB2F20099F479 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 95E5B3361C8BB2F20099F479 /* MainMenu.xib */; };
 		95E5B3431C8BB2F20099F479 /* OctarineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95E5B3421C8BB2F20099F479 /* OctarineTests.swift */; };
 		95E5B34E1C8BB2F20099F479 /* OctarineUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95E5B34D1C8BB2F20099F479 /* OctarineUITests.swift */; };
+		95E5B35C1C8BB6EF0099F479 /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 95E5B35B1C8BB6EF0099F479 /* Quartz.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -45,6 +46,7 @@
 		95E5B3491C8BB2F20099F479 /* OctarineUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OctarineUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		95E5B34D1C8BB2F20099F479 /* OctarineUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OctarineUITests.swift; sourceTree = "<group>"; };
 		95E5B34F1C8BB2F20099F479 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		95E5B35B1C8BB6EF0099F479 /* Quartz.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quartz.framework; path = System/Library/Frameworks/Quartz.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -52,6 +54,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				95E5B35C1C8BB6EF0099F479 /* Quartz.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -75,6 +78,7 @@
 		95E5B3231C8BB2F20099F479 = {
 			isa = PBXGroup;
 			children = (
+				95E5B35B1C8BB6EF0099F479 /* Quartz.framework */,
 				95E5B32E1C8BB2F20099F479 /* Octarine */,
 				95E5B3411C8BB2F20099F479 /* OctarineTests */,
 				95E5B34C1C8BB2F20099F479 /* OctarineUITests */,
