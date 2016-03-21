@@ -16,6 +16,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     @IBOutlet weak var window: NSWindow!
     @IBOutlet weak var searchController : NSArrayController!
+    @IBOutlet weak var specsController  : NSArrayController!
 
     func applicationDidFinishLaunching(aNotification: NSNotification) {
         // Insert code here to initialize your application
@@ -196,9 +197,37 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                     newResults.append(newItem)
                 }
             }
-            print(newResults)
             dispatch_async(dispatch_get_main_queue(), {
                 self.searchResults = newResults
+            })
+        }
+        task.resume()
+    }
+
+    dynamic var detailSpecs = [[String: String]]()
+
+    @IBAction func showSearchResultDetail(sender: NSTableView!) {
+        let item = (searchController.arrangedObjects as! [[String: String]])[sender.clickedRow]
+        let urlComponents = NSURLComponents(string: "https://octopart.com/api/v3/parts/"+item["uid"]!)!
+        urlComponents.queryItems = [
+            NSURLQueryItem(name: "apikey", value: OCTOPART_API_KEY),
+            NSURLQueryItem(name: "include[]", value: "specs"),
+        ]
+        let task = OctarineSession.dataTaskWithURL(urlComponents.URL!) { (data: NSData?, response: NSURLResponse?, error: NSError?) in
+            let response = try? NSJSONSerialization.JSONObjectWithData(data!, options: [])
+            var specMap = [[String:String]]()
+            if let resp  = response as? [String: AnyObject],
+                let specs = resp["specs"] as? [String: AnyObject]
+            {
+                for (_, value) in specs {
+                    var item = [String: String]()
+                    item["name"]  = ((value["metadata"] as! [String: AnyObject])["name"] as! String)
+                    item["value"] = (value["display_value"] as! String)
+                    specMap.append(item)
+                }
+            }
+            dispatch_async(dispatch_get_main_queue(), {
+                self.detailSpecs = specMap
             })
         }
         task.resume()
