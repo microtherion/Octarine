@@ -990,7 +990,6 @@
                                                                         </tableColumns>
                                                                         <connections>
                                                                             <action trigger="doubleAction" selector="followComponentLink:" target="Voe-Tx-rLC" id="ot9-cR-WFf"/>
-                                                                            <action selector="showSearchResultDetail:" target="Voe-Tx-rLC" id="t0a-uU-wW9"/>
                                                                         </connections>
                                                                     </tableView>
                                                                 </subviews>
@@ -1089,6 +1088,7 @@
         <arrayController id="7hJ-8R-Ym9">
             <connections>
                 <binding destination="Voe-Tx-rLC" name="contentArray" keyPath="searchResults" id="kUc-hT-B4w"/>
+                <binding destination="Voe-Tx-rLC" name="selectionIndexes" keyPath="componentSelection" id="8UY-9X-kRz"/>
             </connections>
         </arrayController>
         <arrayController id="FUH-pL-SXb">

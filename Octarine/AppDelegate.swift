@@ -205,32 +205,41 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     dynamic var detailSpecs = [[String: String]]()
-
-    @IBAction func showSearchResultDetail(sender: NSTableView!) {
-        let item = (searchController.arrangedObjects as! [[String: String]])[sender.clickedRow]
-        let urlComponents = NSURLComponents(string: "https://octopart.com/api/v3/parts/"+item["uid"]!)!
-        urlComponents.queryItems = [
-            NSURLQueryItem(name: "apikey", value: OCTOPART_API_KEY),
-            NSURLQueryItem(name: "include[]", value: "specs"),
-        ]
-        let task = OctarineSession.dataTaskWithURL(urlComponents.URL!) { (data: NSData?, response: NSURLResponse?, error: NSError?) in
-            let response = try? NSJSONSerialization.JSONObjectWithData(data!, options: [])
-            var specMap = [[String:String]]()
-            if let resp  = response as? [String: AnyObject],
-                let specs = resp["specs"] as? [String: AnyObject]
-            {
-                for (_, value) in specs {
-                    var item = [String: String]()
-                    item["name"]  = ((value["metadata"] as! [String: AnyObject])["name"] as! String)
-                    item["value"] = (value["display_value"] as! String)
-                    specMap.append(item)
+    dynamic var componentSelection = NSIndexSet() {
+        didSet {
+            if componentSelection.count == 1 {
+                let item = (searchController.arrangedObjects as! [[String: String]])[componentSelection.firstIndex]
+                let urlComponents = NSURLComponents(string: "https://octopart.com/api/v3/parts/"+item["uid"]!)!
+                urlComponents.queryItems = [
+                    NSURLQueryItem(name: "apikey", value: OCTOPART_API_KEY),
+                    NSURLQueryItem(name: "include[]", value: "specs"),
+                ]
+                let task = OctarineSession.dataTaskWithURL(urlComponents.URL!) { (data: NSData?, response: NSURLResponse?, error: NSError?) in
+                    let response = try? NSJSONSerialization.JSONObjectWithData(data!, options: [])
+                    var specMap = [[String:String]]()
+                    if let resp  = response as? [String: AnyObject],
+                       let specs = resp["specs"] as? [String: AnyObject]
+                    {
+                        for (_, value) in specs {
+                            if let metadata = value["metadata"] as? [String: AnyObject],
+                               let name     = metadata["name"] as? String,
+                               let value    = value["display_value"] as? String
+                            {
+                                specMap.append(["name": name, "value":value])
+                            }
+                        }
+                    }
+                    dispatch_async(dispatch_get_main_queue(), {
+                        self.detailSpecs = specMap
+                    })
                 }
+                task.resume()
+            } else {
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.detailSpecs = [[String:String]]()
+                })
             }
-            dispatch_async(dispatch_get_main_queue(), {
-                self.detailSpecs = specMap
-            })
         }
-        task.resume()
     }
 
     @IBAction func followComponentLink(sender: NSTableView!) {
