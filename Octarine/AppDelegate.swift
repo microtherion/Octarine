@@ -7,9 +7,24 @@
 //
 
 import Cocoa
+import Quartz
 
 let OCTOPART_API_KEY = "d0347dc3"
 let OctarineSession = NSURLSession(configuration:NSURLSessionConfiguration.defaultSessionConfiguration())
+
+@objc class HasSheetsTransformer : NSValueTransformer {
+    override class func allowsReverseTransformation() -> Bool {
+        return false
+    }
+
+    override func transformedValue(value: AnyObject?) -> AnyObject? {
+        if (value as! [AnyObject]).isEmpty {
+            return ""
+        } else {
+            return "📜"
+        }
+    }
+}
 
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
@@ -17,9 +32,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     @IBOutlet weak var window: NSWindow!
     @IBOutlet weak var searchController : NSArrayController!
     @IBOutlet weak var specsController  : NSArrayController!
+    @IBOutlet weak var mainTabs : NSTabView!
+    @IBOutlet weak var sheetView : PDFView!
 
     func applicationDidFinishLaunching(aNotification: NSNotification) {
-        // Insert code here to initialize your application
+        NSValueTransformer.setValueTransformer(HasSheetsTransformer(), forName: "HasSheetsTransformer")
     }
 
     func applicationWillTerminate(aNotification: NSNotification) {
@@ -167,32 +184,43 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         return .TerminateNow
     }
 
-    dynamic var searchResults = [[String: String]]()
+    dynamic var searchResults = [[String: AnyObject]]()
 
     @IBAction func searchComponents(sender: NSSearchField!) {
         let urlComponents = NSURLComponents(string: "https://octopart.com/api/v3/parts/search")!
         urlComponents.queryItems = [
             NSURLQueryItem(name: "apikey", value: OCTOPART_API_KEY),
             NSURLQueryItem(name: "q", value: sender.stringValue),
+            NSURLQueryItem(name: "include[]", value: "datasheets"),
             NSURLQueryItem(name: "limit", value: "100")
         ]
 
         let task = OctarineSession.dataTaskWithURL(urlComponents.URL!) { (data: NSData?, response: NSURLResponse?, error: NSError?) in
             let response = try? NSJSONSerialization.JSONObjectWithData(data!, options: [])
-            var newResults = [[String: String]]()
+            var newResults = [[String: AnyObject]]()
             if response != nil {
                 let results    = response!["results"] as! [[String: AnyObject]]
                 for result in results {
                     let item = result["item"] as! [String: AnyObject]
                     let manu = item["manufacturer"] as! [String: AnyObject]
 
-                    let newItem = [
+                    var datasheets = [String]()
+                    if let ds = item["datasheets"] as? [[String: AnyObject]] {
+                        for sheet in ds {
+                            if let url = sheet["url"] as? String {
+                                datasheets.append(url)
+                            }
+                        }
+                    }
+
+                    let newItem : [String: AnyObject] = [
                         "uid":  item["uid"] as? String ?? "",
                         "part": item["mpn"] as? String ?? "",
                         "manu": manu["name"] as? String ?? "",
                         "desc": result["snippet"] as? String ?? "",
                         "murl": manu["homepage_url"] as? String ?? "",
-                        "purl": item["octopart_url"] as? String ?? ""
+                        "purl": item["octopart_url"] as? String ?? "",
+                        "sheets": datasheets
                     ]
                     newResults.append(newItem)
                 }
@@ -208,8 +236,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     dynamic var componentSelection = NSIndexSet() {
         didSet {
             if componentSelection.count == 1 {
-                let item = (searchController.arrangedObjects as! [[String: String]])[componentSelection.firstIndex]
-                let urlComponents = NSURLComponents(string: "https://octopart.com/api/v3/parts/"+item["uid"]!)!
+                let item = (searchController.arrangedObjects as! [[String: AnyObject]])[componentSelection.firstIndex]
+                let urlComponents = NSURLComponents(string: "https://octopart.com/api/v3/parts/"+(item["uid"] as! String))!
                 urlComponents.queryItems = [
                     NSURLQueryItem(name: "apikey", value: OCTOPART_API_KEY),
                     NSURLQueryItem(name: "include[]", value: "specs"),
@@ -242,14 +270,36 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
     }
 
+    dynamic var dataSheets = [String]()
+    dynamic var dataSheetSelection = NSIndexSet() {
+        didSet {
+            if componentSelection.count == 1 {
+                if let url = NSURL(string: dataSheets[dataSheetSelection.firstIndex]) {
+                    let task = OctarineSession.dataTaskWithURL(url) { (data: NSData?, response: NSURLResponse?, error: NSError?) in
+                        dispatch_async(dispatch_get_main_queue(), {
+                            let doc = PDFDocument(data: data)
+                            self.sheetView.setDocument(doc)
+                        })
+                    }
+                    task.resume()
+                }
+            }
+        }
+    }
+
     @IBAction func followComponentLink(sender: NSTableView!) {
-        let item = (searchController.arrangedObjects as! [[String: String]])[sender.clickedRow]
+        let item = (searchController.arrangedObjects as! [[String: AnyObject]])[sender.clickedRow]
         var url  : NSURL?
         switch sender.clickedColumn {
         case 0:
-            url = NSURL(string: item["purl"]!)
+            dataSheets = item["sheets"] as! [String]
+            if !dataSheets.isEmpty {
+                mainTabs.selectTabViewItemWithIdentifier("sheet")
+            }
         case 1:
-            url = NSURL(string: item["murl"]!)
+            url = NSURL(string: item["purl"] as! String)
+        case 2:
+            url = NSURL(string: item["murl"] as! String)
         default:
             break
         }
