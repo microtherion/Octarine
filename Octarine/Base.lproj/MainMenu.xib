@@ -4,6 +4,7 @@
         <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="10109"/>
         <plugIn identifier="com.apple.pdfkit.ibplugin" version="10109"/>
+        <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
         <capability name="stacking Non-gravity area distributions on NSStackView" minToolsVersion="7.0" minSystemVersion="10.11"/>
     </dependencies>
     <objects>
@@ -703,7 +704,7 @@
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
                                                                 <outlineView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" selectionHighlightStyle="sourceList" multipleSelection="NO" autosaveColumns="NO" rowSizeStyle="automatic" viewBased="YES" indentationPerLevel="16" outlineTableColumn="FaV-GJ-yf9" id="kmE-J0-Kwn">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="341" height="0.0"/>
+                                                                    <rect key="frame" x="0.0" y="0.0" width="341" height="244"/>
                                                                     <autoresizingMask key="autoresizingMask"/>
                                                                     <size key="intercellSpacing" width="3" height="2"/>
                                                                     <color key="backgroundColor" name="_sourceListBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -786,7 +787,7 @@
                                                 </constraints>
                                             </customView>
                                             <customView misplaced="YES" id="S5h-Zq-X6X">
-                                                <rect key="frame" x="0.0" y="246.5" width="339" height="256.5"/>
+                                                <rect key="frame" x="0.0" y="246" width="339" height="256.5"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                                 <subviews>
                                                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ZTJ-lQ-NEx">
@@ -1047,17 +1048,26 @@
                                                     <rect key="frame" x="10" y="33" width="333" height="473"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <subviews>
-                                                        <stackView distribution="fill" orientation="horizontal" alignment="top" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Gd4-0S-yJx">
-                                                            <rect key="frame" x="0.0" y="0.0" width="333" height="473"/>
+                                                        <stackView distribution="fill" orientation="horizontal" alignment="top" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" misplaced="YES" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Gd4-0S-yJx">
+                                                            <rect key="frame" x="0.0" y="0.0" width="456" height="473"/>
                                                             <subviews>
-                                                                <pdfView autoresizesSubviews="NO" autoScales="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Jxk-tl-Aob">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="333" height="473"/>
+                                                                <pdfThumbnailView misplaced="YES" maximumNumberOfColumns="1" allowsDragging="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6Aa-pj-fak">
+                                                                    <rect key="frame" x="0.0" y="273" width="114" height="200"/>
+                                                                    <size key="thumbnailSize" width="256" height="256"/>
+                                                                    <connections>
+                                                                        <outlet property="pdfView" destination="Jxk-tl-Aob" id="3Mr-ii-Yqs"/>
+                                                                    </connections>
+                                                                </pdfThumbnailView>
+                                                                <pdfView autoresizesSubviews="NO" misplaced="YES" autoScales="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Jxk-tl-Aob">
+                                                                    <rect key="frame" x="122" y="0.0" width="334" height="473"/>
                                                                 </pdfView>
                                                             </subviews>
                                                             <visibilityPriorities>
                                                                 <integer value="1000"/>
+                                                                <integer value="1000"/>
                                                             </visibilityPriorities>
                                                             <customSpacing>
+                                                                <real value="3.4028234663852886e+38"/>
                                                                 <real value="3.4028234663852886e+38"/>
                                                             </customSpacing>
                                                         </stackView>
@@ -1067,6 +1077,7 @@
                                                         <constraint firstItem="Gd4-0S-yJx" firstAttribute="top" secondItem="TmX-td-6uU" secondAttribute="top" id="Fdp-Cl-bML"/>
                                                         <constraint firstAttribute="bottom" secondItem="Gd4-0S-yJx" secondAttribute="bottom" id="gez-dR-a8L"/>
                                                         <constraint firstItem="Gd4-0S-yJx" firstAttribute="leading" secondItem="TmX-td-6uU" secondAttribute="leading" id="hXh-sm-Uvd"/>
+                                                        <constraint firstItem="6Aa-pj-fak" firstAttribute="width" secondItem="TmX-td-6uU" secondAttribute="width" multiplier="0.25" id="m19-Mv-POi"/>
                                                     </constraints>
                                                 </view>
                                             </tabViewItem>
