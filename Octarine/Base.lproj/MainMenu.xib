@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="10109" systemVersion="15E65" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="10115" systemVersion="15F22" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="10109"/>
-        <plugIn identifier="com.apple.pdfkit.ibplugin" version="10109"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="10115"/>
+        <plugIn identifier="com.apple.pdfkit.ibplugin" version="10115"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
         <capability name="stacking Non-gravity area distributions on NSStackView" minToolsVersion="7.0" minSystemVersion="10.11"/>
     </dependencies>
@@ -21,6 +21,7 @@
                 <outlet property="searchController" destination="7hJ-8R-Ym9" id="xqX-Zu-cQz"/>
                 <outlet property="sheetView" destination="Jxk-tl-Aob" id="Mj8-cy-fGn"/>
                 <outlet property="specsController" destination="FUH-pL-SXb" id="WLe-4M-eia"/>
+                <outlet property="thumbnailView" destination="6Aa-pj-fak" id="WP1-ia-bhs"/>
                 <outlet property="window" destination="QvC-M9-y7g" id="gIp-Ho-8D9"/>
             </connections>
         </customObject>
@@ -694,7 +695,7 @@
                                         <rect key="frame" x="0.0" y="0.0" width="339" height="503"/>
                                         <subviews>
                                             <customView misplaced="YES" id="Y3z-16-fg3">
-                                                <rect key="frame" x="0.0" y="0.0" width="339" height="245.5"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="339" height="246"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                                 <subviews>
                                                     <scrollView misplaced="YES" autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TDt-Lc-ge1">
@@ -704,7 +705,7 @@
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
                                                                 <outlineView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" selectionHighlightStyle="sourceList" multipleSelection="NO" autosaveColumns="NO" rowSizeStyle="automatic" viewBased="YES" indentationPerLevel="16" outlineTableColumn="FaV-GJ-yf9" id="kmE-J0-Kwn">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="341" height="244"/>
+                                                                    <rect key="frame" x="0.0" y="0.0" width="341" height="0.0"/>
                                                                     <autoresizingMask key="autoresizingMask"/>
                                                                     <size key="intercellSpacing" width="3" height="2"/>
                                                                     <color key="backgroundColor" name="_sourceListBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -787,11 +788,11 @@
                                                 </constraints>
                                             </customView>
                                             <customView misplaced="YES" id="S5h-Zq-X6X">
-                                                <rect key="frame" x="0.0" y="246" width="339" height="256.5"/>
+                                                <rect key="frame" x="0.0" y="247" width="339" height="256"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                                 <subviews>
                                                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ZTJ-lQ-NEx">
-                                                        <rect key="frame" x="122" y="4.5" width="110" height="24"/>
+                                                        <rect key="frame" x="122" y="5" width="110" height="24"/>
                                                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Powered by" id="0GG-8B-MVa">
                                                             <font key="font" metaFont="systemSemibold" size="20"/>
                                                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -799,7 +800,7 @@
                                                         </textFieldCell>
                                                     </textField>
                                                     <button misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wzm-th-9bt">
-                                                        <rect key="frame" x="238" y="1.5" width="100" height="30"/>
+                                                        <rect key="frame" x="238" y="2" width="100" height="30"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="30" id="7SL-zd-rGc"/>
                                                             <constraint firstAttribute="width" constant="100" id="VSW-0z-mch"/>
@@ -812,14 +813,14 @@
                                                             <action selector="goToOctopart:" target="Voe-Tx-rLC" id="qN0-dn-u8B"/>
                                                         </connections>
                                                     </button>
-                                                    <scrollView autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="O1x-kK-3O9">
-                                                        <rect key="frame" x="0.0" y="35" width="343" height="221.5"/>
+                                                    <scrollView misplaced="YES" autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="O1x-kK-3O9">
+                                                        <rect key="frame" x="0.0" y="35" width="343" height="222"/>
                                                         <clipView key="contentView" id="OMe-wN-Ahd">
-                                                            <rect key="frame" x="1" y="0.0" width="341" height="220.5"/>
+                                                            <rect key="frame" x="1" y="0.0" width="341" height="221"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
                                                                 <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" columnReordering="NO" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" headerView="miL-GV-zlb" id="gTB-h0-9mA">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="341" height="197.5"/>
+                                                                    <rect key="frame" x="0.0" y="0.0" width="341" height="198"/>
                                                                     <autoresizingMask key="autoresizingMask"/>
                                                                     <size key="intercellSpacing" width="3" height="2"/>
                                                                     <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -936,7 +937,7 @@
                                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                 <subviews>
                                                                     <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" columnReordering="NO" multipleSelection="NO" autosaveColumns="NO" headerView="ipU-wZ-6Ho" id="xS5-tO-iQe">
-                                                                        <rect key="frame" x="0.0" y="0.0" width="452" height="416"/>
+                                                                        <rect key="frame" x="0.0" y="0.0" width="452" height="19"/>
                                                                         <autoresizingMask key="autoresizingMask"/>
                                                                         <size key="intercellSpacing" width="3" height="2"/>
                                                                         <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -1055,7 +1056,7 @@
                                                                     <rect key="frame" x="0.0" y="273" width="114" height="200"/>
                                                                     <size key="thumbnailSize" width="256" height="256"/>
                                                                     <connections>
-                                                                        <outlet property="pdfView" destination="Jxk-tl-Aob" id="3Mr-ii-Yqs"/>
+                                                                        <outlet property="pdfView" destination="Jxk-tl-Aob" id="syy-In-Gej"/>
                                                                     </connections>
                                                                 </pdfThumbnailView>
                                                                 <pdfView autoresizesSubviews="NO" misplaced="YES" autoScales="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Jxk-tl-Aob">
@@ -1120,8 +1121,8 @@
         </arrayController>
         <arrayController id="tKg-WD-v75">
             <connections>
-                <binding destination="Voe-Tx-rLC" name="contentArray" keyPath="dataSheets" id="ZTl-Ob-ETt"/>
                 <binding destination="Voe-Tx-rLC" name="selectionIndexes" keyPath="dataSheetSelection" id="DHF-mD-q5Z"/>
+                <binding destination="Voe-Tx-rLC" name="contentArray" keyPath="dataSheets" id="ZTl-Ob-ETt"/>
             </connections>
         </arrayController>
     </objects>

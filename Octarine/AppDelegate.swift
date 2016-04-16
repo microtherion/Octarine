@@ -34,6 +34,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     @IBOutlet weak var specsController  : NSArrayController!
     @IBOutlet weak var mainTabs : NSTabView!
     @IBOutlet weak var sheetView : PDFView!
+    @IBOutlet weak var thumbnailView : PDFThumbnailView!
 
     func applicationDidFinishLaunching(aNotification: NSNotification) {
         NSValueTransformer.setValueTransformer(HasSheetsTransformer(), forName: "HasSheetsTransformer")
@@ -279,6 +280,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                         dispatch_async(dispatch_get_main_queue(), {
                             let doc = PDFDocument(data: data)
                             self.sheetView.setDocument(doc)
+                            dispatch_async(dispatch_get_main_queue(), {
+                                self.thumbnailView.setPDFView(self.sheetView)
+                            })
                         })
                     }
                     task.resume()
