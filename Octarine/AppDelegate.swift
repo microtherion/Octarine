@@ -21,8 +21,27 @@ let OctarineSession = NSURLSession(configuration:NSURLSessionConfiguration.defau
         if (value as! [AnyObject]).isEmpty {
             return ""
         } else {
-            return "📜"
+            return "📕"
         }
+    }
+}
+
+func stringRep(o: AnyObject?) -> String
+{
+    if let s = o as? String {
+        return s
+    } else {
+        return ""
+    }
+}
+
+func linkRep(o: AnyObject?) -> String
+{
+    let s = stringRep(o)
+    if s != "" {
+        return "🔍"+s
+    } else {
+        return ""
     }
 }
 
@@ -215,12 +234,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                     }
 
                     let newItem : [String: AnyObject] = [
-                        "uid":  item["uid"] as? String ?? "",
-                        "part": item["mpn"] as? String ?? "",
-                        "manu": manu["name"] as? String ?? "",
-                        "desc": result["snippet"] as? String ?? "",
-                        "murl": manu["homepage_url"] as? String ?? "",
-                        "purl": item["octopart_url"] as? String ?? "",
+                        "uid":  stringRep(item["uid"]),
+                        "part": linkRep(item["mpn"]),
+                        "manu": linkRep(manu["name"]),
+                        "desc": stringRep(result["snippet"]),
+                        "murl": stringRep(manu["homepage_url"]),
+                        "purl": stringRep(item["octopart_url"]),
                         "sheets": datasheets
                     ]
                     newResults.append(newItem)
@@ -280,9 +299,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                         dispatch_async(dispatch_get_main_queue(), {
                             let doc = PDFDocument(data: data)
                             self.sheetView.setDocument(doc)
-                            dispatch_async(dispatch_get_main_queue(), {
+                            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(NSEC_PER_SEC)), dispatch_get_main_queue(), {
                                 self.thumbnailView.setPDFView(self.sheetView)
-                            })
+                            });
                         })
                     }
                     task.resume()
