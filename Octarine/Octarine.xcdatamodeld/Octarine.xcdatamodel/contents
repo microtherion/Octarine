@@ -1,4 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model name="untitled.xcdatamodel" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="1" systemVersion="11A491" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
-    <elements/>
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="10169.1" systemVersion="15F22" minimumToolsVersion="Automatic">
+    <entity name="OctItem" representedClassName=".OctItem" syncable="YES">
+        <attribute name="desc" attributeType="String" syncable="YES"/>
+        <attribute name="name" attributeType="String" syncable="YES"/>
+        <attribute name="part" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="children" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="OctItem" inverseName="parents" inverseEntity="OctItem" syncable="YES"/>
+        <relationship name="parents" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="OctItem" inverseName="children" inverseEntity="OctItem" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="OctItem" positionX="-63" positionY="80" width="128" height="118"/>
+    </elements>
 </model>

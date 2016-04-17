@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		95520AC61CC4263800266FB7 /* OctItem+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95520AC41CC4263800266FB7 /* OctItem+CoreDataProperties.swift */; };
+		95520AC71CC4263800266FB7 /* OctItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95520AC51CC4263800266FB7 /* OctItem.swift */; };
 		95946F501C8BEDE000B56725 /* blue-octopart-logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 95946F4F1C8BEDE000B56725 /* blue-octopart-logo.png */; };
 		95E5B3301C8BB2F20099F479 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95E5B32F1C8BB2F20099F479 /* AppDelegate.swift */; };
 		95E5B3331C8BB2F20099F479 /* Octarine.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 95E5B3311C8BB2F20099F479 /* Octarine.xcdatamodeld */; };
@@ -35,6 +37,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		95520AC41CC4263800266FB7 /* OctItem+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "OctItem+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		95520AC51CC4263800266FB7 /* OctItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OctItem.swift; sourceTree = "<group>"; };
 		95946F4F1C8BEDE000B56725 /* blue-octopart-logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "blue-octopart-logo.png"; path = "Artwork/blue-octopart-logo.png"; sourceTree = SOURCE_ROOT; };
 		95E5B32C1C8BB2F20099F479 /* Octarine.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Octarine.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		95E5B32F1C8BB2F20099F479 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -112,6 +116,8 @@
 			isa = PBXGroup;
 			children = (
 				95E5B32F1C8BB2F20099F479 /* AppDelegate.swift */,
+				95520AC41CC4263800266FB7 /* OctItem+CoreDataProperties.swift */,
+				95520AC51CC4263800266FB7 /* OctItem.swift */,
 				95E5B3341C8BB2F20099F479 /* Assets.xcassets */,
 				95E5B3361C8BB2F20099F479 /* MainMenu.xib */,
 				95E5B3391C8BB2F20099F479 /* Info.plist */,
@@ -269,6 +275,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				95520AC61CC4263800266FB7 /* OctItem+CoreDataProperties.swift in Sources */,
+				95520AC71CC4263800266FB7 /* OctItem.swift in Sources */,
 				95E5B3331C8BB2F20099F479 /* Octarine.xcdatamodeld in Sources */,
 				95E5B3301C8BB2F20099F479 /* AppDelegate.swift in Sources */,
 			);
