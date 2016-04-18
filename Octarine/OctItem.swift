@@ -6,37 +6,50 @@
 //  Copyright © 2016 Matthias Neeracher. All rights reserved.
 //
 
-import Foundation
+import AppKit
 import CoreData
 
 class OctItem: NSManagedObject {
-    class func createPartInManagedObjectContext(moc: NSManagedObjectContext,
-                                            name: String, desc: String, part: String) -> OctItem
+    class var managedObjectContext : NSManagedObjectContext {
+        return (NSApp.delegate as! AppDelegate).managedObjectContext
+    }
+
+    class func createPart(name: String, desc: String, partID: String) -> OctItem
     {
-        let newPart = NSEntityDescription.insertNewObjectForEntityForName("OctItem", inManagedObjectContext: moc) as! OctItem
+        let newPart = NSEntityDescription.insertNewObjectForEntityForName("OctItem", inManagedObjectContext: managedObjectContext) as! OctItem
+        newPart.isPart = true
         newPart.name   = name
         newPart.desc   = desc
-        newPart.part   = part
+        newPart.ident  = partID
 
         return newPart
     }
 
-    class func createFolderInManagedObjectContext(moc: NSManagedObjectContext,
-                                                  name: String) -> OctItem
+    class func createFolder(name: String) -> OctItem
     {
-        let newFolder = NSEntityDescription.insertNewObjectForEntityForName("OctItem", inManagedObjectContext: moc) as! OctItem
+        let newFolder = NSEntityDescription.insertNewObjectForEntityForName("OctItem", inManagedObjectContext: managedObjectContext) as! OctItem
+        newFolder.isPart = false
         newFolder.name   = name
         newFolder.desc   = ""
-        newFolder.part   = nil
+        newFolder.ident  = NSUUID().UUIDString
 
         return newFolder
     }
 
-    dynamic var isLeaf : Bool {
-        return part != nil;
+    class func findItemByID(moc: NSManagedObjectContext, ID: String) -> OctItem?
+    {
+        let fetchRequest        = NSFetchRequest(entityName: "OctItem")
+        fetchRequest.predicate  = NSPredicate(format: "ident == %@", ID)
+        let results             = try? managedObjectContext.executeFetchRequest(fetchRequest)
+        
+        if let fetched = results {
+            return fetched[0] as? OctItem
+        } else {
+            return nil
+        }
     }
 
     dynamic var displayName : String {
-        return (isLeaf ? "" : "📁") + name
+        return (isPart ? "" : "📁") + name
     }
 }

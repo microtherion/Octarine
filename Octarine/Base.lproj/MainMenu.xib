@@ -1113,7 +1113,7 @@
                 <binding destination="Voe-Tx-rLC" name="managedObjectContext" keyPath="managedObjectContext" id="Z07-Tq-oo4"/>
             </connections>
         </arrayController>
-        <treeController mode="entity" entityName="OctItem" fetchPredicateFormat="" automaticallyPreparesContent="YES" childrenKeyPath="children" leafKeyPath="isLeaf" avoidsEmptySelection="NO" id="RFr-7r-ndi" userLabel="OctItem Tree Controller">
+        <treeController mode="entity" entityName="OctItem" fetchPredicateFormat="" automaticallyPreparesContent="YES" childrenKeyPath="children" leafKeyPath="isPart" avoidsEmptySelection="NO" id="RFr-7r-ndi" userLabel="OctItem Tree Controller">
             <connections>
                 <binding destination="y5E-Rl-sIM" name="contentArray" keyPath="arrangedObjects" id="Phi-r0-w5u"/>
             </connections>

@@ -2,12 +2,13 @@
 <model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="10169.1" systemVersion="15F22" minimumToolsVersion="Automatic">
     <entity name="OctItem" representedClassName=".OctItem" syncable="YES">
         <attribute name="desc" attributeType="String" syncable="YES"/>
+        <attribute name="ident" attributeType="String" indexed="YES" syncable="YES"/>
+        <attribute name="isPart" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="name" attributeType="String" syncable="YES"/>
-        <attribute name="part" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="children" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="OctItem" inverseName="parents" inverseEntity="OctItem" syncable="YES"/>
         <relationship name="parents" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="OctItem" inverseName="children" inverseEntity="OctItem" syncable="YES"/>
     </entity>
     <elements>
-        <element name="OctItem" positionX="-63" positionY="80" width="128" height="118"/>
+        <element name="OctItem" positionX="-63" positionY="80" width="128" height="133"/>
     </elements>
 </model>

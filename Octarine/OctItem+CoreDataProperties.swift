@@ -13,11 +13,11 @@ import Foundation
 import CoreData
 
 extension OctItem {
-
+    @NSManaged var isPart: Bool
     @NSManaged var name: String
-    @NSManaged var part: String?
+    @NSManaged var ident: String
     @NSManaged var desc: String
-    @NSManaged var parents: NSSet?
+    @NSManaged var parents: NSSet
     @NSManaged var children: NSOrderedSet?
 
 }
