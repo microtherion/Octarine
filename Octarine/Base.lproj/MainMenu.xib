@@ -15,14 +15,24 @@
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
-        <customObject id="Voe-Tx-rLC" customClass="AppDelegate" customModule="Octarine" customModuleProvider="target">
+        <customObject id="Voe-Tx-rLC" customClass="OctApp" customModule="Octarine" customModuleProvider="target">
             <connections>
-                <outlet property="mainTabs" destination="TT7-MZ-BE7" id="gJn-GM-Ju9"/>
-                <outlet property="searchController" destination="7hJ-8R-Ym9" id="xqX-Zu-cQz"/>
-                <outlet property="sheetView" destination="Jxk-tl-Aob" id="Mj8-cy-fGn"/>
-                <outlet property="specsController" destination="FUH-pL-SXb" id="WLe-4M-eia"/>
-                <outlet property="thumbnailView" destination="6Aa-pj-fak" id="WP1-ia-bhs"/>
-                <outlet property="window" destination="QvC-M9-y7g" id="gIp-Ho-8D9"/>
+                <outlet property="mainTabs" destination="TT7-MZ-BE7" id="238-Wy-LE7"/>
+                <outlet property="searchController" destination="7hJ-8R-Ym9" id="xAG-xM-ixI"/>
+                <outlet property="sheets" destination="VVP-ho-yb1" id="lij-j4-aZx"/>
+                <outlet property="window" destination="QvC-M9-y7g" id="lVc-1n-4Tx"/>
+            </connections>
+        </customObject>
+        <customObject id="ZOb-Hf-S5g" customClass="OctDetails" customModule="Octarine" customModuleProvider="target">
+            <connections>
+                <outlet property="searchController" destination="7hJ-8R-Ym9" id="Sik-Cf-ey1"/>
+            </connections>
+        </customObject>
+        <customObject id="uCz-kw-AJg" customClass="OctSearch" customModule="Octarine" customModuleProvider="target"/>
+        <customObject id="VVP-ho-yb1" customClass="OctSheets" customModule="Octarine" customModuleProvider="target">
+            <connections>
+                <outlet property="sheetView" destination="Jxk-tl-Aob" id="tzr-V6-LvN"/>
+                <outlet property="thumbnailView" destination="6Aa-pj-fak" id="z9d-lT-8Fi"/>
             </connections>
         </customObject>
         <customObject id="YLy-65-1bz" customClass="NSFontManager"/>
@@ -910,7 +920,7 @@
                                                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                             </searchFieldCell>
                                                             <connections>
-                                                                <action selector="searchComponents:" target="Voe-Tx-rLC" id="Y57-4c-ti7"/>
+                                                                <action selector="searchComponents:" target="uCz-kw-AJg" id="zxX-ko-yFd"/>
                                                             </connections>
                                                         </searchField>
                                                         <scrollView autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="b1m-Fb-xKP">
@@ -1093,19 +1103,19 @@
         </window>
         <arrayController id="7hJ-8R-Ym9">
             <connections>
-                <binding destination="Voe-Tx-rLC" name="selectionIndexes" keyPath="componentSelection" id="8UY-9X-kRz"/>
-                <binding destination="Voe-Tx-rLC" name="contentArray" keyPath="searchResults" id="kUc-hT-B4w"/>
+                <binding destination="uCz-kw-AJg" name="contentArray" keyPath="searchResults" id="908-qP-KGV"/>
+                <binding destination="ZOb-Hf-S5g" name="selectionIndexes" keyPath="componentSelection" id="SnG-Kz-KEm"/>
             </connections>
         </arrayController>
         <arrayController id="FUH-pL-SXb">
             <connections>
-                <binding destination="Voe-Tx-rLC" name="contentArray" keyPath="detailSpecs" id="JXz-jv-Or7"/>
+                <binding destination="ZOb-Hf-S5g" name="contentArray" keyPath="detailSpecs" id="ObJ-B1-DuI"/>
             </connections>
         </arrayController>
         <arrayController id="tKg-WD-v75" userLabel="Data Sheet Controller">
             <connections>
-                <binding destination="Voe-Tx-rLC" name="selectionIndexes" keyPath="dataSheetSelection" id="DHF-mD-q5Z"/>
-                <binding destination="Voe-Tx-rLC" name="contentArray" keyPath="dataSheets" id="ZTl-Ob-ETt"/>
+                <binding destination="VVP-ho-yb1" name="contentArray" keyPath="dataSheets" id="XcJ-s6-MJ1"/>
+                <binding destination="VVP-ho-yb1" name="selectionIndexes" keyPath="dataSheetSelection" id="ubC-T1-BKd"/>
             </connections>
         </arrayController>
         <arrayController mode="entity" entityName="OctItem" fetchPredicateFormat="parents.@count == 0" automaticallyPreparesContent="YES" avoidsEmptySelection="NO" id="y5E-Rl-sIM" userLabel="OctItem Roots Controller">

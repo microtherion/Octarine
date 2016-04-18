@@ -46,14 +46,11 @@ func linkRep(o: AnyObject?) -> String
 }
 
 @NSApplicationMain
-class AppDelegate: NSObject, NSApplicationDelegate {
-
+class OctApp: NSObject, NSApplicationDelegate {
     @IBOutlet weak var window: NSWindow!
     @IBOutlet weak var searchController : NSArrayController!
-    @IBOutlet weak var specsController  : NSArrayController!
     @IBOutlet weak var mainTabs : NSTabView!
-    @IBOutlet weak var sheetView : PDFView!
-    @IBOutlet weak var thumbnailView : PDFThumbnailView!
+    @IBOutlet weak var sheets : OctSheets!
 
     func applicationDidFinishLaunching(aNotification: NSNotification) {
         NSValueTransformer.setValueTransformer(HasSheetsTransformer(), forName: "HasSheetsTransformer")
@@ -204,119 +201,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         return .TerminateNow
     }
 
-    dynamic var searchResults = [[String: AnyObject]]()
-
-    @IBAction func searchComponents(sender: NSSearchField!) {
-        let urlComponents = NSURLComponents(string: "https://octopart.com/api/v3/parts/search")!
-        urlComponents.queryItems = [
-            NSURLQueryItem(name: "apikey", value: OCTOPART_API_KEY),
-            NSURLQueryItem(name: "q", value: sender.stringValue),
-            NSURLQueryItem(name: "include[]", value: "datasheets"),
-            NSURLQueryItem(name: "limit", value: "100")
-        ]
-
-        let task = OctarineSession.dataTaskWithURL(urlComponents.URL!) { (data: NSData?, response: NSURLResponse?, error: NSError?) in
-            let response = try? NSJSONSerialization.JSONObjectWithData(data!, options: [])
-            var newResults = [[String: AnyObject]]()
-            if response != nil {
-                let results    = response!["results"] as! [[String: AnyObject]]
-                for result in results {
-                    let item = result["item"] as! [String: AnyObject]
-                    let manu = item["manufacturer"] as! [String: AnyObject]
-
-                    var datasheets = [String]()
-                    if let ds = item["datasheets"] as? [[String: AnyObject]] {
-                        for sheet in ds {
-                            if let url = sheet["url"] as? String {
-                                datasheets.append(url)
-                            }
-                        }
-                    }
-
-                    let newItem : [String: AnyObject] = [
-                        "uid":  stringRep(item["uid"]),
-                        "part": linkRep(item["mpn"]),
-                        "manu": linkRep(manu["name"]),
-                        "desc": stringRep(result["snippet"]),
-                        "murl": stringRep(manu["homepage_url"]),
-                        "purl": stringRep(item["octopart_url"]),
-                        "sheets": datasheets
-                    ]
-                    newResults.append(newItem)
-                }
-            }
-            dispatch_async(dispatch_get_main_queue(), {
-                self.searchResults = newResults
-            })
-        }
-        task.resume()
-    }
-
-    dynamic var detailSpecs = [[String: String]]()
-    dynamic var componentSelection = NSIndexSet() {
-        didSet {
-            if componentSelection.count == 1 {
-                let item = (searchController.arrangedObjects as! [[String: AnyObject]])[componentSelection.firstIndex]
-                let urlComponents = NSURLComponents(string: "https://octopart.com/api/v3/parts/"+(item["uid"] as! String))!
-                urlComponents.queryItems = [
-                    NSURLQueryItem(name: "apikey", value: OCTOPART_API_KEY),
-                    NSURLQueryItem(name: "include[]", value: "specs"),
-                ]
-                let task = OctarineSession.dataTaskWithURL(urlComponents.URL!) { (data: NSData?, response: NSURLResponse?, error: NSError?) in
-                    let response = try? NSJSONSerialization.JSONObjectWithData(data!, options: [])
-                    var specMap = [[String:String]]()
-                    if let resp  = response as? [String: AnyObject],
-                       let specs = resp["specs"] as? [String: AnyObject]
-                    {
-                        for (_, value) in specs {
-                            if let metadata = value["metadata"] as? [String: AnyObject],
-                               let name     = metadata["name"] as? String,
-                               let value    = value["display_value"] as? String
-                            {
-                                specMap.append(["name": name, "value":value])
-                            }
-                        }
-                    }
-                    dispatch_async(dispatch_get_main_queue(), {
-                        self.detailSpecs = specMap
-                    })
-                }
-                task.resume()
-            } else {
-                dispatch_async(dispatch_get_main_queue(), {
-                    self.detailSpecs = [[String:String]]()
-                })
-            }
-        }
-    }
-
-    dynamic var dataSheets = [String]()
-    dynamic var dataSheetSelection = NSIndexSet() {
-        didSet {
-            if componentSelection.count == 1 {
-                if let url = NSURL(string: dataSheets[dataSheetSelection.firstIndex]) {
-                    let task = OctarineSession.dataTaskWithURL(url) { (data: NSData?, response: NSURLResponse?, error: NSError?) in
-                        dispatch_async(dispatch_get_main_queue(), {
-                            let doc = PDFDocument(data: data)
-                            self.sheetView.setDocument(doc)
-                            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(NSEC_PER_SEC)), dispatch_get_main_queue(), {
-                                self.thumbnailView.setPDFView(self.sheetView)
-                            });
-                        })
-                    }
-                    task.resume()
-                }
-            }
-        }
-    }
-
     @IBAction func followComponentLink(sender: NSTableView!) {
         let item = (searchController.arrangedObjects as! [[String: AnyObject]])[sender.clickedRow]
         var url  : NSURL?
         switch sender.clickedColumn {
         case 0:
-            dataSheets = item["sheets"] as! [String]
-            if !dataSheets.isEmpty {
+            sheets.dataSheets = item["sheets"] as! [String]
+            if !sheets.dataSheets.isEmpty {
                 mainTabs.selectTabViewItemWithIdentifier("sheet")
             }
         case 1:

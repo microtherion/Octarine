@@ -9,8 +9,11 @@
 /* Begin PBXBuildFile section */
 		95520AC61CC4263800266FB7 /* OctItem+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95520AC41CC4263800266FB7 /* OctItem+CoreDataProperties.swift */; };
 		95520AC71CC4263800266FB7 /* OctItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95520AC51CC4263800266FB7 /* OctItem.swift */; };
+		95520ACA1CC4E20800266FB7 /* OctSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95520AC91CC4E20800266FB7 /* OctSearch.swift */; };
+		95520ACC1CC4E2A600266FB7 /* OctDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95520ACB1CC4E2A600266FB7 /* OctDetails.swift */; };
+		95520ACE1CC4E34000266FB7 /* OctSheets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95520ACD1CC4E34000266FB7 /* OctSheets.swift */; };
 		95946F501C8BEDE000B56725 /* blue-octopart-logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 95946F4F1C8BEDE000B56725 /* blue-octopart-logo.png */; };
-		95E5B3301C8BB2F20099F479 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95E5B32F1C8BB2F20099F479 /* AppDelegate.swift */; };
+		95E5B3301C8BB2F20099F479 /* OctApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95E5B32F1C8BB2F20099F479 /* OctApp.swift */; };
 		95E5B3331C8BB2F20099F479 /* Octarine.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 95E5B3311C8BB2F20099F479 /* Octarine.xcdatamodeld */; };
 		95E5B3351C8BB2F20099F479 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 95E5B3341C8BB2F20099F479 /* Assets.xcassets */; };
 		95E5B3381C8BB2F20099F479 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 95E5B3361C8BB2F20099F479 /* MainMenu.xib */; };
@@ -39,9 +42,12 @@
 /* Begin PBXFileReference section */
 		95520AC41CC4263800266FB7 /* OctItem+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "OctItem+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		95520AC51CC4263800266FB7 /* OctItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OctItem.swift; sourceTree = "<group>"; };
+		95520AC91CC4E20800266FB7 /* OctSearch.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OctSearch.swift; sourceTree = "<group>"; };
+		95520ACB1CC4E2A600266FB7 /* OctDetails.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OctDetails.swift; sourceTree = "<group>"; };
+		95520ACD1CC4E34000266FB7 /* OctSheets.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OctSheets.swift; sourceTree = "<group>"; };
 		95946F4F1C8BEDE000B56725 /* blue-octopart-logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "blue-octopart-logo.png"; path = "Artwork/blue-octopart-logo.png"; sourceTree = SOURCE_ROOT; };
 		95E5B32C1C8BB2F20099F479 /* Octarine.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Octarine.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		95E5B32F1C8BB2F20099F479 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		95E5B32F1C8BB2F20099F479 /* OctApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OctApp.swift; sourceTree = "<group>"; };
 		95E5B3321C8BB2F20099F479 /* Octarine.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Octarine.xcdatamodel; sourceTree = "<group>"; };
 		95E5B3341C8BB2F20099F479 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		95E5B3371C8BB2F20099F479 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
@@ -115,7 +121,10 @@
 		95E5B32E1C8BB2F20099F479 /* Octarine */ = {
 			isa = PBXGroup;
 			children = (
-				95E5B32F1C8BB2F20099F479 /* AppDelegate.swift */,
+				95E5B32F1C8BB2F20099F479 /* OctApp.swift */,
+				95520ACB1CC4E2A600266FB7 /* OctDetails.swift */,
+				95520AC91CC4E20800266FB7 /* OctSearch.swift */,
+				95520ACD1CC4E34000266FB7 /* OctSheets.swift */,
 				95520AC41CC4263800266FB7 /* OctItem+CoreDataProperties.swift */,
 				95520AC51CC4263800266FB7 /* OctItem.swift */,
 				95E5B3341C8BB2F20099F479 /* Assets.xcassets */,
@@ -278,7 +287,10 @@
 				95520AC61CC4263800266FB7 /* OctItem+CoreDataProperties.swift in Sources */,
 				95520AC71CC4263800266FB7 /* OctItem.swift in Sources */,
 				95E5B3331C8BB2F20099F479 /* Octarine.xcdatamodeld in Sources */,
-				95E5B3301C8BB2F20099F479 /* AppDelegate.swift in Sources */,
+				95520ACE1CC4E34000266FB7 /* OctSheets.swift in Sources */,
+				95520ACC1CC4E2A600266FB7 /* OctDetails.swift in Sources */,
+				95E5B3301C8BB2F20099F479 /* OctApp.swift in Sources */,
+				95520ACA1CC4E20800266FB7 /* OctSearch.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

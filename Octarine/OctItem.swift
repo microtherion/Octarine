@@ -11,7 +11,7 @@ import CoreData
 
 class OctItem: NSManagedObject {
     class var managedObjectContext : NSManagedObjectContext {
-        return (NSApp.delegate as! AppDelegate).managedObjectContext
+        return (NSApp.delegate as! OctApp).managedObjectContext
     }
 
     class func createPart(name: String, desc: String, partID: String) -> OctItem
