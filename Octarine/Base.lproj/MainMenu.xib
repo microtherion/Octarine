@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="10115" systemVersion="15F22" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="10115" systemVersion="15F23" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="10115"/>
@@ -28,7 +28,11 @@
                 <outlet property="searchController" destination="7hJ-8R-Ym9" id="Sik-Cf-ey1"/>
             </connections>
         </customObject>
-        <customObject id="uCz-kw-AJg" customClass="OctSearch" customModule="Octarine" customModuleProvider="target"/>
+        <customObject id="uCz-kw-AJg" customClass="OctSearch" customModule="Octarine" customModuleProvider="target">
+            <connections>
+                <outlet property="resultTable" destination="xS5-tO-iQe" id="4za-on-Sbl"/>
+            </connections>
+        </customObject>
         <customObject id="VVP-ho-yb1" customClass="OctSheets" customModule="Octarine" customModuleProvider="target">
             <connections>
                 <outlet property="sheetView" destination="Jxk-tl-Aob" id="tzr-V6-LvN"/>
@@ -36,6 +40,11 @@
             </connections>
         </customObject>
         <customObject id="YLy-65-1bz" customClass="NSFontManager"/>
+        <customObject id="O3g-iW-BPy" customClass="OctTree" customModule="Octarine" customModuleProvider="target">
+            <connections>
+                <outlet property="outline" destination="kmE-J0-Kwn" id="9HQ-fZ-0J1"/>
+            </connections>
+        </customObject>
         <menu title="Main Menu" systemMenu="main" id="AYu-sK-qS6">
             <items>
                 <menuItem title="Octarine" id="1Xt-HY-uBw">
@@ -715,7 +724,7 @@
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
                                                                 <outlineView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" selectionHighlightStyle="sourceList" alternatingRowBackgroundColors="YES" multipleSelection="NO" autosaveColumns="NO" headerView="4Hg-FG-IO8" indentationPerLevel="16" autoresizesOutlineColumn="YES" outlineTableColumn="FaV-GJ-yf9" id="kmE-J0-Kwn">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="341" height="228"/>
+                                                                    <rect key="frame" x="0.0" y="0.0" width="341" height="19"/>
                                                                     <autoresizingMask key="autoresizingMask"/>
                                                                     <size key="intercellSpacing" width="3" height="2"/>
                                                                     <color key="backgroundColor" name="_sourceListBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -755,6 +764,9 @@
                                                                             </connections>
                                                                         </tableColumn>
                                                                     </tableColumns>
+                                                                    <connections>
+                                                                        <outlet property="dataSource" destination="O3g-iW-BPy" id="vnK-OB-jOf"/>
+                                                                    </connections>
                                                                 </outlineView>
                                                             </subviews>
                                                             <nil key="backgroundColor"/>
@@ -768,7 +780,7 @@
                                                             <autoresizingMask key="autoresizingMask"/>
                                                         </scroller>
                                                         <tableHeaderView key="headerView" id="4Hg-FG-IO8">
-                                                            <rect key="frame" x="0.0" y="0.0" width="341" height="17"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="341" height="23"/>
                                                             <autoresizingMask key="autoresizingMask"/>
                                                         </tableHeaderView>
                                                     </scrollView>
@@ -929,7 +941,7 @@
                                                                 <rect key="frame" x="1" y="0.0" width="331" height="439"/>
                                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                 <subviews>
-                                                                    <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" columnReordering="NO" multipleSelection="NO" autosaveColumns="NO" headerView="ipU-wZ-6Ho" id="xS5-tO-iQe">
+                                                                    <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" columnReordering="NO" autosaveColumns="NO" headerView="ipU-wZ-6Ho" id="xS5-tO-iQe">
                                                                         <rect key="frame" x="0.0" y="0.0" width="452" height="19"/>
                                                                         <autoresizingMask key="autoresizingMask"/>
                                                                         <size key="intercellSpacing" width="3" height="2"/>
@@ -969,7 +981,12 @@
                                                                                 </textFieldCell>
                                                                                 <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                                                 <connections>
-                                                                                    <binding destination="7hJ-8R-Ym9" name="value" keyPath="arrangedObjects.part" id="egm-IJ-vmC"/>
+                                                                                    <binding destination="7hJ-8R-Ym9" name="value" keyPath="arrangedObjects.part" id="Qzq-m9-xBu">
+                                                                                        <dictionary key="options">
+                                                                                            <bool key="NSConditionallySetsEditable" value="YES"/>
+                                                                                            <string key="NSValueTransformerName">LinkTransformer</string>
+                                                                                        </dictionary>
+                                                                                    </binding>
                                                                                 </connections>
                                                                             </tableColumn>
                                                                             <tableColumn editable="NO" width="100" minWidth="40" maxWidth="1000" id="gOz-gJ-brp">
@@ -985,7 +1002,12 @@
                                                                                 </textFieldCell>
                                                                                 <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                                                 <connections>
-                                                                                    <binding destination="7hJ-8R-Ym9" name="value" keyPath="arrangedObjects.manu" id="xOr-45-rhn"/>
+                                                                                    <binding destination="7hJ-8R-Ym9" name="value" keyPath="arrangedObjects.manu" id="j8R-vt-Piu">
+                                                                                        <dictionary key="options">
+                                                                                            <bool key="NSConditionallySetsEditable" value="YES"/>
+                                                                                            <string key="NSValueTransformerName">LinkTransformer</string>
+                                                                                        </dictionary>
+                                                                                    </binding>
                                                                                 </connections>
                                                                             </tableColumn>
                                                                             <tableColumn identifier="" editable="NO" width="200" minWidth="10" maxWidth="3.4028234663852886e+38" id="DpS-L2-EJf">
@@ -1007,6 +1029,7 @@
                                                                         </tableColumns>
                                                                         <connections>
                                                                             <action trigger="doubleAction" selector="followComponentLink:" target="Voe-Tx-rLC" id="ot9-cR-WFf"/>
+                                                                            <outlet property="dataSource" destination="uCz-kw-AJg" id="JrB-QJ-C3E"/>
                                                                         </connections>
                                                                     </tableView>
                                                                 </subviews>
@@ -1103,8 +1126,8 @@
         </window>
         <arrayController id="7hJ-8R-Ym9">
             <connections>
-                <binding destination="uCz-kw-AJg" name="contentArray" keyPath="searchResults" id="908-qP-KGV"/>
                 <binding destination="ZOb-Hf-S5g" name="selectionIndexes" keyPath="componentSelection" id="SnG-Kz-KEm"/>
+                <binding destination="uCz-kw-AJg" name="contentArray" keyPath="searchResults" id="908-qP-KGV"/>
             </connections>
         </arrayController>
         <arrayController id="FUH-pL-SXb">
@@ -1114,8 +1137,8 @@
         </arrayController>
         <arrayController id="tKg-WD-v75" userLabel="Data Sheet Controller">
             <connections>
-                <binding destination="VVP-ho-yb1" name="contentArray" keyPath="dataSheets" id="XcJ-s6-MJ1"/>
                 <binding destination="VVP-ho-yb1" name="selectionIndexes" keyPath="dataSheetSelection" id="ubC-T1-BKd"/>
+                <binding destination="VVP-ho-yb1" name="contentArray" keyPath="dataSheets" id="XcJ-s6-MJ1"/>
             </connections>
         </arrayController>
         <arrayController mode="entity" entityName="OctItem" fetchPredicateFormat="parents.@count == 0" automaticallyPreparesContent="YES" avoidsEmptySelection="NO" id="y5E-Rl-sIM" userLabel="OctItem Roots Controller">

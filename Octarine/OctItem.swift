@@ -36,7 +36,7 @@ class OctItem: NSManagedObject {
         return newFolder
     }
 
-    class func findItemByID(moc: NSManagedObjectContext, ID: String) -> OctItem?
+    class func findItemByID(ID: String) -> OctItem?
     {
         let fetchRequest        = NSFetchRequest(entityName: "OctItem")
         fetchRequest.predicate  = NSPredicate(format: "ident == %@", ID)
@@ -47,6 +47,23 @@ class OctItem: NSManagedObject {
         } else {
             return nil
         }
+    }
+
+    class func itemFromSerialized(serialized: [String: AnyObject]) -> OctItem
+    {
+        if let found = findItemByID(serialized["ident"] as! String) {
+            return found
+        } else if serialized["is_part"] as! Bool {
+            return createPart(serialized["name"] as! String,
+                              desc: serialized["desc"] as! String,
+                              partID: serialized["ident"] as! String)
+        } else {
+            return createFolder(serialized["name"] as! String)
+        }
+    }
+
+    func serialized() -> [String : AnyObject] {
+        return ["is_part": isPart, "name": name, "desc": desc, "ident": ident];
     }
 
     dynamic var displayName : String {

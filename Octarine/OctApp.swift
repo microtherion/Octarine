@@ -35,13 +35,17 @@ func stringRep(o: AnyObject?) -> String
     }
 }
 
-func linkRep(o: AnyObject?) -> String
-{
-    let s = stringRep(o)
-    if s != "" {
-        return "🔍"+s
-    } else {
-        return ""
+@objc class LinkTransformer : NSValueTransformer {
+    override class func allowsReverseTransformation() -> Bool {
+        return false
+    }
+
+    override func transformedValue(value: AnyObject?) -> AnyObject? {
+        if let s = value as? String where s != "" {
+            return "🔍"+s
+        } else {
+            return value
+        }
     }
 }
 
@@ -54,6 +58,7 @@ class OctApp: NSObject, NSApplicationDelegate {
 
     func applicationDidFinishLaunching(aNotification: NSNotification) {
         NSValueTransformer.setValueTransformer(HasSheetsTransformer(), forName: "HasSheetsTransformer")
+        NSValueTransformer.setValueTransformer(LinkTransformer(), forName: "LinkTransformer")
     }
 
     func applicationWillTerminate(aNotification: NSNotification) {

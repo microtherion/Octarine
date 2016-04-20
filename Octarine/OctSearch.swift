@@ -8,7 +8,14 @@
 
 import AppKit
 
-class OctSearch : NSObject {
+class OctSearch : NSObject, NSTableViewDataSource {
+    @IBOutlet weak var resultTable : NSTableView!
+
+    override func awakeFromNib() {
+        resultTable.setDraggingSourceOperationMask(.Copy, forLocal: true)
+        resultTable.setDraggingSourceOperationMask(.Copy, forLocal: false)
+    }
+
     dynamic var searchResults = [[String: AnyObject]]()
 
     @IBAction func searchComponents(sender: NSSearchField!) {
@@ -40,8 +47,8 @@ class OctSearch : NSObject {
 
                     let newItem : [String: AnyObject] = [
                         "uid":  stringRep(item["uid"]),
-                        "part": linkRep(item["mpn"]),
-                        "manu": linkRep(manu["name"]),
+                        "part": stringRep(item["mpn"]),
+                        "manu": stringRep(manu["name"]),
                         "desc": stringRep(result["snippet"]),
                         "murl": stringRep(manu["homepage_url"]),
                         "purl": stringRep(item["octopart_url"]),
@@ -55,5 +62,24 @@ class OctSearch : NSObject {
             })
         }
         task.resume()
+    }
+
+    func tableView(tableView: NSTableView, writeRowsWithIndexes rowIndexes: NSIndexSet, toPasteboard pboard: NSPasteboard) -> Bool {
+        let serialized = rowIndexes.map({ (index: Int) -> [String : AnyObject] in
+            let part = searchResults[index]
+            return ["is_part": true, "ident": part["uid"]!, "name": part["part"]!, "desc": part["desc"]!]
+        })
+        let urls = rowIndexes.map({ (index: Int) -> NSPasteboardItem in
+            let part = searchResults[index]
+            let pbitem = NSPasteboardItem()
+            pbitem.setString(part["purl"] as? String, forType: "public.url")
+            pbitem.setString(part["part"] as? String, forType: "public.url-name")
+            return pbitem
+        })
+        pboard.declareTypes([kOctPasteboardType], owner: self)
+        pboard.setPropertyList(serialized, forType: kOctPasteboardType)
+        pboard.writeObjects(urls)
+
+        return true
     }
 }
