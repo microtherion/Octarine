@@ -42,7 +42,7 @@ class OctItem: NSManagedObject {
         fetchRequest.predicate  = NSPredicate(format: "ident == %@", ID)
         let results             = try? managedObjectContext.executeFetchRequest(fetchRequest)
         
-        if let fetched = results {
+        if let fetched = results where fetched.count > 0 {
             return fetched[0] as? OctItem
         } else {
             return nil

@@ -723,7 +723,7 @@
                                                             <rect key="frame" x="1" y="0.0" width="341" height="245"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
-                                                                <outlineView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" selectionHighlightStyle="sourceList" alternatingRowBackgroundColors="YES" multipleSelection="NO" autosaveColumns="NO" headerView="4Hg-FG-IO8" indentationPerLevel="16" autoresizesOutlineColumn="YES" outlineTableColumn="FaV-GJ-yf9" id="kmE-J0-Kwn">
+                                                                <outlineView identifier="Item Outline" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" selectionHighlightStyle="sourceList" alternatingRowBackgroundColors="YES" multipleSelection="NO" autosaveColumns="NO" headerView="4Hg-FG-IO8" indentationPerLevel="16" autosaveExpandedItems="YES" autoresizesOutlineColumn="YES" outlineTableColumn="FaV-GJ-yf9" id="kmE-J0-Kwn">
                                                                     <rect key="frame" x="0.0" y="0.0" width="341" height="19"/>
                                                                     <autoresizingMask key="autoresizingMask"/>
                                                                     <size key="intercellSpacing" width="3" height="2"/>
@@ -744,7 +744,7 @@
                                                                             </textFieldCell>
                                                                             <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                                             <connections>
-                                                                                <binding destination="RFr-7r-ndi" name="value" keyPath="arrangedObjects.displayName" id="xQo-lC-1zP"/>
+                                                                                <binding destination="RFr-7r-ndi" name="value" keyPath="arrangedObjects.name" id="XKv-eo-Cnx"/>
                                                                             </connections>
                                                                         </tableColumn>
                                                                         <tableColumn identifier="" width="235" minWidth="10" maxWidth="3.4028234663852886e+38" id="n0w-xn-uxp">
@@ -765,7 +765,7 @@
                                                                         </tableColumn>
                                                                     </tableColumns>
                                                                     <connections>
-                                                                        <outlet property="dataSource" destination="O3g-iW-BPy" id="vnK-OB-jOf"/>
+                                                                        <outlet property="dataSource" destination="O3g-iW-BPy" id="XeE-gW-Oy4"/>
                                                                     </connections>
                                                                 </outlineView>
                                                             </subviews>
@@ -1146,7 +1146,7 @@
                 <binding destination="Voe-Tx-rLC" name="managedObjectContext" keyPath="managedObjectContext" id="Z07-Tq-oo4"/>
             </connections>
         </arrayController>
-        <treeController mode="entity" entityName="OctItem" fetchPredicateFormat="" automaticallyPreparesContent="YES" childrenKeyPath="children" leafKeyPath="isPart" avoidsEmptySelection="NO" id="RFr-7r-ndi" userLabel="OctItem Tree Controller">
+        <treeController objectClassName="OctItem" automaticallyPreparesContent="YES" childrenKeyPath="children.@array" leafKeyPath="isPart" avoidsEmptySelection="NO" id="RFr-7r-ndi" userLabel="OctItem Tree Controller">
             <connections>
                 <binding destination="y5E-Rl-sIM" name="contentArray" keyPath="arrangedObjects" id="Phi-r0-w5u"/>
             </connections>

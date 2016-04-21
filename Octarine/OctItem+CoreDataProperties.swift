@@ -19,5 +19,4 @@ extension OctItem {
     @NSManaged var desc: String
     @NSManaged var parents: NSSet
     @NSManaged var children: NSOrderedSet?
-
 }

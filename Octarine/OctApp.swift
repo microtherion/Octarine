@@ -49,6 +49,28 @@ func stringRep(o: AnyObject?) -> String
     }
 }
 
+@objc class FolderTransformer : NSValueTransformer {
+    override class func allowsReverseTransformation() -> Bool {
+        return true
+    }
+
+    override func transformedValue(value: AnyObject?) -> AnyObject? {
+        if let s = value as? String where s != "" {
+            return "🔍"+s
+        } else {
+            return value
+        }
+    }
+
+    override func reverseTransformedValue(value: AnyObject?) -> AnyObject? {
+        if let s = value as? String where s != "" {
+            return s.substringFromIndex(s.startIndex.successor())
+        } else {
+            return value
+        }
+    }
+}
+
 @NSApplicationMain
 class OctApp: NSObject, NSApplicationDelegate {
     @IBOutlet weak var window: NSWindow!
@@ -59,6 +81,7 @@ class OctApp: NSObject, NSApplicationDelegate {
     func applicationDidFinishLaunching(aNotification: NSNotification) {
         NSValueTransformer.setValueTransformer(HasSheetsTransformer(), forName: "HasSheetsTransformer")
         NSValueTransformer.setValueTransformer(LinkTransformer(), forName: "LinkTransformer")
+        NSValueTransformer.setValueTransformer(LinkTransformer(), forName: "FolderTransformer")
     }
 
     func applicationWillTerminate(aNotification: NSNotification) {
