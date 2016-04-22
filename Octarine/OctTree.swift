@@ -72,7 +72,7 @@ class OctTree : NSObject, NSOutlineViewDataSource {
     }
 
     func outlineView(outlineView: NSOutlineView, acceptDrop info: NSDraggingInfo,
-                     item: AnyObject?, childIndex: Int) -> Bool
+                     item parentItem: AnyObject?, childIndex: Int) -> Bool
     {
         outlineView.beginUpdates()
         if let draggingSource = info.draggingSource() as? NSOutlineView
@@ -87,31 +87,39 @@ class OctTree : NSObject, NSOutlineViewDataSource {
                 return OctItem.itemFromSerialized(item)
             })
         }
-        let octItem = item?.representedObject as? OctItem
+        let newParent = parentItem?.representedObject as? OctItem ?? OctItem.rootFolder()
         var insertAtIndex = childIndex
-        if octItem != nil && insertAtIndex == NSOutlineViewDropOnItemIndex {
-            insertAtIndex = octItem?.children?.count ?? 0
+        if insertAtIndex == NSOutlineViewDropOnItemIndex {
+            insertAtIndex = newParent.children?.count ?? 0
         }
         //
         // If this is a move, remove from previous parent, if any
         //
         if info.draggingSourceOperationMask().contains(.Move) {
             for (index, item) in draggedItems.enumerate() {
-                if let parent = draggedNodes[index].parentNode?.representedObject {
-                    item.mutableSetValueForKey("parents").removeObject(parent)
+                let node   = draggedNodes[index]
+                let path   = node.indexPath
+                let parent = node.parentNode?.representedObject as? OctItem ?? OctItem.rootFolder()
+                if parent == newParent && path.indexAtPosition(path.length-1) < insertAtIndex {
+                    insertAtIndex -= 1
                 }
+                let origIndex = parent.children!.indexOfObject(item)
+                parent.mutableOrderedSetValueForKey("children").removeObject(item)
+                outlineView.removeItemsAtIndexes(NSIndexSet(index:origIndex), inParent: node.parentNode, withAnimation: NSTableViewAnimationOptions.EffectNone)
             }
         }
-        if let octItem = octItem {
-            for item in draggedItems {
-                let kids = octItem.mutableOrderedSetValueForKey("children")
-                kids.insertObject(item, atIndex: insertAtIndex)
-                insertAtIndex += 1
-            }
+        for item in draggedItems {
+            let kids = newParent.mutableOrderedSetValueForKey("children")
+            kids.insertObject(item, atIndex: insertAtIndex)
+            outlineView.insertItemsAtIndexes(NSIndexSet(index:insertAtIndex), inParent: parentItem, withAnimation: NSTableViewAnimationOptions.EffectGap)
+            insertAtIndex += 1
         }
         outlineView.endUpdates()
 
         return true
     }
 
+    dynamic var rootItems : [OctItem] {
+        return OctItem.rootFolder().children?.array as? [OctItem] ?? []
+    }
 }

@@ -82,6 +82,8 @@ class OctApp: NSObject, NSApplicationDelegate {
         NSValueTransformer.setValueTransformer(HasSheetsTransformer(), forName: "HasSheetsTransformer")
         NSValueTransformer.setValueTransformer(LinkTransformer(), forName: "LinkTransformer")
         NSValueTransformer.setValueTransformer(LinkTransformer(), forName: "FolderTransformer")
+
+        OctItem.rootFolder()
     }
 
     func applicationWillTerminate(aNotification: NSNotification) {

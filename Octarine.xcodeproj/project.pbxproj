@@ -89,6 +89,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		9566EC071CC91EFA0052529D /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				95E5B3341C8BB2F20099F479 /* Assets.xcassets */,
+				95E5B3361C8BB2F20099F479 /* MainMenu.xib */,
+				95E5B3391C8BB2F20099F479 /* Info.plist */,
+				95E5B3311C8BB2F20099F479 /* Octarine.xcdatamodeld */,
+				95E5B35B1C8BB6EF0099F479 /* Quartz.framework */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
 		95946F511C8BEDE900B56725 /* Images */ = {
 			isa = PBXGroup;
 			children = (
@@ -101,7 +113,6 @@
 		95E5B3231C8BB2F20099F479 = {
 			isa = PBXGroup;
 			children = (
-				95E5B35B1C8BB6EF0099F479 /* Quartz.framework */,
 				95E5B32E1C8BB2F20099F479 /* Octarine */,
 				95946F511C8BEDE900B56725 /* Images */,
 				95E5B3411C8BB2F20099F479 /* OctarineTests */,
@@ -130,10 +141,7 @@
 				95520AC41CC4263800266FB7 /* OctItem+CoreDataProperties.swift */,
 				95520AC51CC4263800266FB7 /* OctItem.swift */,
 				95B1494A1CC73423006BEA63 /* OctTree.swift */,
-				95E5B3341C8BB2F20099F479 /* Assets.xcassets */,
-				95E5B3361C8BB2F20099F479 /* MainMenu.xib */,
-				95E5B3391C8BB2F20099F479 /* Info.plist */,
-				95E5B3311C8BB2F20099F479 /* Octarine.xcdatamodeld */,
+				9566EC071CC91EFA0052529D /* Resources */,
 			);
 			path = Octarine;
 			sourceTree = "<group>";

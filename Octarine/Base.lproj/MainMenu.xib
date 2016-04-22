@@ -723,7 +723,7 @@
                                                             <rect key="frame" x="1" y="0.0" width="341" height="245"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
-                                                                <outlineView identifier="Item Outline" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" selectionHighlightStyle="sourceList" alternatingRowBackgroundColors="YES" multipleSelection="NO" autosaveColumns="NO" headerView="4Hg-FG-IO8" indentationPerLevel="16" autosaveExpandedItems="YES" autoresizesOutlineColumn="YES" outlineTableColumn="FaV-GJ-yf9" id="kmE-J0-Kwn">
+                                                                <outlineView identifier="Item Outline" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" selectionHighlightStyle="sourceList" alternatingRowBackgroundColors="YES" autosaveColumns="NO" headerView="4Hg-FG-IO8" indentationPerLevel="16" autosaveExpandedItems="YES" autoresizesOutlineColumn="YES" outlineTableColumn="FaV-GJ-yf9" id="kmE-J0-Kwn">
                                                                     <rect key="frame" x="0.0" y="0.0" width="341" height="19"/>
                                                                     <autoresizingMask key="autoresizingMask"/>
                                                                     <size key="intercellSpacing" width="3" height="2"/>
@@ -1141,14 +1141,9 @@
                 <binding destination="VVP-ho-yb1" name="contentArray" keyPath="dataSheets" id="XcJ-s6-MJ1"/>
             </connections>
         </arrayController>
-        <arrayController mode="entity" entityName="OctItem" fetchPredicateFormat="parents.@count == 0" automaticallyPreparesContent="YES" avoidsEmptySelection="NO" id="y5E-Rl-sIM" userLabel="OctItem Roots Controller">
+        <treeController mode="entity" automaticallyPreparesContent="YES" childrenKeyPath="children.@array" leafKeyPath="isPart" avoidsEmptySelection="NO" id="RFr-7r-ndi" userLabel="OctItem Tree Controller">
             <connections>
-                <binding destination="Voe-Tx-rLC" name="managedObjectContext" keyPath="managedObjectContext" id="Z07-Tq-oo4"/>
-            </connections>
-        </arrayController>
-        <treeController objectClassName="OctItem" automaticallyPreparesContent="YES" childrenKeyPath="children.@array" leafKeyPath="isPart" avoidsEmptySelection="NO" id="RFr-7r-ndi" userLabel="OctItem Tree Controller">
-            <connections>
-                <binding destination="y5E-Rl-sIM" name="contentArray" keyPath="arrangedObjects" id="Phi-r0-w5u"/>
+                <binding destination="O3g-iW-BPy" name="contentArray" keyPath="rootItems" id="nUF-ea-7es"/>
             </connections>
         </treeController>
     </objects>

@@ -36,6 +36,25 @@ class OctItem: NSManagedObject {
         return newFolder
     }
 
+    class func rootFolder() -> OctItem
+    {
+        let fetchRequest        = NSFetchRequest(entityName: "OctItem")
+        fetchRequest.predicate  = NSPredicate(format: "ident == ''")
+        let results             = try? managedObjectContext.executeFetchRequest(fetchRequest)
+
+        if let results = results where results.count>0 {
+            return results[0] as! OctItem
+        } else {
+            let newFolder = NSEntityDescription.insertNewObjectForEntityForName("OctItem", inManagedObjectContext: managedObjectContext) as! OctItem
+            newFolder.isPart = false
+            newFolder.name   = ""
+            newFolder.desc   = ""
+            newFolder.ident  = ""
+
+            return newFolder;
+        }
+    }
+
     class func findItemByID(ID: String) -> OctItem?
     {
         let fetchRequest        = NSFetchRequest(entityName: "OctItem")
