@@ -10,6 +10,7 @@ import AppKit
 
 class OctSearch : NSObject, NSTableViewDataSource {
     @IBOutlet weak var resultTable : NSTableView!
+    @IBOutlet weak var octApp : OctApp!
 
     override func awakeFromNib() {
         resultTable.setDraggingSourceOperationMask(.Copy, forLocal: true)
@@ -63,10 +64,12 @@ class OctSearch : NSObject, NSTableViewDataSource {
                     newResults.append(OctSearch.partFromJSON(result["item"]))
                 }
             }
+            self.octApp.endingRequest()
             dispatch_async(dispatch_get_main_queue(), {
                 self.searchResults = newResults
             })
         }
+        octApp.startingRequest()
         task.resume()
     }
 

@@ -10,6 +10,7 @@ import AppKit
 
 class OctDetails : NSObject {
     @IBOutlet weak var searchController : NSArrayController!
+    @IBOutlet weak var octApp : OctApp!
 
     dynamic var detailSpecs = [[String: String]]()
     dynamic var componentSelection = NSIndexSet() {
@@ -36,10 +37,12 @@ class OctDetails : NSObject {
                             }
                         }
                     }
+                    self.octApp.endingRequest()
                     dispatch_async(dispatch_get_main_queue(), {
                         self.detailSpecs = specMap
                     })
                 }
+                octApp.startingRequest()
                 task.resume()
             } else {
                 dispatch_async(dispatch_get_main_queue(), {

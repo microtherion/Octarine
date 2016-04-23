@@ -78,6 +78,19 @@ class OctApp: NSObject, NSApplicationDelegate {
     @IBOutlet weak var mainTabs : NSTabView!
     @IBOutlet weak var sheets : OctSheets!
 
+    dynamic var requestPending = 0
+    func startingRequest() {
+        dispatch_async(dispatch_get_main_queue()) {
+            self.requestPending += 1
+        }
+    }
+
+    func endingRequest() {
+        dispatch_async(dispatch_get_main_queue()) {
+            self.requestPending -= 1
+        }
+    }
+
     func applicationDidFinishLaunching(aNotification: NSNotification) {
         NSValueTransformer.setValueTransformer(HasSheetsTransformer(), forName: "HasSheetsTransformer")
         NSValueTransformer.setValueTransformer(LinkTransformer(), forName: "LinkTransformer")

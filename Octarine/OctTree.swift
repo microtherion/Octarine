@@ -120,6 +120,7 @@ class OctTree : NSObject, NSOutlineViewDataSource, NSOutlineViewDelegate {
     @IBOutlet weak var search: OctSearch!
     @IBOutlet weak var details: OctDetails!
     @IBOutlet weak var sheets: OctSheets!
+    @IBOutlet weak var octApp : OctApp!
 
     override func awakeFromNib() {
         outline.registerForDraggedTypes([kOctPasteboardType])
@@ -390,6 +391,7 @@ class OctTree : NSObject, NSOutlineViewDataSource, NSOutlineViewDelegate {
                     newResults.append(OctSearch.partFromJSON(result))
                 }
             }
+            self.octApp.endingRequest()
             dispatch_async(dispatch_get_main_queue(), {
                 self.search.searchResults = newResults
                 if newResults.count == 1 {
@@ -399,6 +401,7 @@ class OctTree : NSObject, NSOutlineViewDataSource, NSOutlineViewDelegate {
                 }
             })
         }
+        octApp.startingRequest()
         task.resume()
     }
 }

@@ -25,16 +25,19 @@
         </customObject>
         <customObject id="ZOb-Hf-S5g" customClass="OctDetails" customModule="Octarine" customModuleProvider="target">
             <connections>
+                <outlet property="octApp" destination="Voe-Tx-rLC" id="ZrZ-6V-h9Z"/>
                 <outlet property="searchController" destination="7hJ-8R-Ym9" id="Sik-Cf-ey1"/>
             </connections>
         </customObject>
         <customObject id="uCz-kw-AJg" customClass="OctSearch" customModule="Octarine" customModuleProvider="target">
             <connections>
+                <outlet property="octApp" destination="Voe-Tx-rLC" id="cnd-IL-8zA"/>
                 <outlet property="resultTable" destination="xS5-tO-iQe" id="4za-on-Sbl"/>
             </connections>
         </customObject>
         <customObject id="VVP-ho-yb1" customClass="OctSheets" customModule="Octarine" customModuleProvider="target">
             <connections>
+                <outlet property="octApp" destination="Voe-Tx-rLC" id="lmE-LI-qfY"/>
                 <outlet property="sheetView" destination="Jxk-tl-Aob" id="tzr-V6-LvN"/>
                 <outlet property="thumbnailView" destination="6Aa-pj-fak" id="z9d-lT-8Fi"/>
             </connections>
@@ -43,6 +46,7 @@
         <customObject id="O3g-iW-BPy" customClass="OctTree" customModule="Octarine" customModuleProvider="target">
             <connections>
                 <outlet property="details" destination="ZOb-Hf-S5g" id="Y2P-SE-HfR"/>
+                <outlet property="octApp" destination="Voe-Tx-rLC" id="wuI-5u-WPW"/>
                 <outlet property="outline" destination="kmE-J0-Kwn" id="9HQ-fZ-0J1"/>
                 <outlet property="search" destination="uCz-kw-AJg" id="ktB-zW-GCm"/>
                 <outlet property="sheets" destination="VVP-ho-yb1" id="Zax-Fy-8bI"/>
@@ -898,6 +902,16 @@ CA
                                                             <autoresizingMask key="autoresizingMask"/>
                                                         </tableHeaderView>
                                                     </scrollView>
+                                                    <progressIndicator wantsLayer="YES" horizontalHuggingPriority="750" verticalHuggingPriority="750" misplaced="YES" maxValue="100" displayedWhenStopped="NO" bezeled="NO" indeterminate="YES" controlSize="small" style="spinning" translatesAutoresizingMaskIntoConstraints="NO" id="mVT-g8-aQb">
+                                                        <rect key="frame" x="11" y="11" width="16" height="16"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="16" id="ahj-Jk-zlf"/>
+                                                            <constraint firstAttribute="width" constant="16" id="qts-Bm-42b"/>
+                                                        </constraints>
+                                                        <connections>
+                                                            <binding destination="Voe-Tx-rLC" name="animate" keyPath="requestPending" id="R5t-t5-OKl"/>
+                                                        </connections>
+                                                    </progressIndicator>
                                                 </subviews>
                                                 <constraints>
                                                     <constraint firstAttribute="trailing" secondItem="wzm-th-9bt" secondAttribute="trailing" constant="5" id="8iD-M6-gng"/>
@@ -905,7 +919,9 @@ CA
                                                     <constraint firstAttribute="trailing" secondItem="O1x-kK-3O9" secondAttribute="trailing" id="JPg-b5-mhA"/>
                                                     <constraint firstItem="O1x-kK-3O9" firstAttribute="leading" secondItem="S5h-Zq-X6X" secondAttribute="leading" id="SI4-zm-zc4"/>
                                                     <constraint firstAttribute="bottom" secondItem="wzm-th-9bt" secondAttribute="bottom" constant="5" id="Wi9-PB-hj1"/>
+                                                    <constraint firstAttribute="bottom" secondItem="mVT-g8-aQb" secondAttribute="bottom" constant="8" id="Xup-wD-POc"/>
                                                     <constraint firstItem="O1x-kK-3O9" firstAttribute="top" secondItem="S5h-Zq-X6X" secondAttribute="top" id="aU2-jK-QAl"/>
+                                                    <constraint firstItem="mVT-g8-aQb" firstAttribute="leading" secondItem="S5h-Zq-X6X" secondAttribute="leading" constant="8" id="gbV-Jg-DTn"/>
                                                     <constraint firstItem="wzm-th-9bt" firstAttribute="top" secondItem="O1x-kK-3O9" secondAttribute="bottom" id="n8u-qb-GgQ"/>
                                                     <constraint firstItem="wzm-th-9bt" firstAttribute="centerY" secondItem="ZTJ-lQ-NEx" secondAttribute="centerY" id="nVu-YX-5pv"/>
                                                 </constraints>
