@@ -1,4 +1,4 @@
-//
+ //
 //  OctTree.swift
 //  Octarine
 //
@@ -124,7 +124,8 @@ class OctTree : NSObject, NSOutlineViewDataSource {
         outline.setDraggingSourceOperationMask([.Delete], forLocal: false)
     }
 
-    func reloadTree() {
+    var oldTreeRoots = [OctTreeNode]()
+    func reloadTree(expanding item: OctTreeNode? = nil) {
         var expandedGroups = [String]()
 
         for row in 0..<outline.numberOfRows {
@@ -132,7 +133,14 @@ class OctTree : NSObject, NSOutlineViewDataSource {
                 expandedGroups.append((outline.itemAtRow(row) as! OctTreeNode).persistentIdentifier)
             }
         }
+        if let item=item {
+            let identifier = item.persistentIdentifier
+            if !expandedGroups.contains(identifier) {
+                expandedGroups.append(identifier)
+            }
+        }
 
+        oldTreeRoots  = gOctTreeRoots
         gOctTreeRoots = []
         outline.reloadData()
 
@@ -336,7 +344,7 @@ class OctTree : NSObject, NSOutlineViewDataSource {
             insertAtIndex += 1
         }
         outlineView.endUpdates()
-        reloadTree()
+        reloadTree(expanding: newParentNode)
         let insertedIndexes = NSIndexSet(indexesInRange: NSMakeRange(insertAtRow, draggedItems.count))
         outlineView.selectRowIndexes(insertedIndexes, byExtendingSelection: false)
 
@@ -353,6 +361,9 @@ class OctTree : NSObject, NSOutlineViewDataSource {
             }
             outlineView.endUpdates()
             reloadTree()
+        }
+        dispatch_async(dispatch_get_main_queue()) {
+            self.oldTreeRoots = []
         }
     }
 }
