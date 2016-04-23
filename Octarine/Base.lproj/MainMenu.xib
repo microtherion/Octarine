@@ -42,7 +42,10 @@
         <customObject id="YLy-65-1bz" customClass="NSFontManager"/>
         <customObject id="O3g-iW-BPy" customClass="OctTree" customModule="Octarine" customModuleProvider="target">
             <connections>
+                <outlet property="details" destination="ZOb-Hf-S5g" id="Y2P-SE-HfR"/>
                 <outlet property="outline" destination="kmE-J0-Kwn" id="9HQ-fZ-0J1"/>
+                <outlet property="search" destination="uCz-kw-AJg" id="ktB-zW-GCm"/>
+                <outlet property="sheets" destination="VVP-ho-yb1" id="Zax-Fy-8bI"/>
             </connections>
         </customObject>
         <menu title="Main Menu" systemMenu="main" id="AYu-sK-qS6">
@@ -778,6 +781,7 @@ CA
                                                                     </tableColumns>
                                                                     <connections>
                                                                         <outlet property="dataSource" destination="O3g-iW-BPy" id="XeE-gW-Oy4"/>
+                                                                        <outlet property="delegate" destination="O3g-iW-BPy" id="qsb-di-MVB"/>
                                                                     </connections>
                                                                 </outlineView>
                                                             </subviews>

@@ -18,12 +18,39 @@ class OctSearch : NSObject, NSTableViewDataSource {
 
     dynamic var searchResults = [[String: AnyObject]]()
 
+    class func partFromJSON(item: AnyObject?) -> [String: AnyObject] {
+        let item = item as! [String: AnyObject]
+        let manu = item["manufacturer"] as! [String: AnyObject]
+
+        var datasheets = [String]()
+        if let ds = item["datasheets"] as? [[String: AnyObject]] {
+            for sheet in ds {
+                if let url = sheet["url"] as? String {
+                    datasheets.append(url)
+                }
+            }
+        }
+
+        let newItem : [String: AnyObject] = [
+            "uid":  stringRep(item["uid"]),
+            "part": stringRep(item["mpn"]),
+            "manu": stringRep(manu["name"]),
+            "desc": stringRep(item["short_description"]),
+            "murl": stringRep(manu["homepage_url"]),
+            "purl": stringRep(item["octopart_url"]),
+            "sheets": datasheets
+        ]
+
+        return newItem
+    }
+
     @IBAction func searchComponents(sender: NSSearchField!) {
         let urlComponents = NSURLComponents(string: "https://octopart.com/api/v3/parts/search")!
         urlComponents.queryItems = [
             NSURLQueryItem(name: "apikey", value: OCTOPART_API_KEY),
             NSURLQueryItem(name: "q", value: sender.stringValue),
             NSURLQueryItem(name: "include[]", value: "datasheets"),
+            NSURLQueryItem(name: "include[]", value: "short_description"),
             NSURLQueryItem(name: "limit", value: "100")
         ]
 
@@ -33,28 +60,7 @@ class OctSearch : NSObject, NSTableViewDataSource {
             if response != nil {
                 let results    = response!["results"] as! [[String: AnyObject]]
                 for result in results {
-                    let item = result["item"] as! [String: AnyObject]
-                    let manu = item["manufacturer"] as! [String: AnyObject]
-
-                    var datasheets = [String]()
-                    if let ds = item["datasheets"] as? [[String: AnyObject]] {
-                        for sheet in ds {
-                            if let url = sheet["url"] as? String {
-                                datasheets.append(url)
-                            }
-                        }
-                    }
-
-                    let newItem : [String: AnyObject] = [
-                        "uid":  stringRep(item["uid"]),
-                        "part": stringRep(item["mpn"]),
-                        "manu": stringRep(manu["name"]),
-                        "desc": stringRep(result["snippet"]),
-                        "murl": stringRep(manu["homepage_url"]),
-                        "purl": stringRep(item["octopart_url"]),
-                        "sheets": datasheets
-                    ]
-                    newResults.append(newItem)
+                    newResults.append(OctSearch.partFromJSON(result["item"]))
                 }
             }
             dispatch_async(dispatch_get_main_queue(), {

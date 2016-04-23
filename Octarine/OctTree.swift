@@ -115,8 +115,11 @@ class OctTreeNode : NSObject {
     }
 }
 
-class OctTree : NSObject, NSOutlineViewDataSource {
+class OctTree : NSObject, NSOutlineViewDataSource, NSOutlineViewDelegate {
     @IBOutlet weak var outline : NSOutlineView!
+    @IBOutlet weak var search: OctSearch!
+    @IBOutlet weak var details: OctDetails!
+    @IBOutlet weak var sheets: OctSheets!
 
     override func awakeFromNib() {
         outline.registerForDraggedTypes([kOctPasteboardType])
@@ -365,6 +368,38 @@ class OctTree : NSObject, NSOutlineViewDataSource {
         dispatch_async(dispatch_get_main_queue()) {
             self.oldTreeRoots = []
         }
+    }
+
+    func outlineViewSelectionDidChange(_: NSNotification) {
+        let urlComponents = NSURLComponents(string: "https://octopart.com/api/v3/parts/get_multi")!
+        let queryItems = [
+            NSURLQueryItem(name: "apikey", value: OCTOPART_API_KEY),
+            NSURLQueryItem(name: "include[]", value: "datasheets"),
+            NSURLQueryItem(name: "include[]", value: "short_description"),
+            ] + outline.selectedRowIndexes.map() { (row: Int) -> NSURLQueryItem in
+                NSURLQueryItem(name: "uid[]", value: (outline.itemAtRow(row) as! OctTreeNode).item.ident)
+            }
+        urlComponents.queryItems = queryItems
+
+        let task = OctarineSession.dataTaskWithURL(urlComponents.URL!) { (data: NSData?, response: NSURLResponse?, error: NSError?) in
+            let response = try? NSJSONSerialization.JSONObjectWithData(data!, options: [])
+            var newResults = [[String: AnyObject]]()
+            if response != nil {
+                let results    = response as! [String: AnyObject]
+                for (uid,result) in results {
+                    newResults.append(OctSearch.partFromJSON(result))
+                }
+            }
+            dispatch_async(dispatch_get_main_queue(), {
+                self.search.searchResults = newResults
+                if newResults.count == 1 {
+                    self.details.componentSelection = NSIndexSet(index: 0)
+                    self.sheets.dataSheets = newResults[0]["sheets"] as! [String]
+                    self.sheets.dataSheetSelection = NSIndexSet(index: 0)
+                }
+            })
+        }
+        task.resume()
     }
 }
 
