@@ -45,7 +45,6 @@ class OctTreeNode : NSObject {
                 for index in 0..<roots.count {
                     gOctTreeRoots.append(OctTreeNode(parent: nil, index: index))
                 }
-                print("Roots", gOctTreeRoots)
             }
         }
         return gOctTreeRoots.count
@@ -210,6 +209,10 @@ class OctTree : NSObject, NSOutlineViewDataSource {
         if insertAtIndex == NSOutlineViewDropOnItemIndex {
             insertAtIndex   = newParent.children?.count ?? 0
         }
+        var insertAtRow     = outlineView.rowForItem(item)
+        if insertAtRow < 0 {
+            insertAtRow     = insertAtIndex
+        }
 
         outlineView.beginUpdates()
         //
@@ -223,6 +226,9 @@ class OctTree : NSObject, NSOutlineViewDataSource {
                 if parent == newParent && index < insertAtIndex {
                     insertAtIndex -= 1
                 }
+                if outlineView.rowForItem(node) < insertAtRow {
+                    insertAtRow -= 1
+                }
                 node.removeFromParent()
             }
         }
@@ -234,6 +240,8 @@ class OctTree : NSObject, NSOutlineViewDataSource {
         outlineView.endUpdates()
         gOctTreeRoots = []
         outlineView.reloadData()
+        let insertedIndexes = NSIndexSet(indexesInRange: NSMakeRange(insertAtRow, draggedItems.count))
+        outlineView.selectRowIndexes(insertedIndexes, byExtendingSelection: false)
 
         return true
     }
