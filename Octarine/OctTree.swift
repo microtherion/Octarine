@@ -38,6 +38,10 @@ class OctTreeNode : NSObject {
         return parent?.item ?? OctItem.rootFolder()
     }
 
+    var persistentIdentifier : String {
+        return item.ident + "[" + parentItem.ident + "]"
+    }
+
     class func numberOfRootItems() -> Int {
         if gOctTreeRoots.count == 0 {
             // Lazy initialization
@@ -95,6 +99,20 @@ class OctTreeNode : NSObject {
             item.managedObjectContext?.deleteObject(item)
         }
     }
+
+    class func mapNode(node: OctTreeNode, f : (OctTreeNode) -> Bool) {
+        if f(node) {
+            for i in 0..<node.numberOfChildren {
+                mapNode(node.child(i), f: f)
+            }
+        }
+    }
+
+    class func map(f : (OctTreeNode) -> Bool) {
+        for i in 0..<numberOfRootItems() {
+            mapNode(rootItem(i), f: f)
+        }
+    }
 }
 
 class OctTree : NSObject, NSOutlineViewDataSource {
@@ -104,6 +122,28 @@ class OctTree : NSObject, NSOutlineViewDataSource {
         outline.registerForDraggedTypes([kOctPasteboardType])
         outline.setDraggingSourceOperationMask([.Move, .Copy], forLocal: true)
         outline.setDraggingSourceOperationMask([.Delete], forLocal: false)
+    }
+
+    func reloadTree() {
+        var expandedGroups = [String]()
+
+        for row in 0..<outline.numberOfRows {
+            if outline.isItemExpanded(outline.itemAtRow(row)) {
+                expandedGroups.append((outline.itemAtRow(row) as! OctTreeNode).persistentIdentifier)
+            }
+        }
+
+        gOctTreeRoots = []
+        outline.reloadData()
+
+        OctTreeNode.map() { (group: OctTreeNode) -> Bool in
+            if expandedGroups.contains(group.persistentIdentifier) {
+                self.outline.expandItem(group)
+                return true
+            } else {
+                return false
+            }
+        }
     }
 
     @IBAction func newGroup(sender: AnyObject) {
@@ -132,9 +172,30 @@ class OctTree : NSObject, NSOutlineViewDataSource {
             groupKids.addObject(node.item)
         }
         outline.endUpdates()
-        gOctTreeRoots = []
-        outline.reloadData()
+        reloadTree()
         outline.editColumn(0, row: insertAt, withEvent: nil, select: true)
+    }
+
+    func outlineView(outlineView: NSOutlineView, persistentObjectForItem item: AnyObject?) -> AnyObject? {
+        return (item as? OctTreeNode)?.persistentIdentifier
+    }
+
+    func outlineView(outlineView: NSOutlineView, itemForPersistentObject object: AnyObject) -> AnyObject? {
+        if let identifier = object as? String {
+            var found : OctTreeNode?
+            OctTreeNode.map() { (node: OctTreeNode) -> Bool in
+                guard found==nil else { return false }
+                if node.persistentIdentifier == identifier {
+                    found = node
+                    return false
+                } else {
+                    return true
+                }
+            }
+            return found
+        } else {
+            return nil
+        }
     }
 
     func outlineView(outlineView: NSOutlineView, isItemExpandable item: AnyObject) -> Bool {
@@ -248,7 +309,7 @@ class OctTree : NSObject, NSOutlineViewDataSource {
         }
         var insertAtRow     = outlineView.rowForItem(item)
         if insertAtRow < 0 {
-            insertAtRow     = insertAtIndex
+            insertAtRow     = outlineView.numberOfRows
         }
 
         outlineView.beginUpdates()
@@ -275,8 +336,7 @@ class OctTree : NSObject, NSOutlineViewDataSource {
             insertAtIndex += 1
         }
         outlineView.endUpdates()
-        gOctTreeRoots = []
-        outlineView.reloadData()
+        reloadTree()
         let insertedIndexes = NSIndexSet(indexesInRange: NSMakeRange(insertAtRow, draggedItems.count))
         outlineView.selectRowIndexes(insertedIndexes, byExtendingSelection: false)
 
@@ -292,8 +352,7 @@ class OctTree : NSObject, NSOutlineViewDataSource {
                 node.deleteIfOrphaned()
             }
             outlineView.endUpdates()
-            gOctTreeRoots = []
-            outlineView.reloadData()
+            reloadTree()
         }
     }
 }
@@ -309,8 +368,7 @@ class OctOutlineView : NSOutlineView {
             node.deleteIfOrphaned()
         }
         endUpdates()
-        gOctTreeRoots = []
-        reloadData()
+        (dataSource() as? OctTree)?.reloadTree()
     }
 
     override func validateUserInterfaceItem(item: NSValidatedUserInterfaceItem) -> Bool {
