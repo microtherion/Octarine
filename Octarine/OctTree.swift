@@ -10,6 +10,88 @@ import AppKit
 
 let kOctPasteboardType = "OctPasteboardType"
 
+var gOctTreeRoots = [OctTreeNode]()
+
+class OctTreeNode : NSObject {
+    var parent  : OctTreeNode?
+    let item    : OctItem
+    let path    : NSIndexPath
+
+    private init(parent: OctTreeNode?, index: Int) {
+        self.parent = parent
+        let parentItem = parent?.item ?? OctItem.rootFolder()
+        self.item   = parentItem.children![index] as! OctItem
+        self.path   = parent?.path.indexPathByAddingIndex(index) ?? NSIndexPath(index: index)
+
+        super.init()
+    }
+
+    var isExpandable : Bool {
+        return !item.isPart
+    }
+
+    var numberOfChildren : Int {
+        return item.children?.count ?? 0
+    }
+
+    var parentItem : OctItem {
+        return parent?.item ?? OctItem.rootFolder()
+    }
+
+    class func numberOfRootItems() -> Int {
+        if gOctTreeRoots.count == 0 {
+            // Lazy initialization
+            if let roots = OctItem.rootFolder().children {
+                for index in 0..<roots.count {
+                    gOctTreeRoots.append(OctTreeNode(parent: nil, index: index))
+                }
+                print("Roots", gOctTreeRoots)
+            }
+        }
+        return gOctTreeRoots.count
+    }
+
+    class func rootItem(index: Int) -> OctTreeNode {
+        return gOctTreeRoots[index]
+    }
+
+    var children = [OctTreeNode]()
+
+    func child(index: Int) -> OctTreeNode {
+        if children.count == 0 {
+            // Lazy initialization
+            for index in 0..<numberOfChildren {
+                children.append(OctTreeNode(parent: self, index: index))
+            }
+        }
+
+        return children[index]
+    }
+
+    func isDescendantOf(node: OctTreeNode) -> Bool {
+        if self == node {
+            return true
+        } else if path.length <= node.path.length {
+            return false
+        } else {
+            return parent!.isDescendantOf(node)
+        }
+    }
+
+    func isDescendantOfOneOf(nodes: [OctTreeNode]) -> Bool {
+        for node in nodes {
+            if isDescendantOf(node) {
+                return true
+            }
+        }
+        return false
+    }
+
+    func removeFromParent() {
+        parentItem.mutableOrderedSetValueForKey("children").removeObject(item)
+    }
+}
+
 class OctTree : NSObject, NSOutlineViewDataSource {
     @IBOutlet weak var outline : NSOutlineView!
 
@@ -19,12 +101,61 @@ class OctTree : NSObject, NSOutlineViewDataSource {
         outline.setDraggingSourceOperationMask(.None, forLocal: false)
     }
 
-    var draggedNodes : [NSTreeNode] = []
-    var draggedItems : [OctItem]    = []
+    func outlineView(outlineView: NSOutlineView, isItemExpandable item: AnyObject) -> Bool {
+        return (item as! OctTreeNode).isExpandable
+    }
+
+    func outlineView(outlineView: NSOutlineView, numberOfChildrenOfItem item: AnyObject?) -> Int {
+        return (item as? OctTreeNode)?.numberOfChildren ?? OctTreeNode.numberOfRootItems()
+    }
+
+    func outlineView(outlineView: NSOutlineView, child index: Int, ofItem item: AnyObject?) -> AnyObject {
+        if let node = item as? OctTreeNode {
+            return node.child(index)
+        } else {
+            return OctTreeNode.rootItem(index)
+        }
+    }
+
+    func outlineView(outlineView: NSOutlineView, objectValueForTableColumn tableColumn: NSTableColumn?, byItem item: AnyObject?) -> AnyObject? {
+        guard let octItem = (item as? OctTreeNode)?.item,
+              let column = tableColumn?.identifier
+        else {
+            return nil
+        }
+        switch column {
+        case "name":
+            return octItem.name
+        case "desc":
+            return octItem.desc
+        default:
+            return nil
+        }
+    }
+
+    func outlineView(outlineView: NSOutlineView, setObjectValue object: AnyObject?, forTableColumn tableColumn: NSTableColumn?, byItem item: AnyObject?) {
+        guard let octItem = (item as? OctTreeNode)?.item,
+              let column = tableColumn?.identifier
+        else {
+                return
+        }
+        switch column {
+        case "name":
+            octItem.name = object as? String ?? ""
+        case "desc":
+            octItem.desc = object as? String ?? ""
+        default:
+            return
+        }
+    }
+
+    var draggedItems = [OctItem]()
+    var draggedNodes = [OctTreeNode]()
+
     func outlineView(outlineView: NSOutlineView, writeItems items: [AnyObject], toPasteboard pboard: NSPasteboard) -> Bool {
-        draggedNodes = items as! [NSTreeNode]
-        draggedItems = draggedNodes.map { (node: NSTreeNode) -> OctItem in
-            node.representedObject as! OctItem
+        draggedNodes = items as! [OctTreeNode]
+        draggedItems = draggedNodes.map { (node: OctTreeNode) -> OctItem in
+            node.item
         }
         let serialized = draggedItems.map { (item: OctItem) -> [String: AnyObject] in
             item.serialized()
@@ -35,46 +166,32 @@ class OctTree : NSObject, NSOutlineViewDataSource {
         return true
     }
 
-    func itemIsDescendentOfDrag(outlineView: NSOutlineView, item: OctItem) -> Bool {
-        if draggedItems.contains(item) {
-            return true
-        } else {
-            for parent in item.parents {
-                if itemIsDescendentOfDrag(outlineView, item: parent as! OctItem) {
-                    return true
-                }
-            }
-            return false
-        }
-    }
-
     func outlineView(outlineView: NSOutlineView, validateDrop info: NSDraggingInfo,
                      proposedItem item: AnyObject?, proposedChildIndex index: Int) -> NSDragOperation
     {
         guard info.draggingPasteboard().availableTypeFromArray([kOctPasteboardType]) != nil else {
-            return NSDragOperation.None // Only allow reordering drags
+            return .None // Only allow reordering drags
         }
         guard let draggingSource = info.draggingSource() as? NSOutlineView
             where draggingSource == outlineView else
         {
-            return NSDragOperation.Generic // Drags from outside the outline always OK
+            return [.Generic, .Copy] // Drags from outside the outline always OK
         }
-        guard let octItem = item?.representedObject as? OctItem else {
-            return NSDragOperation.Generic // Drags into root always OK
+        guard let octNode = item as? OctTreeNode else {
+            return [.Move, .Copy] // Drags into root always OK
         }
-        if octItem.isPart {
-            return NSDragOperation.None     // Don't allow dragging on a part
-        } else if itemIsDescendentOfDrag(outlineView, item: octItem) {
-            return NSDragOperation.None     // Don't allow drag on dragged items or their descendents
+        if !octNode.isExpandable {
+            return .None     // Don't allow dragging on a part
+        } else if octNode.isDescendantOfOneOf(draggedNodes) {
+            return .None     // Don't allow drag on dragged items or their descendents
         } else {
-            return NSDragOperation.Generic // Otherwise we're good
+            return [.Move, .Copy]  // Otherwise we're good
         }
     }
 
     func outlineView(outlineView: NSOutlineView, acceptDrop info: NSDraggingInfo,
-                     item parentItem: AnyObject?, childIndex: Int) -> Bool
+                     item: AnyObject?, childIndex: Int) -> Bool
     {
-        outlineView.beginUpdates()
         if let draggingSource = info.draggingSource() as? NSOutlineView
             where draggingSource == outlineView
         {
@@ -87,39 +204,37 @@ class OctTree : NSObject, NSOutlineViewDataSource {
                 return OctItem.itemFromSerialized(item)
             })
         }
-        let newParent = parentItem?.representedObject as? OctItem ?? OctItem.rootFolder()
-        var insertAtIndex = childIndex
+        let newParentNode   = item as? OctTreeNode
+        let newParent       = newParentNode?.item ?? OctItem.rootFolder()
+        var insertAtIndex   = childIndex
         if insertAtIndex == NSOutlineViewDropOnItemIndex {
-            insertAtIndex = newParent.children?.count ?? 0
+            insertAtIndex   = newParent.children?.count ?? 0
         }
+
+        outlineView.beginUpdates()
         //
         // If this is a move, remove from previous parent, if any
         //
         if info.draggingSourceOperationMask().contains(.Move) {
-            for (index, item) in draggedItems.enumerate() {
-                let node   = draggedNodes[index]
-                let path   = node.indexPath
-                let parent = node.parentNode?.representedObject as? OctItem ?? OctItem.rootFolder()
-                if parent == newParent && path.indexAtPosition(path.length-1) < insertAtIndex {
+            for node in draggedNodes {
+                let path   = node.path
+                let parent = node.parentItem
+                let index  = path.indexAtPosition(path.length-1)
+                if parent == newParent && index < insertAtIndex {
                     insertAtIndex -= 1
                 }
-                let origIndex = parent.children!.indexOfObject(item)
-                parent.mutableOrderedSetValueForKey("children").removeObject(item)
-                outlineView.removeItemsAtIndexes(NSIndexSet(index:origIndex), inParent: node.parentNode, withAnimation: NSTableViewAnimationOptions.EffectNone)
+                node.removeFromParent()
             }
         }
         for item in draggedItems {
             let kids = newParent.mutableOrderedSetValueForKey("children")
             kids.insertObject(item, atIndex: insertAtIndex)
-            outlineView.insertItemsAtIndexes(NSIndexSet(index:insertAtIndex), inParent: parentItem, withAnimation: NSTableViewAnimationOptions.EffectGap)
             insertAtIndex += 1
         }
         outlineView.endUpdates()
+        gOctTreeRoots = []
+        outlineView.reloadData()
 
         return true
-    }
-
-    dynamic var rootItems : [OctItem] {
-        return OctItem.rootFolder().children?.array as? [OctItem] ?? []
     }
 }
