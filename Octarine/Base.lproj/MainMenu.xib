@@ -95,10 +95,26 @@
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <menu key="submenu" title="File" id="bib-Uj-vzu">
                         <items>
-                            <menuItem title="New" keyEquivalent="n" id="Was-JA-tGl">
-                                <connections>
-                                    <action selector="newDocument:" target="-1" id="4Si-XN-c54"/>
-                                </connections>
+                            <menuItem title="New" id="7uv-vr-h5Z">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <menu key="submenu" title="New" id="8y3-XF-Mp5">
+                                    <items>
+                                        <menuItem title="Custom Part" keyEquivalent="N" id="u6K-8h-5Ls"/>
+                                        <menuItem isSeparatorItem="YES" id="63N-o9-nZw"/>
+                                        <menuItem title="Group" tag="1" keyEquivalent="n" id="HD6-uQ-vYF">
+                                            <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                            <connections>
+                                                <action selector="newGroup:" target="O3g-iW-BPy" id="OIy-to-9Xn"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Group from Selection" id="3c3-Kt-mwh">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="newGroup:" target="O3g-iW-BPy" id="ef0-qz-kZB"/>
+                                            </connections>
+                                        </menuItem>
+                                    </items>
+                                </menu>
                             </menuItem>
                             <menuItem title="Open…" keyEquivalent="o" id="IAo-SY-fd9">
                                 <connections>
@@ -726,14 +742,14 @@ CA
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
                                                                 <outlineView identifier="Item Outline" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" selectionHighlightStyle="sourceList" alternatingRowBackgroundColors="YES" autosaveColumns="NO" headerView="4Hg-FG-IO8" indentationPerLevel="16" autosaveExpandedItems="YES" autoresizesOutlineColumn="YES" outlineTableColumn="FaV-GJ-yf9" id="kmE-J0-Kwn" customClass="OctOutlineView" customModule="Octarine" customModuleProvider="target">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="341" height="19"/>
+                                                                    <rect key="frame" x="0.0" y="0.0" width="357" height="222"/>
                                                                     <autoresizingMask key="autoresizingMask"/>
                                                                     <size key="intercellSpacing" width="3" height="2"/>
                                                                     <color key="backgroundColor" name="_sourceListBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                                     <tableViewGridLines key="gridStyleMask" vertical="YES"/>
                                                                     <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                                                     <tableColumns>
-                                                                        <tableColumn identifier="name" width="100" minWidth="16" maxWidth="1000" id="FaV-GJ-yf9">
+                                                                        <tableColumn identifier="name" width="116" minWidth="16" maxWidth="1000" id="FaV-GJ-yf9">
                                                                             <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" title="Name">
                                                                                 <font key="font" metaFont="smallSystem"/>
                                                                                 <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -767,7 +783,7 @@ CA
                                                             </subviews>
                                                             <nil key="backgroundColor"/>
                                                         </clipView>
-                                                        <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="WMG-oz-E4A">
+                                                        <scroller key="horizontalScroller" verticalHuggingPriority="750" horizontal="YES" id="WMG-oz-E4A">
                                                             <rect key="frame" x="1" y="229" width="341" height="16"/>
                                                             <autoresizingMask key="autoresizingMask"/>
                                                         </scroller>
@@ -776,7 +792,7 @@ CA
                                                             <autoresizingMask key="autoresizingMask"/>
                                                         </scroller>
                                                         <tableHeaderView key="headerView" id="4Hg-FG-IO8">
-                                                            <rect key="frame" x="0.0" y="0.0" width="341" height="23"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="357" height="23"/>
                                                             <autoresizingMask key="autoresizingMask"/>
                                                         </tableHeaderView>
                                                     </scrollView>

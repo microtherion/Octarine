@@ -106,6 +106,37 @@ class OctTree : NSObject, NSOutlineViewDataSource {
         outline.setDraggingSourceOperationMask([.Delete], forLocal: false)
     }
 
+    @IBAction func newGroup(sender: AnyObject) {
+        let selectedNode = outline.itemAtRow(outline.selectedRowIndexes.firstIndex) as? OctTreeNode
+        let parentItem   = selectedNode?.parent?.item ?? OctItem.rootFolder()
+        let insertAt : Int
+        if let path = selectedNode?.path {
+            insertAt = path.indexAtPosition(path.length-1)+sender.tag()
+        } else {
+            insertAt = parentItem.children?.count ?? 0
+        }
+        let group       = OctItem.createFolder("")
+        group.name      = "New Group "+group.ident.substringToIndex(group.ident.startIndex.advancedBy(6))
+        var contents    = [OctTreeNode]()
+        if sender.tag()==0 {
+            for row in outline.selectedRowIndexes {
+                contents.append(outline.itemAtRow(row) as! OctTreeNode)
+            }
+        }
+        outline.beginUpdates()
+        let kids = parentItem.mutableOrderedSetValueForKey("children")
+        kids.insertObject(group, atIndex: insertAt)
+        let groupKids = group.mutableOrderedSetValueForKey("children")
+        for node in contents {
+            node.removeFromParent()
+            groupKids.addObject(node.item)
+        }
+        outline.endUpdates()
+        gOctTreeRoots = []
+        outline.reloadData()
+        outline.editColumn(0, row: insertAt, withEvent: nil, select: true)
+    }
+
     func outlineView(outlineView: NSOutlineView, isItemExpandable item: AnyObject) -> Bool {
         return (item as! OctTreeNode).isExpandable
     }
