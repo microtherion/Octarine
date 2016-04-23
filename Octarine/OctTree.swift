@@ -89,6 +89,12 @@ class OctTreeNode : NSObject {
     func removeFromParent() {
         parentItem.mutableOrderedSetValueForKey("children").removeObject(item)
     }
+
+    func deleteIfOrphaned() {
+        if item.parents.count == 0 {
+            item.managedObjectContext?.deleteObject(item)
+        }
+    }
 }
 
 class OctTree : NSObject, NSOutlineViewDataSource {
@@ -97,7 +103,7 @@ class OctTree : NSObject, NSOutlineViewDataSource {
     override func awakeFromNib() {
         outline.registerForDraggedTypes([kOctPasteboardType])
         outline.setDraggingSourceOperationMask([.Move, .Copy], forLocal: true)
-        outline.setDraggingSourceOperationMask(.None, forLocal: false)
+        outline.setDraggingSourceOperationMask([.Delete], forLocal: false)
     }
 
     func outlineView(outlineView: NSOutlineView, isItemExpandable item: AnyObject) -> Bool {
@@ -219,7 +225,7 @@ class OctTree : NSObject, NSOutlineViewDataSource {
         // If this is a move, remove from previous parent, if any
         //
         if info.draggingSourceOperationMask().contains(.Move) {
-            for node in draggedNodes {
+            for node in draggedNodes.reverse() {
                 let path   = node.path
                 let parent = node.parentItem
                 let index  = path.indexAtPosition(path.length-1)
@@ -244,5 +250,42 @@ class OctTree : NSObject, NSOutlineViewDataSource {
         outlineView.selectRowIndexes(insertedIndexes, byExtendingSelection: false)
 
         return true
+    }
+
+    func outlineView(outlineView: NSOutlineView, draggingSession session: NSDraggingSession, endedAtPoint screenPoint: NSPoint, operation: NSDragOperation)
+    {
+        if operation.contains(.Delete) {
+            outlineView.beginUpdates()
+            for node in draggedNodes {
+                node.removeFromParent()
+                node.deleteIfOrphaned()
+            }
+            outlineView.endUpdates()
+            gOctTreeRoots = []
+            outlineView.reloadData()
+        }
+    }
+}
+
+class OctOutlineView : NSOutlineView {
+    @IBAction func delete(_: AnyObject) {
+        let nodes = selectedRowIndexes.map { (index: Int) -> OctTreeNode in
+            itemAtRow(index) as! OctTreeNode
+        }
+        beginUpdates()
+        for node in nodes {
+            node.removeFromParent()
+            node.deleteIfOrphaned()
+        }
+        endUpdates()
+        gOctTreeRoots = []
+        reloadData()
+    }
+
+    override func validateUserInterfaceItem(item: NSValidatedUserInterfaceItem) -> Bool {
+        if item.action() == #selector(OctOutlineView.delete(_:)) {
+            return selectedRowIndexes.count > 0
+        }
+        return super.validateUserInterfaceItem(item)
     }
 }
