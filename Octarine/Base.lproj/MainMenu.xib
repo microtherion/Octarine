@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="10115" systemVersion="15F23" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
-        <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="10115"/>
         <plugIn identifier="com.apple.pdfkit.ibplugin" version="10115"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
         <capability name="stacking Non-gravity area distributions on NSStackView" minToolsVersion="7.0" minSystemVersion="10.11"/>
     </dependencies>
@@ -17,6 +17,7 @@
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <customObject id="Voe-Tx-rLC" customClass="OctApp" customModule="Octarine" customModuleProvider="target">
             <connections>
+                <outlet property="help" destination="pbk-4z-Z63" id="19K-6K-VfB"/>
                 <outlet property="mainTabs" destination="TT7-MZ-BE7" id="238-Wy-LE7"/>
                 <outlet property="searchController" destination="7hJ-8R-Ym9" id="xAG-xM-ixI"/>
                 <outlet property="sheets" destination="VVP-ho-yb1" id="lij-j4-aZx"/>
@@ -52,6 +53,7 @@
                 <outlet property="sheets" destination="VVP-ho-yb1" id="Zax-Fy-8bI"/>
             </connections>
         </customObject>
+        <customObject id="pbk-4z-Z63" customClass="OctHelp" customModule="Octarine" customModuleProvider="target"/>
         <menu title="Main Menu" systemMenu="main" id="AYu-sK-qS6">
             <items>
                 <menuItem title="Octarine" id="1Xt-HY-uBw">
@@ -711,7 +713,7 @@ CA
                         <items>
                             <menuItem title="Octarine Help" keyEquivalent="?" id="FKE-Sm-Kum">
                                 <connections>
-                                    <action selector="showHelp:" target="-1" id="y7X-2Q-9no"/>
+                                    <action selector="showHelp:" target="Voe-Tx-rLC" id="eti-dR-Ad1"/>
                                 </connections>
                             </menuItem>
                         </items>
@@ -735,21 +737,21 @@ CA
                                 <rect key="frame" x="0.0" y="0.0" width="343" height="503"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <subviews>
-                                    <splitView identifier="OctarineAuxSplit" misplaced="YES" arrangesAllSubviews="NO" autosaveName="OctarineAuxSplit" dividerStyle="thin" translatesAutoresizingMaskIntoConstraints="NO" id="7Xe-5E-Gt5">
-                                        <rect key="frame" x="0.0" y="0.0" width="339" height="503"/>
+                                    <splitView identifier="OctarineAuxSplit" arrangesAllSubviews="NO" autosaveName="OctarineAuxSplit" dividerStyle="thin" translatesAutoresizingMaskIntoConstraints="NO" id="7Xe-5E-Gt5">
+                                        <rect key="frame" x="0.0" y="0.0" width="343" height="503"/>
                                         <subviews>
-                                            <customView misplaced="YES" id="Y3z-16-fg3">
-                                                <rect key="frame" x="0.0" y="0.0" width="339" height="246"/>
+                                            <customView id="Y3z-16-fg3">
+                                                <rect key="frame" x="0.0" y="0.0" width="343" height="246"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                                 <subviews>
-                                                    <scrollView misplaced="YES" autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TDt-Lc-ge1">
-                                                        <rect key="frame" x="0.0" y="-1" width="343" height="246"/>
+                                                    <scrollView autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TDt-Lc-ge1">
+                                                        <rect key="frame" x="0.0" y="0.0" width="343" height="246"/>
                                                         <clipView key="contentView" drawsBackground="NO" id="Sb0-pM-4F3">
                                                             <rect key="frame" x="1" y="0.0" width="341" height="245"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
                                                                 <outlineView identifier="OctTree" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" selectionHighlightStyle="sourceList" alternatingRowBackgroundColors="YES" autosaveColumns="NO" autosaveName="OctTree" headerView="4Hg-FG-IO8" indentationPerLevel="16" autosaveExpandedItems="YES" outlineTableColumn="FaV-GJ-yf9" id="kmE-J0-Kwn" customClass="OctOutlineView" customModule="Octarine" customModuleProvider="target">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="357" height="222"/>
+                                                                    <rect key="frame" x="0.0" y="0.0" width="357" height="19"/>
                                                                     <autoresizingMask key="autoresizingMask"/>
                                                                     <size key="intercellSpacing" width="3" height="2"/>
                                                                     <color key="backgroundColor" name="_sourceListBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -812,40 +814,33 @@ CA
                                                     <constraint firstItem="TDt-Lc-ge1" firstAttribute="top" secondItem="Y3z-16-fg3" secondAttribute="top" id="Yby-gA-Tjz"/>
                                                 </constraints>
                                             </customView>
-                                            <customView misplaced="YES" id="S5h-Zq-X6X">
-                                                <rect key="frame" x="0.0" y="247" width="339" height="256"/>
+                                            <customView id="S5h-Zq-X6X">
+                                                <rect key="frame" x="0.0" y="247" width="343" height="256"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                                 <subviews>
-                                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ZTJ-lQ-NEx">
-                                                        <rect key="frame" x="122" y="5" width="110" height="24"/>
-                                                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Powered by" id="0GG-8B-MVa">
-                                                            <font key="font" metaFont="systemSemibold" size="20"/>
-                                                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                                        </textFieldCell>
-                                                    </textField>
-                                                    <button misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wzm-th-9bt">
-                                                        <rect key="frame" x="238" y="2" width="100" height="30"/>
+                                                    <button misplaced="YES" placeholderIntrinsicWidth="261" placeholderIntrinsicHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="wzm-th-9bt">
+                                                        <rect key="frame" x="115" y="3" width="225" height="24"/>
                                                         <constraints>
-                                                            <constraint firstAttribute="height" constant="30" id="7SL-zd-rGc"/>
-                                                            <constraint firstAttribute="width" constant="100" id="VSW-0z-mch"/>
+                                                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="40" id="3mv-Gy-SZv"/>
+                                                            <constraint firstAttribute="height" relation="lessThanOrEqual" constant="30" id="7SL-zd-rGc"/>
+                                                            <constraint firstAttribute="width" secondItem="wzm-th-9bt" secondAttribute="height" multiplier="28:3" id="fTt-p7-RWE"/>
                                                         </constraints>
-                                                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="blue-octopart-logo" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="Dxx-dQ-5pf">
+                                                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="powered" imagePosition="only" alignment="center" controlSize="mini" imageScaling="proportionallyUpOrDown" inset="2" id="Dxx-dQ-5pf">
                                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                                            <font key="font" metaFont="system"/>
+                                                            <font key="font" metaFont="miniSystem"/>
                                                         </buttonCell>
                                                         <connections>
                                                             <action selector="goToOctopart:" target="Voe-Tx-rLC" id="qN0-dn-u8B"/>
                                                         </connections>
                                                     </button>
-                                                    <scrollView misplaced="YES" autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="O1x-kK-3O9">
-                                                        <rect key="frame" x="0.0" y="35" width="343" height="222"/>
+                                                    <scrollView autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="O1x-kK-3O9">
+                                                        <rect key="frame" x="0.0" y="30" width="343" height="226"/>
                                                         <clipView key="contentView" id="OMe-wN-Ahd">
-                                                            <rect key="frame" x="1" y="0.0" width="341" height="221"/>
+                                                            <rect key="frame" x="1" y="0.0" width="341" height="225"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
                                                                 <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" columnReordering="NO" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" headerView="miL-GV-zlb" id="gTB-h0-9mA">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="341" height="198"/>
+                                                                    <rect key="frame" x="0.0" y="0.0" width="341" height="202"/>
                                                                     <autoresizingMask key="autoresizingMask"/>
                                                                     <size key="intercellSpacing" width="3" height="2"/>
                                                                     <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -894,7 +889,7 @@ CA
                                                             <autoresizingMask key="autoresizingMask"/>
                                                         </scroller>
                                                         <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="fcV-Ut-8rb">
-                                                            <rect key="frame" x="224" y="17" width="15" height="102"/>
+                                                            <rect key="frame" x="326" y="0.0" width="16" height="0.0"/>
                                                             <autoresizingMask key="autoresizingMask"/>
                                                         </scroller>
                                                         <tableHeaderView key="headerView" id="miL-GV-zlb">
@@ -902,8 +897,8 @@ CA
                                                             <autoresizingMask key="autoresizingMask"/>
                                                         </tableHeaderView>
                                                     </scrollView>
-                                                    <progressIndicator wantsLayer="YES" horizontalHuggingPriority="750" verticalHuggingPriority="750" misplaced="YES" maxValue="100" displayedWhenStopped="NO" bezeled="NO" indeterminate="YES" controlSize="small" style="spinning" translatesAutoresizingMaskIntoConstraints="NO" id="mVT-g8-aQb">
-                                                        <rect key="frame" x="11" y="11" width="16" height="16"/>
+                                                    <progressIndicator wantsLayer="YES" horizontalHuggingPriority="750" verticalHuggingPriority="750" maxValue="100" displayedWhenStopped="NO" bezeled="NO" indeterminate="YES" controlSize="small" style="spinning" translatesAutoresizingMaskIntoConstraints="NO" id="mVT-g8-aQb">
+                                                        <rect key="frame" x="8" y="7" width="16" height="16"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="16" id="ahj-Jk-zlf"/>
                                                             <constraint firstAttribute="width" constant="16" id="qts-Bm-42b"/>
@@ -914,16 +909,16 @@ CA
                                                     </progressIndicator>
                                                 </subviews>
                                                 <constraints>
-                                                    <constraint firstAttribute="trailing" secondItem="wzm-th-9bt" secondAttribute="trailing" constant="5" id="8iD-M6-gng"/>
-                                                    <constraint firstItem="wzm-th-9bt" firstAttribute="leading" secondItem="ZTJ-lQ-NEx" secondAttribute="trailing" constant="8" symbolic="YES" id="IW6-zG-2JZ"/>
+                                                    <constraint firstAttribute="trailing" secondItem="wzm-th-9bt" secondAttribute="trailing" constant="3" id="8iD-M6-gng"/>
                                                     <constraint firstAttribute="trailing" secondItem="O1x-kK-3O9" secondAttribute="trailing" id="JPg-b5-mhA"/>
                                                     <constraint firstItem="O1x-kK-3O9" firstAttribute="leading" secondItem="S5h-Zq-X6X" secondAttribute="leading" id="SI4-zm-zc4"/>
-                                                    <constraint firstAttribute="bottom" secondItem="wzm-th-9bt" secondAttribute="bottom" constant="5" id="Wi9-PB-hj1"/>
-                                                    <constraint firstAttribute="bottom" secondItem="mVT-g8-aQb" secondAttribute="bottom" constant="8" id="Xup-wD-POc"/>
+                                                    <constraint firstItem="mVT-g8-aQb" firstAttribute="top" secondItem="O1x-kK-3O9" secondAttribute="bottom" constant="7" id="Sph-X1-PgU"/>
+                                                    <constraint firstAttribute="bottom" secondItem="wzm-th-9bt" secondAttribute="bottom" constant="3" id="Wi9-PB-hj1"/>
+                                                    <constraint firstAttribute="bottom" secondItem="mVT-g8-aQb" secondAttribute="bottom" constant="7" id="Xup-wD-POc"/>
                                                     <constraint firstItem="O1x-kK-3O9" firstAttribute="top" secondItem="S5h-Zq-X6X" secondAttribute="top" id="aU2-jK-QAl"/>
                                                     <constraint firstItem="mVT-g8-aQb" firstAttribute="leading" secondItem="S5h-Zq-X6X" secondAttribute="leading" constant="8" id="gbV-Jg-DTn"/>
-                                                    <constraint firstItem="wzm-th-9bt" firstAttribute="top" secondItem="O1x-kK-3O9" secondAttribute="bottom" id="n8u-qb-GgQ"/>
-                                                    <constraint firstItem="wzm-th-9bt" firstAttribute="centerY" secondItem="ZTJ-lQ-NEx" secondAttribute="centerY" id="nVu-YX-5pv"/>
+                                                    <constraint firstItem="wzm-th-9bt" firstAttribute="top" relation="greaterThanOrEqual" secondItem="O1x-kK-3O9" secondAttribute="bottom" constant="3" id="n8u-qb-GgQ"/>
+                                                    <constraint firstItem="wzm-th-9bt" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="mVT-g8-aQb" secondAttribute="trailing" constant="8" symbolic="YES" id="uZO-8r-MNV"/>
                                                 </constraints>
                                             </customView>
                                         </subviews>
@@ -944,7 +939,7 @@ CA
                                 <rect key="frame" x="344" y="0.0" width="339" height="503"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <subviews>
-                                    <tabView translatesAutoresizingMaskIntoConstraints="NO" id="TT7-MZ-BE7">
+                                    <tabView initialItem="3Tt-DF-Aei" translatesAutoresizingMaskIntoConstraints="NO" id="TT7-MZ-BE7">
                                         <rect key="frame" x="-7" y="-10" width="353" height="519"/>
                                         <font key="font" metaFont="system"/>
                                         <tabViewItems>
@@ -1173,8 +1168,9 @@ CA
                 <binding destination="VVP-ho-yb1" name="contentArray" keyPath="dataSheets" id="XcJ-s6-MJ1"/>
             </connections>
         </arrayController>
+        <customObject id="6Vs-8C-wix"/>
     </objects>
     <resources>
-        <image name="blue-octopart-logo" width="201.60000610351562" height="45.599998474121094"/>
+        <image name="powered" width="420" height="46"/>
     </resources>
 </document>

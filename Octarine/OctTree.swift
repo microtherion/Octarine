@@ -387,7 +387,7 @@ class OctTree : NSObject, NSOutlineViewDataSource, NSOutlineViewDelegate {
             var newResults = [[String: AnyObject]]()
             if response != nil {
                 let results    = response as! [String: AnyObject]
-                for (uid,result) in results {
+                for (_,result) in results {
                     newResults.append(OctSearch.partFromJSON(result))
                 }
             }

@@ -77,6 +77,7 @@ class OctApp: NSObject, NSApplicationDelegate {
     @IBOutlet weak var searchController : NSArrayController!
     @IBOutlet weak var mainTabs : NSTabView!
     @IBOutlet weak var sheets : OctSheets!
+    @IBOutlet weak var help : OctHelp!
 
     dynamic var requestPending = 0
     func startingRequest() {
@@ -263,8 +264,12 @@ class OctApp: NSObject, NSApplicationDelegate {
         }
     }
 
-    @IBAction func goToOctopart(sender: AnyObject!) {
+    @IBAction func goToOctopart(_: AnyObject!) {
         NSWorkspace.sharedWorkspace().openURL(NSURL(string:"https://octopart.com")!)
+    }
+
+    @IBAction func showHelp(sender: AnyObject!) {
+        help.showWindow(sender)
     }
 }
 
