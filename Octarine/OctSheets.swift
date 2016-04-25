@@ -17,6 +17,7 @@ class OctSheets : NSObject, NSOutlineViewDataSource, NSSearchFieldDelegate {
     @IBOutlet weak var outlineView: NSOutlineView!
     @IBOutlet weak var octApp : OctApp!
 
+    var sheetOutline : PDFOutline! = nil
     var pageChangedObserver : AnyObject?
 
     override func awakeFromNib() {
@@ -33,7 +34,25 @@ class OctSheets : NSObject, NSOutlineViewDataSource, NSSearchFieldDelegate {
         }
     }
 
-    dynamic var sheetOutline : PDFOutline! = nil
+    dynamic var showSidebar : Bool = true { didSet { updateSidebar() } }
+
+    func updateSidebar() {
+        if showSidebar && sheetOutline != nil {
+            sheetStack.setVisibilityPriority(NSStackViewVisibilityPriorityMustHold, forView: outlineScroller)
+            outlineView.reloadData()
+        } else {
+            sheetStack.setVisibilityPriority(NSStackViewVisibilityPriorityNotVisible, forView: outlineScroller)
+        }
+        if showSidebar && sheetOutline == nil {
+            sheetStack.setVisibilityPriority(NSStackViewVisibilityPriorityMustHold, forView: thumbnailView)
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(NSEC_PER_SEC)), dispatch_get_main_queue(), {
+                self.thumbnailView.setPDFView(self.sheetView)
+            });
+        } else {
+            sheetStack.setVisibilityPriority(NSStackViewVisibilityPriorityNotVisible, forView: thumbnailView)
+        }
+    }
+
     dynamic var dataSheets = [String]()
     dynamic var dataSheetSelection = NSIndexSet() {
         didSet {
@@ -57,21 +76,7 @@ class OctSheets : NSObject, NSOutlineViewDataSource, NSSearchFieldDelegate {
                                     self.sheetOutline = nil
                                 }
                             }
-                            if self.sheetOutline != nil {
-                                self.sheetStack.setVisibilityPriority(NSStackViewVisibilityPriorityNotVisible,
-                                    forView: self.thumbnailView)
-                                self.sheetStack.setVisibilityPriority(NSStackViewVisibilityPriorityMustHold,
-                                    forView: self.outlineScroller)
-                                self.outlineView.reloadData()
-                            } else {
-                                self.sheetStack.setVisibilityPriority(NSStackViewVisibilityPriorityNotVisible,
-                                    forView: self.outlineScroller)
-                                self.sheetStack.setVisibilityPriority(NSStackViewVisibilityPriorityMustHold,
-                                    forView: self.thumbnailView)
-                                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(NSEC_PER_SEC)), dispatch_get_main_queue(), {
-                                    self.thumbnailView.setPDFView(self.sheetView)
-                                });
-                            }
+                            self.updateSidebar()
                         })
                     }
                     octApp.startingRequest()
