@@ -42,9 +42,6 @@
                             <string key="keyEquivalent"></string>
                             <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                         </buttonCell>
-                        <connections>
-                            <action selector="goToNextPage:" target="jG0-A1-dve" id="i8i-FK-rNu"/>
-                        </connections>
                     </button>
                     <button translatesAutoresizingMaskIntoConstraints="NO" id="z2f-6n-Uzv">
                         <rect key="frame" x="10" y="634" width="32" height="31"/>
