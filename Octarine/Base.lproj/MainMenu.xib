@@ -828,22 +828,22 @@ CA
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <subviews>
                                                         <stackView distribution="fill" orientation="horizontal" alignment="top" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" misplaced="YES" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Gd4-0S-yJx">
-                                                            <rect key="frame" x="0.0" y="0.0" width="1040" height="720"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="1096" height="720"/>
                                                             <subviews>
                                                                 <scrollView hidden="YES" misplaced="YES" autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="x54-wB-VsP">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="260" height="720"/>
+                                                                    <rect key="frame" x="0.0" y="0.0" width="274" height="720"/>
                                                                     <clipView key="contentView" id="1Av-iD-Ypm">
-                                                                        <rect key="frame" x="1" y="0.0" width="258" height="719"/>
+                                                                        <rect key="frame" x="1" y="0.0" width="272" height="719"/>
                                                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                         <subviews>
                                                                             <outlineView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnReordering="NO" columnResizing="NO" multipleSelection="NO" autosaveColumns="NO" headerView="mMk-On-YZO" indentationPerLevel="16" outlineTableColumn="QNQ-Bt-f5K" id="SdN-FH-aQy">
-                                                                                <rect key="frame" x="0.0" y="0.0" width="258" height="696"/>
+                                                                                <rect key="frame" x="0.0" y="0.0" width="272" height="696"/>
                                                                                 <autoresizingMask key="autoresizingMask"/>
                                                                                 <size key="intercellSpacing" width="3" height="2"/>
                                                                                 <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                                                 <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                                                                 <tableColumns>
-                                                                                    <tableColumn width="254.5" minWidth="40" maxWidth="1000" id="QNQ-Bt-f5K">
+                                                                                    <tableColumn width="269" minWidth="40" maxWidth="1000" id="QNQ-Bt-f5K">
                                                                                         <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" title="Table of Contents">
                                                                                             <font key="font" metaFont="smallSystem"/>
                                                                                             <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -875,46 +875,82 @@ CA
                                                                         <autoresizingMask key="autoresizingMask"/>
                                                                     </scroller>
                                                                     <tableHeaderView key="headerView" id="mMk-On-YZO">
-                                                                        <rect key="frame" x="0.0" y="0.0" width="258" height="23"/>
+                                                                        <rect key="frame" x="0.0" y="0.0" width="272" height="23"/>
                                                                         <autoresizingMask key="autoresizingMask"/>
                                                                     </tableHeaderView>
                                                                 </scrollView>
                                                                 <pdfThumbnailView misplaced="YES" maximumNumberOfColumns="1" allowsDragging="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6Aa-pj-fak">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="260" height="720"/>
+                                                                    <rect key="frame" x="0.0" y="0.0" width="274" height="720"/>
                                                                     <size key="thumbnailSize" width="256" height="256"/>
                                                                     <connections>
                                                                         <outlet property="pdfView" destination="Jxk-tl-Aob" id="syy-In-Gej"/>
                                                                     </connections>
                                                                 </pdfThumbnailView>
                                                                 <customView focusRingType="none" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="yw8-a7-hgP">
-                                                                    <rect key="frame" x="268" y="0.0" width="772" height="720"/>
+                                                                    <rect key="frame" x="282" y="0.0" width="814" height="720"/>
                                                                     <subviews>
                                                                         <pdfView autoresizesSubviews="NO" misplaced="YES" autoScales="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Jxk-tl-Aob">
                                                                             <rect key="frame" x="0.0" y="0.0" width="770" height="690"/>
                                                                         </pdfView>
-                                                                        <searchField wantsLayer="YES" verticalHuggingPriority="750" misplaced="YES" tag="2" translatesAutoresizingMaskIntoConstraints="NO" id="UTe-9F-wQM">
-                                                                            <rect key="frame" x="0.0" y="698" width="770" height="22"/>
-                                                                            <searchFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" borderStyle="bezel" title="Search" usesSingleLineMode="YES" bezelStyle="round" maximumRecents="10" recentsAutosaveName="OctPDFSearch" id="NOs-wi-0g2">
-                                                                                <font key="font" metaFont="system"/>
-                                                                                <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                                                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                                                            </searchFieldCell>
-                                                                            <connections>
-                                                                                <action selector="findAction:" target="VVP-ho-yb1" id="IBS-Ce-UJf"/>
-                                                                                <binding destination="VVP-ho-yb1" name="value" keyPath="searchString" id="pG3-NM-xYW"/>
-                                                                                <outlet property="delegate" destination="VVP-ho-yb1" id="LrE-ib-JZ8"/>
-                                                                                <outlet property="searchMenuTemplate" destination="QTH-Xs-hye" id="kku-rH-svM"/>
-                                                                            </connections>
-                                                                        </searchField>
+                                                                        <stackView distribution="fill" orientation="horizontal" alignment="top" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" misplaced="YES" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="VLI-M9-DEi">
+                                                                            <rect key="frame" x="0.0" y="699" width="814" height="22"/>
+                                                                            <subviews>
+                                                                                <searchField wantsLayer="YES" verticalHuggingPriority="750" misplaced="YES" tag="2" translatesAutoresizingMaskIntoConstraints="NO" id="UTe-9F-wQM">
+                                                                                    <rect key="frame" x="0.0" y="0.0" width="772" height="22"/>
+                                                                                    <searchFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" borderStyle="bezel" title="Search" usesSingleLineMode="YES" bezelStyle="round" maximumRecents="10" recentsAutosaveName="OctPDFSearch" id="NOs-wi-0g2">
+                                                                                        <font key="font" metaFont="system"/>
+                                                                                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                                                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                                                    </searchFieldCell>
+                                                                                    <connections>
+                                                                                        <action selector="findAction:" target="VVP-ho-yb1" id="IBS-Ce-UJf"/>
+                                                                                        <binding destination="VVP-ho-yb1" name="value" keyPath="searchString" id="pG3-NM-xYW"/>
+                                                                                        <outlet property="delegate" destination="VVP-ho-yb1" id="LrE-ib-JZ8"/>
+                                                                                        <outlet property="searchMenuTemplate" destination="QTH-Xs-hye" id="kku-rH-svM"/>
+                                                                                    </connections>
+                                                                                </searchField>
+                                                                                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Yf2-Zb-Civ">
+                                                                                    <rect key="frame" x="778" y="3" width="38" height="17"/>
+                                                                                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Label" id="xUc-Dv-wC0">
+                                                                                        <font key="font" metaFont="fixedUser" size="11"/>
+                                                                                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                                                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                                                                    </textFieldCell>
+                                                                                    <connections>
+                                                                                        <binding destination="VVP-ho-yb1" name="displayPatternValue1" keyPath="found.@count" id="0MN-PJ-qGT">
+                                                                                            <dictionary key="options">
+                                                                                                <string key="NSDisplayPattern">Found %{value1}@ matches.</string>
+                                                                                            </dictionary>
+                                                                                        </binding>
+                                                                                        <binding destination="VVP-ho-yb1" name="hidden" keyPath="found.@count" id="s3z-TA-tVd">
+                                                                                            <dictionary key="options">
+                                                                                                <string key="NSValueTransformerName">NSNegateBoolean</string>
+                                                                                            </dictionary>
+                                                                                        </binding>
+                                                                                    </connections>
+                                                                                </textField>
+                                                                            </subviews>
+                                                                            <constraints>
+                                                                                <constraint firstItem="Yf2-Zb-Civ" firstAttribute="centerY" secondItem="UTe-9F-wQM" secondAttribute="centerY" id="WJf-cF-ToK"/>
+                                                                            </constraints>
+                                                                            <visibilityPriorities>
+                                                                                <integer value="1000"/>
+                                                                                <integer value="1000"/>
+                                                                            </visibilityPriorities>
+                                                                            <customSpacing>
+                                                                                <real value="3.4028234663852886e+38"/>
+                                                                                <real value="3.4028234663852886e+38"/>
+                                                                            </customSpacing>
+                                                                        </stackView>
                                                                     </subviews>
                                                                     <constraints>
-                                                                        <constraint firstItem="Jxk-tl-Aob" firstAttribute="top" secondItem="UTe-9F-wQM" secondAttribute="bottom" constant="8" symbolic="YES" id="3Ov-Za-3e0"/>
+                                                                        <constraint firstItem="VLI-M9-DEi" firstAttribute="leading" secondItem="yw8-a7-hgP" secondAttribute="leading" id="375-Nk-cEm"/>
                                                                         <constraint firstAttribute="trailing" secondItem="Jxk-tl-Aob" secondAttribute="trailing" id="Adn-iQ-BtU"/>
-                                                                        <constraint firstItem="UTe-9F-wQM" firstAttribute="leading" secondItem="yw8-a7-hgP" secondAttribute="leading" id="DRn-Uu-jsN"/>
-                                                                        <constraint firstItem="UTe-9F-wQM" firstAttribute="top" secondItem="yw8-a7-hgP" secondAttribute="top" id="EUy-vQ-DVi"/>
+                                                                        <constraint firstItem="VLI-M9-DEi" firstAttribute="top" secondItem="yw8-a7-hgP" secondAttribute="top" id="Aj7-IQ-tuK"/>
                                                                         <constraint firstAttribute="bottom" secondItem="Jxk-tl-Aob" secondAttribute="bottom" id="FI8-xN-a1N"/>
+                                                                        <constraint firstAttribute="trailing" secondItem="VLI-M9-DEi" secondAttribute="trailing" id="NgY-Cx-qXg"/>
+                                                                        <constraint firstItem="Jxk-tl-Aob" firstAttribute="top" secondItem="VLI-M9-DEi" secondAttribute="bottom" constant="8" symbolic="YES" id="YIp-RD-aHA"/>
                                                                         <constraint firstItem="Jxk-tl-Aob" firstAttribute="leading" secondItem="yw8-a7-hgP" secondAttribute="leading" id="p1q-uv-UCl"/>
-                                                                        <constraint firstAttribute="trailing" secondItem="UTe-9F-wQM" secondAttribute="trailing" id="sAv-ZM-maT"/>
                                                                     </constraints>
                                                                 </customView>
                                                             </subviews>
