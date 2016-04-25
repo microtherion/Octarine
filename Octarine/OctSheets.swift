@@ -9,7 +9,7 @@
 import AppKit
 import Quartz
 
-class OctSheets : NSObject, NSOutlineViewDataSource, NSOutlineViewDelegate {
+class OctSheets : NSObject, NSOutlineViewDataSource, NSSearchFieldDelegate {
     @IBOutlet weak var sheetView : PDFView!
     @IBOutlet weak var sheetStack : NSStackView!
     @IBOutlet weak var thumbnailView : PDFThumbnailView!
@@ -43,7 +43,12 @@ class OctSheets : NSObject, NSOutlineViewDataSource, NSOutlineViewDelegate {
                         dispatch_async(dispatch_get_main_queue(), {
                             let doc = PDFDocument(data: data)
                             self.octApp.endingRequest()
-                            self.sheetOutline    = nil
+
+                            self.sheetOutline   = nil
+                            self.found          = []
+                            self.lastFound      = nil
+
+                            doc.setDelegate(self)
                             self.sheetView.setDocument(doc)
                             self.sheetOutline    = doc.outlineRoot()
                             if self.sheetOutline != nil {
@@ -117,8 +122,9 @@ class OctSheets : NSObject, NSOutlineViewDataSource, NSOutlineViewDelegate {
     }
 
     @IBAction func takeDestinationFromOutline(_: AnyObject) {
-        let outlineItem = outlineView.itemAtRow(outlineView.selectedRow) as! PDFOutline
-        sheetView.goToDestination(outlineItem.destination())
+        if let outlineItem = outlineView.itemAtRow(outlineView.selectedRow) as? PDFOutline {
+            sheetView.goToDestination(outlineItem.destination())
+        }
     }
 
     func pageChanged() {
@@ -148,4 +154,83 @@ class OctSheets : NSObject, NSOutlineViewDataSource, NSOutlineViewDelegate {
             outlineView.scrollRowToVisible(closestRow)
         }
     }
+
+    var lastFound : PDFSelection?
+    dynamic var found = [PDFSelection]()
+    dynamic var findCaseInsensitive : Bool = true { didSet { updateSearch() } }
+    dynamic var searchString : String = "" { didSet { updateSearch() } }
+
+    override func validateMenuItem(menuItem: NSMenuItem) -> Bool {
+        if menuItem.tag == 0 {
+            if findCaseInsensitive {
+                menuItem.state = NSOnState
+            } else {
+                menuItem.state = NSOffState
+            }
+        }
+        return true
+    }
+
+    @IBAction func toggleCaseInsensitive(_: AnyObject) {
+        findCaseInsensitive = !findCaseInsensitive
+    }
+    
+    func updateSearch() {
+        guard let doc = sheetView.document() else { return }
+
+        if doc.isFinding() {
+            doc.cancelFindString()
+        }
+        found       = []
+        lastFound   = nil
+        sheetView.setHighlightedSelections(nil)
+
+        if searchString.lengthOfBytesUsingEncoding(NSUTF8StringEncoding) > 1 {
+            doc.findString(searchString, withOptions: findCaseInsensitive ? 1 : 0)
+        }
+    }
+
+    override func didMatchString(instance: PDFSelection!) {
+        instance.setColor(NSColor.yellowColor())
+        found.append(instance)
+        sheetView.setHighlightedSelections(found)
+    }
+
+    @IBAction func findAction(sender: AnyObject) {
+        switch sender.tag?() ?? 0 {
+        case 2:
+            guard found.count > 0 else { break }
+            if let last = lastFound, let lastIndex = found.indexOf(last)
+                where lastIndex+1 < found.count
+            {
+                lastFound = found[lastIndex+1]
+            } else {
+                lastFound = found.first
+            }
+            let selection = lastFound?.copy() as! PDFSelection
+            selection.setColor(nil)
+            sheetView.setCurrentSelection(selection, animate: true)
+            sheetView.scrollSelectionToVisible(self)
+        case 3:
+            guard found.count > 0 else { break }
+            if let last = lastFound, let lastIndex = found.indexOf(last)
+                where lastIndex > 0
+            {
+                lastFound = found[lastIndex-1]
+            } else {
+                lastFound = found.last
+            }
+            let selection = lastFound?.copy() as! PDFSelection
+            selection.setColor(nil)
+            sheetView.setCurrentSelection(selection, animate: true)
+            sheetView.scrollSelectionToVisible(self)
+        case 7:
+            if let sel = sheetView.currentSelection() {
+                searchString = sel.string()
+                lastFound = sel
+            }
+        default: break
+        }
+    }
+
 }
