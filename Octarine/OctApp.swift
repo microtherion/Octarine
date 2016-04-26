@@ -12,6 +12,17 @@ import Quartz
 let OCTOPART_API_KEY = "d0347dc3"
 let OctarineSession = NSURLSession(configuration:NSURLSessionConfiguration.defaultSessionConfiguration())
 
+
+class NSTempURL {
+    let url : NSURL
+    init() {
+        let tempRoot    = NSURL(fileURLWithPath: NSTemporaryDirectory(), isDirectory: true)
+        url             = tempRoot.URLByAppendingPathComponent(NSProcessInfo.processInfo().globallyUniqueString)
+        try! NSFileManager.defaultManager().createDirectoryAtURL(url, withIntermediateDirectories: false, attributes: nil)
+    }
+}
+let OctTemp = NSTempURL()
+
 @objc class HasSheetsTransformer : NSValueTransformer {
     override class func allowsReverseTransformation() -> Bool {
         return false

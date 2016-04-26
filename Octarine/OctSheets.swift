@@ -9,18 +9,20 @@
 import AppKit
 import Quartz
 
-class OctSheets : NSObject, NSOutlineViewDataSource, NSSearchFieldDelegate {
+class OctSheets : NSObject, NSOutlineViewDataSource, NSSearchFieldDelegate, NSSharingServicePickerDelegate {
     @IBOutlet weak var sheetView : PDFView!
     @IBOutlet weak var sheetStack : NSStackView!
     @IBOutlet weak var thumbnailView : PDFThumbnailView!
     @IBOutlet weak var outlineScroller : NSScrollView!
     @IBOutlet weak var outlineView: NSOutlineView!
     @IBOutlet weak var octApp : OctApp!
+    @IBOutlet weak var sharingButton: NSButton!
 
     var sheetOutline : PDFOutline! = nil
     var pageChangedObserver : AnyObject?
 
     override func awakeFromNib() {
+        sharingButton.sendActionOn(Int(NSEventMask.LeftMouseDownMask.rawValue))
         self.sheetStack.setVisibilityPriority(NSStackViewVisibilityPriorityNotVisible,
                                               forView: self.thumbnailView)
         pageChangedObserver = NSNotificationCenter.defaultCenter().addObserverForName(PDFViewPageChangedNotification, object: sheetView, queue: nil) { _ in
@@ -238,4 +240,44 @@ class OctSheets : NSObject, NSOutlineViewDataSource, NSSearchFieldDelegate {
         }
     }
 
+    @IBAction func sheetShareMenu(_: AnyObject) {
+        var items = [AnyObject]()
+        if dataSheetSelection.count == 1 {
+            if let doc = sheetView.document() {
+                let docURL = NSURL(string: dataSheets[dataSheetSelection.firstIndex])!
+                let tempURL = OctTemp.url.URLByAppendingPathComponent(docURL.lastPathComponent!)
+                doc.dataRepresentation().writeToURL(tempURL, atomically: true)
+                items.append(docURL)
+                items.append(tempURL)
+            }
+        }
+        let servicePicker = NSSharingServicePicker(items:items)
+        servicePicker.delegate    = self
+
+        servicePicker.showRelativeToRect(sharingButton.bounds, ofView: sharingButton, preferredEdge: NSRectEdge.MinY)
+    }
+
+    func sharingServicePicker(sharingServicePicker: NSSharingServicePicker, sharingServicesForItems items: [AnyObject], proposedSharingServices proposedServices: [NSSharingService]) -> [NSSharingService] {
+        var services = proposedServices
+        // Also bridge to URL-only services
+        let urlOnly  = [items[0]]
+        for extraService in NSSharingService.sharingServicesForItems(urlOnly)
+            where !proposedServices.contains(extraService)
+        {
+            services.append(NSSharingService(title: extraService.title,
+                image: extraService.image, alternateImage: extraService.alternateImage, handler: {
+                    extraService.performWithItems(urlOnly)
+            }))
+        }
+        let workspace = NSWorkspace.sharedWorkspace()
+        if let pdfAppURL = workspace.URLForApplicationToOpenURL(items[1] as! NSURL) {
+            let icon = workspace.iconForFile(pdfAppURL.path!)
+            services.append(NSSharingService(title: (pdfAppURL.URLByDeletingPathExtension?.lastPathComponent)!,
+                image: icon, alternateImage:  nil, handler: {
+                workspace.openURL(items[1] as! NSURL)
+            }))
+        }
+
+        return services
+    }
 }
