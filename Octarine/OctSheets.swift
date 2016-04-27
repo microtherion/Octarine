@@ -9,6 +9,28 @@
 import AppKit
 import Quartz
 
+extension PDFDocument {
+    func establishTitle(url: NSURL) {
+        var attr = documentAttributes()
+        guard nil == attr[PDFDocumentTitleAttribute] as? String else { return }
+        let outline = outlineRoot()
+        if let outlineTitle = outline?.childAtIndex(0)?.label() {
+            attr[PDFDocumentTitleAttribute] = outlineTitle
+        } else {
+            attr[PDFDocumentTitleAttribute] = url.URLByDeletingPathExtension?.lastPathComponent
+        }
+        setDocumentAttributes(attr)
+    }
+
+    func title() -> String! {
+        return documentAttributes()[PDFDocumentTitleAttribute] as! String
+    }
+
+    func desc() -> String {
+        return "\(title()) [\(pageCount()) pages]"
+    }
+}
+
 class OctSheets : NSObject, NSOutlineViewDataSource, NSSearchFieldDelegate, NSSharingServicePickerDelegate {
     @IBOutlet weak var sheetView : PDFView!
     @IBOutlet weak var sheetStack : NSStackView!
@@ -17,6 +39,7 @@ class OctSheets : NSObject, NSOutlineViewDataSource, NSSearchFieldDelegate, NSSh
     @IBOutlet weak var outlineView: NSOutlineView!
     @IBOutlet weak var octApp : OctApp!
     @IBOutlet weak var sharingButton: NSButton!
+    @IBOutlet weak var sheetSelection: NSPopUpButton!
 
     var sheetOutline : PDFOutline! = nil
     var pageChangedObserver : AnyObject?
@@ -55,36 +78,59 @@ class OctSheets : NSObject, NSOutlineViewDataSource, NSSearchFieldDelegate, NSSh
         }
     }
 
-    dynamic var dataSheets = [String]()
-    dynamic var dataSheetSelection = NSIndexSet() {
-        didSet {
-            if dataSheetSelection.count == 1 {
-                if let url = NSURL(string: dataSheets[dataSheetSelection.firstIndex]) {
-                    let task = OctarineSession.dataTaskWithURL(url) { (data: NSData?, response: NSURLResponse?, error: NSError?) in
-                        dispatch_async(dispatch_get_main_queue(), {
-                            let doc = PDFDocument(data: data)
+    dynamic var hideSelectionMenu : Bool = true
+    dynamic var dataSheets        = [String]() { didSet { loadDataSheets() } }
+    dynamic var dataSheetDocs     = [PDFDocument]()
+
+    var dataSheetTasks            = [NSURLSessionTask]()
+    func loadDataSheets() {
+        dataSheetDocs       = []
+        dataSheetSelection  = 0
+        hideSelectionMenu   = true
+        octApp.startingRequest()
+        for sheet in dataSheets {
+            if let url = NSURL(string: sheet) {
+                var task : NSURLSessionTask? = nil
+                task = OctarineSession.dataTaskWithURL(url) { (data: NSData?, _: NSURLResponse?, error: NSError?) in
+                    let doc = PDFDocument(data: data)
+                    doc.establishTitle(url)
+                    dispatch_async(dispatch_get_main_queue()) {
+                        self.dataSheetDocs.append(doc)
+                        self.hideSelectionMenu = self.dataSheetDocs.count < 2
+                        self.dataSheetTasks = self.dataSheetTasks.filter({ $0 != task })
+                        if self.dataSheetTasks.count == 0 {
                             self.octApp.endingRequest()
-
-                            self.sheetOutline   = nil
-                            self.found          = []
-                            self.lastFound      = nil
-
-                            doc.setDelegate(self)
-                            self.sheetView.setDocument(doc)
-                            self.sheetOutline    = doc.outlineRoot()
-                            if self.sheetOutline != nil {
-                                // We want the outline to be non-trivial. Just a title won't do
-                                if self.sheetOutline.numberOfChildren() == 0 {
-                                    self.sheetOutline = nil
-                                }
-                            }
-                            self.updateSidebar()
-                        })
+                            self.dataSheetSelection  = 0
+                        }
                     }
-                    octApp.startingRequest()
-                    task.resume()
                 }
+                dataSheetTasks.append(task!)
+                task!.resume()
             }
+        }
+    }
+
+    dynamic var dataSheetSelection = 0 {
+        didSet {
+            dispatch_async(dispatch_get_main_queue(), {
+                guard !self.dataSheetDocs.isEmpty else { return }
+                let doc = self.dataSheetDocs[self.dataSheetSelection]
+
+                self.sheetOutline   = nil
+                self.found          = []
+                self.lastFound      = nil
+
+                doc.setDelegate(self)
+                self.sheetView.setDocument(doc)
+                self.sheetOutline    = doc.outlineRoot()
+                if self.sheetOutline != nil {
+                    // We want the outline to be non-trivial. Just a title won't do
+                    if self.sheetOutline.numberOfChildren() == 0 {
+                        self.sheetOutline = nil
+                    }
+                }
+                self.updateSidebar()
+            })
         }
     }
 
@@ -242,14 +288,12 @@ class OctSheets : NSObject, NSOutlineViewDataSource, NSSearchFieldDelegate, NSSh
 
     @IBAction func sheetShareMenu(_: AnyObject) {
         var items = [AnyObject]()
-        if dataSheetSelection.count == 1 {
-            if let doc = sheetView.document() {
-                let docURL = NSURL(string: dataSheets[dataSheetSelection.firstIndex])!
-                let tempURL = OctTemp.url.URLByAppendingPathComponent(docURL.lastPathComponent!)
-                doc.dataRepresentation().writeToURL(tempURL, atomically: true)
-                items.append(docURL)
-                items.append(tempURL)
-            }
+        if let doc = sheetView.document() {
+            let docURL = dataSheetDocs[dataSheetSelection].documentURL()
+            let tempURL = OctTemp.url.URLByAppendingPathComponent(docURL.lastPathComponent!)
+            doc.dataRepresentation().writeToURL(tempURL, atomically: true)
+            items.append(docURL)
+            items.append(tempURL)
         }
         let servicePicker = NSSharingServicePicker(items:items)
         servicePicker.delegate    = self

@@ -397,7 +397,7 @@ class OctTree : NSObject, NSOutlineViewDataSource, NSOutlineViewDelegate {
                 if newResults.count == 1 {
                     self.details.componentSelection = NSIndexSet(index: 0)
                     self.sheets.dataSheets = newResults[0]["sheets"] as! [String]
-                    self.sheets.dataSheetSelection = NSIndexSet(index: 0)
+                    self.sheets.dataSheetSelection = 0
                 }
             })
         }
