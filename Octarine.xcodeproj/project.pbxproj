@@ -12,6 +12,7 @@
 		95520ACA1CC4E20800266FB7 /* OctSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95520AC91CC4E20800266FB7 /* OctSearch.swift */; };
 		95520ACC1CC4E2A600266FB7 /* OctDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95520ACB1CC4E2A600266FB7 /* OctDetails.swift */; };
 		95520ACE1CC4E34000266FB7 /* OctSheets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95520ACD1CC4E34000266FB7 /* OctSheets.swift */; };
+		955BDD3D1CD3B3B80055E553 /* OctCustomPart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 955BDD3C1CD3B3B80055E553 /* OctCustomPart.swift */; };
 		9575B9AE1CCC69C700DAEF11 /* Help.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 9575B9AD1CCC69C700DAEF11 /* Help.pdf */; };
 		9575B9B01CCC6A1200DAEF11 /* Help.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9575B9AF1CCC6A1200DAEF11 /* Help.xib */; };
 		9575B9B21CCC6C2C00DAEF11 /* OctHelp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9575B9B11CCC6C2C00DAEF11 /* OctHelp.swift */; };
@@ -49,6 +50,7 @@
 		95520AC91CC4E20800266FB7 /* OctSearch.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OctSearch.swift; sourceTree = "<group>"; };
 		95520ACB1CC4E2A600266FB7 /* OctDetails.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OctDetails.swift; sourceTree = "<group>"; };
 		95520ACD1CC4E34000266FB7 /* OctSheets.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OctSheets.swift; sourceTree = "<group>"; };
+		955BDD3C1CD3B3B80055E553 /* OctCustomPart.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OctCustomPart.swift; sourceTree = "<group>"; };
 		9575B9AD1CCC69C700DAEF11 /* Help.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = Help.pdf; path = Documentation/Help.pdf; sourceTree = SOURCE_ROOT; };
 		9575B9AF1CCC6A1200DAEF11 /* Help.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Help.xib; sourceTree = "<group>"; };
 		9575B9B11CCC6C2C00DAEF11 /* OctHelp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OctHelp.swift; sourceTree = "<group>"; };
@@ -152,6 +154,7 @@
 				95520AC51CC4263800266FB7 /* OctItem.swift */,
 				95B1494A1CC73423006BEA63 /* OctTree.swift */,
 				9575B9B11CCC6C2C00DAEF11 /* OctHelp.swift */,
+				955BDD3C1CD3B3B80055E553 /* OctCustomPart.swift */,
 				9566EC071CC91EFA0052529D /* Resources */,
 			);
 			path = Octarine;
@@ -314,6 +317,7 @@
 				95520ACE1CC4E34000266FB7 /* OctSheets.swift in Sources */,
 				95520ACC1CC4E2A600266FB7 /* OctDetails.swift in Sources */,
 				95E5B3301C8BB2F20099F479 /* OctApp.swift in Sources */,
+				955BDD3D1CD3B3B80055E553 /* OctCustomPart.swift in Sources */,
 				95B1494B1CC73423006BEA63 /* OctTree.swift in Sources */,
 				9575B9B21CCC6C2C00DAEF11 /* OctHelp.swift in Sources */,
 				95520ACA1CC4E20800266FB7 /* OctSearch.swift in Sources */,
