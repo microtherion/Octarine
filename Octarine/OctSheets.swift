@@ -64,10 +64,10 @@ class OctSheets : NSObject, NSOutlineViewDataSource, NSSearchFieldDelegate, NSSh
     func updateSidebar() {
         if showSidebar && sheetOutline != nil {
             sheetStack.setVisibilityPriority(NSStackViewVisibilityPriorityMustHold, forView: outlineScroller)
-            outlineView.reloadData()
         } else {
             sheetStack.setVisibilityPriority(NSStackViewVisibilityPriorityNotVisible, forView: outlineScroller)
         }
+        outlineView.reloadData()
         if showSidebar && sheetOutline == nil {
             sheetStack.setVisibilityPriority(NSStackViewVisibilityPriorityMustHold, forView: thumbnailView)
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(NSEC_PER_SEC)), dispatch_get_main_queue(), {
