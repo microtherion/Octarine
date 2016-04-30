@@ -9,8 +9,6 @@
 import AppKit
 
 class OctURLTextField : NSTextField {
-    @IBOutlet weak var customPart : OctCustomPart!
-    
     override func awakeFromNib() {
         registerForDraggedTypes(["public.url"])
     }
@@ -22,7 +20,14 @@ class OctURLTextField : NSTextField {
     override func performDragOperation(sender: NSDraggingInfo) -> Bool {
         if let urls = sender.draggingPasteboard().readObjectsForClasses([NSURL.self], options: nil) as? [NSURL] {
             let url = urls[0].filePathURL ?? urls[0]
-            customPart.path = url.absoluteString
+            stringValue = url.absoluteString
+
+            if let bind = infoForBinding("value") {
+                let boundObj    = bind[NSObservedObjectKey] as! NSObject
+                let boundPath   = bind[NSObservedKeyPathKey] as! String
+
+                boundObj.setValue(stringValue, forKeyPath: boundPath)
+            }
             selectText(self)
 
             return true;
