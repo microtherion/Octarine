@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		952477F61CD4BABC00E8D65B /* OctURLTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 952477F51CD4BABC00E8D65B /* OctURLTextField.swift */; };
 		95520AC61CC4263800266FB7 /* OctItem+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95520AC41CC4263800266FB7 /* OctItem+CoreDataProperties.swift */; };
 		95520AC71CC4263800266FB7 /* OctItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95520AC51CC4263800266FB7 /* OctItem.swift */; };
 		95520ACA1CC4E20800266FB7 /* OctSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95520AC91CC4E20800266FB7 /* OctSearch.swift */; };
@@ -45,6 +46,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		952477F51CD4BABC00E8D65B /* OctURLTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OctURLTextField.swift; sourceTree = "<group>"; };
 		95520AC41CC4263800266FB7 /* OctItem+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "OctItem+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		95520AC51CC4263800266FB7 /* OctItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OctItem.swift; sourceTree = "<group>"; };
 		95520AC91CC4E20800266FB7 /* OctSearch.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OctSearch.swift; sourceTree = "<group>"; };
@@ -155,6 +157,7 @@
 				95B1494A1CC73423006BEA63 /* OctTree.swift */,
 				9575B9B11CCC6C2C00DAEF11 /* OctHelp.swift */,
 				955BDD3C1CD3B3B80055E553 /* OctCustomPart.swift */,
+				952477F51CD4BABC00E8D65B /* OctURLTextField.swift */,
 				9566EC071CC91EFA0052529D /* Resources */,
 			);
 			path = Octarine;
@@ -321,6 +324,7 @@
 				95B1494B1CC73423006BEA63 /* OctTree.swift in Sources */,
 				9575B9B21CCC6C2C00DAEF11 /* OctHelp.swift in Sources */,
 				95520ACA1CC4E20800266FB7 /* OctSearch.swift in Sources */,
+				952477F61CD4BABC00E8D65B /* OctURLTextField.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

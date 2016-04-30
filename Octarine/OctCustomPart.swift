@@ -8,23 +8,30 @@
 
 import AppKit
 
-class OctCustomPart : NSObject {
+class OctCustomPart : NSObject, NSTextFieldDelegate {
     @IBOutlet weak var sheet : NSWindow!
     @IBOutlet weak var mainWindow: NSWindow!
+    @IBOutlet weak var partTree: OctTree!
 
     dynamic var name        = "New Part"
     dynamic var desc        = ""
-    dynamic var url         : NSURL?
+    dynamic var path        = "" { didSet { validatePart(self) } }
     dynamic var validPart   = false
 
     @IBAction func beginPartSheet(_: AnyObject) {
         mainWindow.beginSheet(sheet) { (response: NSModalResponse) in
-            print(response)
+            if (response > 0) {
+                self.partTree.newCustomPart(self.name, desc: self.desc, url: self.path)
+            }
         }
     }
 
+    override func controlTextDidChange(obj: NSNotification) {
+        print(obj)
+    }
+
     @IBAction func validatePart(_: AnyObject) {
-        validPart = url != nil && name != ""
+        validPart = NSURL(string: path) != nil && name != ""
     }
 
     @IBAction func add(_: AnyObject) {

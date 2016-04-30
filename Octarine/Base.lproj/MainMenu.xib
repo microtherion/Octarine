@@ -62,6 +62,7 @@
         <customObject id="pLF-ZX-5Ys" customClass="OctCustomPart" customModule="Octarine" customModuleProvider="target">
             <connections>
                 <outlet property="mainWindow" destination="QvC-M9-y7g" id="O5s-Gd-FST"/>
+                <outlet property="partTree" destination="O3g-iW-BPy" id="P1I-HO-AFM"/>
                 <outlet property="sheet" destination="hr6-yv-g7I" id="jiI-K1-gvd"/>
             </connections>
         </customObject>
@@ -932,7 +933,7 @@ CA
                                                                             <subviews>
                                                                                 <button horizontalHuggingPriority="750" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="s0k-83-QQf">
                                                                                     <rect key="frame" x="-4" y="-2" width="29" height="26"/>
-                                                                                    <buttonCell key="cell" type="disclosure" bezelStyle="roundedDisclosure" image="4A109D04-DCB5-467D-9150-DE432B0B77DE" imagePosition="only" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Ljf-uA-tJW">
+                                                                                    <buttonCell key="cell" type="disclosure" bezelStyle="roundedDisclosure" image="72EAE214-EF48-4D68-B276-04438024DB25" imagePosition="only" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Ljf-uA-tJW">
                                                                                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES" changeBackground="YES" changeGray="YES"/>
                                                                                         <font key="font" metaFont="system"/>
                                                                                     </buttonCell>
@@ -1177,25 +1178,26 @@ CA
                             <rect key="frame" x="1" y="1" width="480" height="59"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
-                                <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="uv9-Yl-ZEq">
-                                    <rect key="frame" x="407" y="13" width="59" height="32"/>
-                                    <buttonCell key="cell" type="push" title="File…" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="P62-7B-PgR">
-                                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                        <font key="font" metaFont="system"/>
-                                    </buttonCell>
-                                </button>
-                                <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Lb7-1C-GFO">
-                                    <rect key="frame" x="20" y="20" width="385" height="22"/>
-                                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" placeholderString="Data Sheet (Mandatory)" drawsBackground="YES" usesSingleLineMode="YES" id="7y3-25-dHU">
-                                        <font key="font" metaFont="system"/>
+                                <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Lb7-1C-GFO" customClass="OctURLTextField" customModule="Octarine" customModuleProvider="target">
+                                    <rect key="frame" x="20" y="32" width="440" height="19"/>
+                                    <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" placeholderString="Data Sheet (Mandatory)" drawsBackground="YES" usesSingleLineMode="YES" id="7y3-25-dHU">
+                                        <font key="font" metaFont="smallSystem"/>
                                         <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
                                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                     </textFieldCell>
                                     <connections>
                                         <action selector="validatePart:" target="pLF-ZX-5Ys" id="78j-JC-zSF"/>
-                                        <binding destination="pLF-ZX-5Ys" name="value" keyPath="url" id="DkI-2q-js6"/>
+                                        <binding destination="pLF-ZX-5Ys" name="value" keyPath="path" id="fUV-1Q-4dF"/>
+                                        <outlet property="customPart" destination="pLF-ZX-5Ys" id="BuZ-7e-k5x"/>
                                     </connections>
                                 </textField>
+                                <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="uv9-Yl-ZEq">
+                                    <rect key="frame" x="408" y="3" width="57" height="28"/>
+                                    <buttonCell key="cell" type="push" title="File…" bezelStyle="rounded" alignment="center" controlSize="small" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="P62-7B-PgR">
+                                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                        <font key="font" metaFont="smallSystem"/>
+                                    </buttonCell>
+                                </button>
                             </subviews>
                         </view>
                         <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
@@ -1238,7 +1240,7 @@ DQ
         </window>
     </objects>
     <resources>
-        <image name="4A109D04-DCB5-467D-9150-DE432B0B77DE" width="1" height="1">
+        <image name="72EAE214-EF48-4D68-B276-04438024DB25" width="1" height="1">
             <mutableData key="keyedArchiveRepresentation">
 YnBsaXN0MDDUAQIDBAUGPT5YJHZlcnNpb25YJG9iamVjdHNZJGFyY2hpdmVyVCR0b3ASAAGGoK4HCBMU
 GR4fIyQrLjE3OlUkbnVsbNUJCgsMDQ4PEBESVk5TU2l6ZVYkY2xhc3NcTlNJbWFnZUZsYWdzVk5TUmVw
