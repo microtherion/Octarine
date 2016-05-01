@@ -296,7 +296,7 @@ class OctTree : NSObject, NSOutlineViewDataSource, NSOutlineViewDelegate {
                      proposedItem item: AnyObject?, proposedChildIndex index: Int) -> NSDragOperation
     {
         guard info.draggingPasteboard().availableTypeFromArray([kOctPasteboardType]) != nil else {
-            return .None // Only allow reordering drags
+            return .None 
         }
         guard let draggingSource = info.draggingSource() as? NSOutlineView
             where draggingSource == outlineView else

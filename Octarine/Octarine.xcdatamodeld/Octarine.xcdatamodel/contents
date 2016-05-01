@@ -1,14 +1,23 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="10169.1" systemVersion="15F22" minimumToolsVersion="Automatic">
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="10169.1" systemVersion="15F31" minimumToolsVersion="Automatic">
+    <entity name="OctDataSheet" syncable="YES">
+        <attribute name="url" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="part" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="OctItem" inverseName="sheets" inverseEntity="OctItem" syncable="YES"/>
+    </entity>
     <entity name="OctItem" representedClassName=".OctItem" syncable="YES">
         <attribute name="desc" attributeType="String" syncable="YES"/>
         <attribute name="ident" attributeType="String" indexed="YES" syncable="YES"/>
         <attribute name="isPart" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="manu_url" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="manufacturer" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="name" attributeType="String" syncable="YES"/>
+        <attribute name="part_url" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="children" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="OctItem" inverseName="parents" inverseEntity="OctItem" syncable="YES"/>
         <relationship name="parents" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="OctItem" inverseName="children" inverseEntity="OctItem" syncable="YES"/>
+        <relationship name="sheets" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="OctDataSheet" inverseName="part" inverseEntity="OctDataSheet" syncable="YES"/>
     </entity>
     <elements>
-        <element name="OctItem" positionX="-63" positionY="80" width="128" height="133"/>
+        <element name="OctDataSheet" positionX="331" positionY="171" width="128" height="73"/>
+        <element name="OctItem" positionX="-63" positionY="80" width="128" height="195"/>
     </elements>
 </model>

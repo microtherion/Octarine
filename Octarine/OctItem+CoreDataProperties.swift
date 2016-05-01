@@ -17,6 +17,10 @@ extension OctItem {
     @NSManaged var name: String
     @NSManaged var ident: String
     @NSManaged var desc: String
+    @NSManaged var part_url: String?
+    @NSManaged var manufacturer: String?
+    @NSManaged var manu_url: String?
     @NSManaged var parents: NSSet
     @NSManaged var children: NSOrderedSet?
+    @NSManaged var sheets: NSOrderedSet?
 }
