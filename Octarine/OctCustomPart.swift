@@ -57,6 +57,23 @@ class OctCustomPart : NSObject, NSTableViewDataSource {
         mainWindow.endSheet(sheet)
     }
 
+    @IBAction func addDataSheetFile(_: AnyObject) {
+        let openPanel = NSOpenPanel()
+        openPanel.canChooseFiles            = true
+        openPanel.canChooseDirectories      = false
+        openPanel.allowsMultipleSelection   = true
+        openPanel.allowedFileTypes          = [kUTTypePDF as String]
+        openPanel.beginSheetModalForWindow(sheet) { (response: Int) in
+            if response == NSFileHandlingPanelOKButton {
+                var at = self.dataSheets.selectedRow+1
+                for url in openPanel.URLs {
+                    self.sheets.insert(url.filePathURL!.absoluteString, atIndex: at)
+                    at += 1
+                }
+                self.dataSheets.reloadData()
+            }
+        }
+    }
     func deleteSelectedSheets() {
         for row in dataSheets.selectedRowIndexes.reverse() {
             sheets.removeAtIndex(row)

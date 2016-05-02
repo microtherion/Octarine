@@ -938,7 +938,7 @@ CA
                                                                             <subviews>
                                                                                 <button horizontalHuggingPriority="750" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="s0k-83-QQf">
                                                                                     <rect key="frame" x="-4" y="-2" width="29" height="26"/>
-                                                                                    <buttonCell key="cell" type="disclosure" bezelStyle="roundedDisclosure" image="17128D4E-018F-4D4F-B04A-2651A5AE9050" imagePosition="only" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Ljf-uA-tJW">
+                                                                                    <buttonCell key="cell" type="disclosure" bezelStyle="roundedDisclosure" image="A5BAC62B-4854-4362-8744-D5781F8C35CC" imagePosition="only" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Ljf-uA-tJW">
                                                                                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES" changeBackground="YES" changeGray="YES"/>
                                                                                         <font key="font" metaFont="system"/>
                                                                                     </buttonCell>
@@ -1290,6 +1290,9 @@ CA
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
+                        <connections>
+                            <action selector="addDataSheetFile:" target="pLF-ZX-5Ys" id="yJR-Ky-r6o"/>
+                        </connections>
                     </button>
                     <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="I8n-ay-uib" userLabel="Delete URLs">
                         <rect key="frame" x="240" y="60" width="220" height="21"/>
@@ -1300,6 +1303,9 @@ CA
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
+                        <connections>
+                            <action selector="delete:" target="hSY-qK-vao" id="pqV-8V-gnF"/>
+                        </connections>
                     </button>
                     <button verticalHuggingPriority="750" tag="-1001" translatesAutoresizingMaskIntoConstraints="NO" id="xqW-Xi-3al">
                         <rect key="frame" x="14" y="13" width="82" height="32"/>
@@ -1379,7 +1385,7 @@ DQ
         </window>
     </objects>
     <resources>
-        <image name="17128D4E-018F-4D4F-B04A-2651A5AE9050" width="1" height="1">
+        <image name="A5BAC62B-4854-4362-8744-D5781F8C35CC" width="1" height="1">
             <mutableData key="keyedArchiveRepresentation">
 YnBsaXN0MDDUAQIDBAUGPT5YJHZlcnNpb25YJG9iamVjdHNZJGFyY2hpdmVyVCR0b3ASAAGGoK4HCBMU
 GR4fIyQrLjE3OlUkbnVsbNUJCgsMDQ4PEBESVk5TU2l6ZVYkY2xhc3NcTlNJbWFnZUZsYWdzVk5TUmVw
