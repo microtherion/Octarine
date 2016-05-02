@@ -8,16 +8,24 @@
 
 import AppKit
 
-class OctSearch : NSObject, NSTableViewDataSource {
+class OctSearch : NSObject, NSTableViewDataSource, NSTableViewDelegate {
     @IBOutlet weak var resultTable : NSTableView!
     @IBOutlet weak var octApp : OctApp!
+    @IBOutlet weak var sheets: OctSheets!
 
     override func awakeFromNib() {
         resultTable.setDraggingSourceOperationMask(.Copy, forLocal: true)
         resultTable.setDraggingSourceOperationMask(.Copy, forLocal: false)
     }
 
-    dynamic var searchResults = [[String: AnyObject]]()
+    dynamic var searchResults = [[String: AnyObject]]() {
+        didSet {
+            if searchResults.count == 1 {
+                resultTable.selectRowIndexes(NSIndexSet(index: 0), byExtendingSelection: false)
+                updateDataSheets()
+            }
+        }
+    }
 
     class func partFromJSON(item: AnyObject?) -> [String: AnyObject] {
         let item = item as! [String: AnyObject]
@@ -33,13 +41,13 @@ class OctSearch : NSObject, NSTableViewDataSource {
         }
 
         let newItem : [String: AnyObject] = [
-            "uid":  stringRep(item["uid"]),
-            "part": stringRep(item["mpn"]),
-            "manu": stringRep(manu["name"]),
-            "desc": stringRep(item["short_description"]),
-            "murl": stringRep(manu["homepage_url"]),
-            "purl": stringRep(item["octopart_url"]),
-            "sheets": datasheets
+            "ident":    stringRep(item["uid"]),
+            "name":     stringRep(item["mpn"]),
+            "manu":     stringRep(manu["name"]),
+            "desc":     stringRep(item["short_description"]),
+            "murl":     stringRep(manu["homepage_url"]),
+            "purl":     stringRep(item["octopart_url"]),
+            "sheets":   datasheets
         ]
 
         return newItem
@@ -76,13 +84,13 @@ class OctSearch : NSObject, NSTableViewDataSource {
     func tableView(tableView: NSTableView, writeRowsWithIndexes rowIndexes: NSIndexSet, toPasteboard pboard: NSPasteboard) -> Bool {
         let serialized = rowIndexes.map({ (index: Int) -> [String : AnyObject] in
             let part = searchResults[index]
-            return ["is_part": true, "ident": part["uid"]!, "name": part["part"]!, "desc": part["desc"]!]
+            return ["is_part": true, "ident": part["ident"]!, "name": part["name"]!, "desc": part["desc"]!]
         })
         let urls = rowIndexes.map({ (index: Int) -> NSPasteboardItem in
             let part = searchResults[index]
             let pbitem = NSPasteboardItem()
             pbitem.setString(part["purl"] as? String, forType: "public.url")
-            pbitem.setString(part["part"] as? String, forType: "public.url-name")
+            pbitem.setString(part["name"] as? String, forType: "public.url-name")
             return pbitem
         })
         pboard.declareTypes([kOctPasteboardType], owner: self)
@@ -90,5 +98,21 @@ class OctSearch : NSObject, NSTableViewDataSource {
         pboard.writeObjects(urls)
 
         return true
+    }
+
+    func updateDataSheets() {
+        if resultTable.selectedRowIndexes.count == 1 {
+            let newSheets = searchResults[resultTable.selectedRow]["sheets"] as? [String] ?? []
+            sheets.dataSheets = newSheets
+            if newSheets.count > 0 {
+                sheets.dataSheetSelection = 0
+            }
+        } else {
+            sheets.dataSheets = []
+        }
+    }
+
+    func tableViewSelectionDidChange(_: NSNotification) {
+        updateDataSheets()
     }
 }

@@ -34,6 +34,7 @@
             <connections>
                 <outlet property="octApp" destination="Voe-Tx-rLC" id="cnd-IL-8zA"/>
                 <outlet property="resultTable" destination="xS5-tO-iQe" id="4za-on-Sbl"/>
+                <outlet property="sheets" destination="VVP-ho-yb1" id="0Gi-If-X42"/>
             </connections>
         </customObject>
         <customObject id="VVP-ho-yb1" customClass="OctSheets" customModule="Octarine" customModuleProvider="target">
@@ -782,7 +783,7 @@ CA
                                                                                 </textFieldCell>
                                                                                 <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                                                 <connections>
-                                                                                    <binding destination="7hJ-8R-Ym9" name="value" keyPath="arrangedObjects.part" id="Qzq-m9-xBu">
+                                                                                    <binding destination="7hJ-8R-Ym9" name="value" keyPath="arrangedObjects.name" id="3qL-Pn-tY3">
                                                                                         <dictionary key="options">
                                                                                             <bool key="NSConditionallySetsEditable" value="YES"/>
                                                                                             <string key="NSValueTransformerName">LinkTransformer</string>
@@ -831,6 +832,7 @@ CA
                                                                         <connections>
                                                                             <action trigger="doubleAction" selector="followComponentLink:" target="Voe-Tx-rLC" id="ot9-cR-WFf"/>
                                                                             <outlet property="dataSource" destination="uCz-kw-AJg" id="JrB-QJ-C3E"/>
+                                                                            <outlet property="delegate" destination="uCz-kw-AJg" id="pao-nz-sNb"/>
                                                                         </connections>
                                                                     </tableView>
                                                                 </subviews>
@@ -936,7 +938,7 @@ CA
                                                                             <subviews>
                                                                                 <button horizontalHuggingPriority="750" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="s0k-83-QQf">
                                                                                     <rect key="frame" x="-4" y="-2" width="29" height="26"/>
-                                                                                    <buttonCell key="cell" type="disclosure" bezelStyle="roundedDisclosure" image="A64767C2-7DA1-4057-9C78-0DBBF451BB92" imagePosition="only" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Ljf-uA-tJW">
+                                                                                    <buttonCell key="cell" type="disclosure" bezelStyle="roundedDisclosure" image="17128D4E-018F-4D4F-B04A-2651A5AE9050" imagePosition="only" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Ljf-uA-tJW">
                                                                                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES" changeBackground="YES" changeGray="YES"/>
                                                                                         <font key="font" metaFont="system"/>
                                                                                     </buttonCell>
@@ -1377,7 +1379,7 @@ DQ
         </window>
     </objects>
     <resources>
-        <image name="A64767C2-7DA1-4057-9C78-0DBBF451BB92" width="1" height="1">
+        <image name="17128D4E-018F-4D4F-B04A-2651A5AE9050" width="1" height="1">
             <mutableData key="keyedArchiveRepresentation">
 YnBsaXN0MDDUAQIDBAUGPT5YJHZlcnNpb25YJG9iamVjdHNZJGFyY2hpdmVyVCR0b3ASAAGGoK4HCBMU
 GR4fIyQrLjE3OlUkbnVsbNUJCgsMDQ4PEBESVk5TU2l6ZVYkY2xhc3NcTlNJbWFnZUZsYWdzVk5TUmVw

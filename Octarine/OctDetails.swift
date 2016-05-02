@@ -17,7 +17,7 @@ class OctDetails : NSObject {
         didSet {
             if componentSelection.count == 1 {
                 let item = (searchController.arrangedObjects as! [[String: AnyObject]])[componentSelection.firstIndex]
-                let urlComponents = NSURLComponents(string: "https://octopart.com/api/v3/parts/"+(item["uid"] as! String))!
+                let urlComponents = NSURLComponents(string: "https://octopart.com/api/v3/parts/"+(item["ident"] as! String))!
                 urlComponents.queryItems = [
                     NSURLQueryItem(name: "apikey", value: OCTOPART_API_KEY),
                     NSURLQueryItem(name: "include[]", value: "specs"),

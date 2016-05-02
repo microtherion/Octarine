@@ -76,20 +76,43 @@ class OctItem: NSManagedObject {
         if let found = findItemByID(serialized["ident"] as! String) {
             return found
         } else if serialized["is_part"] as! Bool {
-            return createPart(serialized["name"] as! String,
-                              desc: serialized["desc"] as! String,
-                              partID: serialized["ident"] as! String)
+            let part = createPart(serialized["name"] as! String,
+                                  desc: serialized["desc"] as! String,
+                                  partID: serialized["ident"] as! String)
+            if part.isCustomPart {
+                part.part_url       = serialized["purl"] as? String
+                part.manufacturer   = serialized["manu"] as? String
+                part.manu_url       = serialized["murl"] as? String
+            }
+            if let sheets = serialized["sheets"] as? [String] {
+                part.setDataSheets(sheets)
+            }
+
+            return part
         } else {
             return createFolder(serialized["name"] as! String)
         }
     }
 
     func serialized() -> [String : AnyObject] {
-        return ["is_part": isPart, "name": name, "desc": desc, "ident": ident];
+        var result : [String : AnyObject] = ["is_part": isPart, "name": name, "desc": desc, "ident": ident]
+        result["manu"] = manufacturer
+        result["murl"] = manu_url
+        result["purl"] = part_url
+        result["sheets"] = sheets?.map(){ (sheet: AnyObject) -> String in
+            (sheet as! NSManagedObject).valueForKey("url") as! String
+        }
+
+        return result
     }
 
     dynamic var displayName : String {
         return (isPart ? "" : "📁") + name
+    }
+
+    dynamic var isCustomPart : Bool {
+        // Custom parts have UUIDs, standard parts have hex encoded 64 bit numbers
+        return ident.lengthOfBytesUsingEncoding(NSUTF8StringEncoding) > 16
     }
 
     func setDataSheets(sheets: [String]) {
