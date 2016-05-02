@@ -30,6 +30,21 @@ class OctCustomPart : NSObject, NSTableViewDataSource {
     @IBAction func beginPartSheet(_: AnyObject) {
         mainWindow.beginSheet(sheet) { (response: NSModalResponse) in
             if (response > 0) {
+                let part = OctItem.createCustomPart()
+                part.name               = self.name
+                if self.purl != "" {
+                    part.part_url       = self.purl
+                }
+                if self.manu != "" {
+                    part.manufacturer   = self.manu
+                }
+                if self.murl != "" {
+                    part.manu_url       = self.murl
+                }
+                part.desc           = self.desc
+                part.setDataSheets(self.sheets)
+
+                self.partTree.newCustomPart(part)
             }
         }
     }
@@ -134,13 +149,18 @@ class OctCustomPartSheets : NSTableView {
         (dataSource() as? OctCustomPart)?.deleteSelectedSheets()
     }
 
+    @IBAction func copy(_: AnyObject) {
+    }
+
     @IBAction func paste(_: AnyObject) {
     }
     
     override func validateUserInterfaceItem(item: NSValidatedUserInterfaceItem) -> Bool {
-        if item.action() == #selector(OctOutlineView.delete(_:)) {
+        switch item.action() {
+        case #selector(OctCustomPartSheets.delete(_:)), #selector(OctCustomPartSheets.copy(_:)):
             return selectedRowIndexes.count > 0
+        default:
+            return super.validateUserInterfaceItem(item)
         }
-        return super.validateUserInterfaceItem(item)
     }
 }

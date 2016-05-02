@@ -188,7 +188,7 @@ class OctTree : NSObject, NSOutlineViewDataSource, NSOutlineViewDelegate {
         outline.editColumn(0, row: insertAt, withEvent: nil, select: true)
     }
 
-    func newCustomPart(name: String, desc: String, url: String) {
+    func newCustomPart(part: OctItem) {
         let selectedNode = outline.itemAtRow(outline.selectedRowIndexes.firstIndex) as? OctTreeNode
         let parentItem   = selectedNode?.parent?.item ?? OctItem.rootFolder()
         let insertAt : Int
@@ -197,7 +197,6 @@ class OctTree : NSObject, NSOutlineViewDataSource, NSOutlineViewDelegate {
         } else {
             insertAt = parentItem.children?.count ?? 0
         }
-        let part       = OctItem.createPart(name, desc: desc, partID: url)
         outline.beginUpdates()
         let kids = parentItem.mutableOrderedSetValueForKey("children")
         kids.insertObject(part, atIndex: insertAt)

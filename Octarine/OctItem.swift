@@ -14,8 +14,7 @@ class OctItem: NSManagedObject {
         return (NSApp.delegate as! OctApp).managedObjectContext
     }
 
-    class func createPart(name: String, desc: String, partID: String) -> OctItem
-    {
+    class func createPart(name: String, desc: String, partID: String) -> OctItem {
         let newPart = NSEntityDescription.insertNewObjectForEntityForName("OctItem", inManagedObjectContext: managedObjectContext) as! OctItem
         newPart.isPart = true
         newPart.name   = name
@@ -25,8 +24,15 @@ class OctItem: NSManagedObject {
         return newPart
     }
 
-    class func createFolder(name: String) -> OctItem
-    {
+    class func createCustomPart() -> OctItem {
+        let newPart = NSEntityDescription.insertNewObjectForEntityForName("OctItem", inManagedObjectContext: managedObjectContext) as! OctItem
+        newPart.isPart = true
+        newPart.ident  = NSUUID().UUIDString
+
+        return newPart
+    }
+    
+    class func createFolder(name: String) -> OctItem {
         let newFolder = NSEntityDescription.insertNewObjectForEntityForName("OctItem", inManagedObjectContext: managedObjectContext) as! OctItem
         newFolder.isPart = false
         newFolder.name   = name
@@ -36,8 +42,7 @@ class OctItem: NSManagedObject {
         return newFolder
     }
 
-    class func rootFolder() -> OctItem
-    {
+    class func rootFolder() -> OctItem {
         let fetchRequest        = NSFetchRequest(entityName: "OctItem")
         fetchRequest.predicate  = NSPredicate(format: "ident == ''")
         let results             = try? managedObjectContext.executeFetchRequest(fetchRequest)
@@ -55,8 +60,7 @@ class OctItem: NSManagedObject {
         }
     }
 
-    class func findItemByID(ID: String) -> OctItem?
-    {
+    class func findItemByID(ID: String) -> OctItem? {
         let fetchRequest        = NSFetchRequest(entityName: "OctItem")
         fetchRequest.predicate  = NSPredicate(format: "ident == %@", ID)
         let results             = try? managedObjectContext.executeFetchRequest(fetchRequest)
@@ -68,8 +72,7 @@ class OctItem: NSManagedObject {
         }
     }
 
-    class func itemFromSerialized(serialized: [String: AnyObject]) -> OctItem
-    {
+    class func itemFromSerialized(serialized: [String: AnyObject]) -> OctItem {
         if let found = findItemByID(serialized["ident"] as! String) {
             return found
         } else if serialized["is_part"] as! Bool {
@@ -87,5 +90,20 @@ class OctItem: NSManagedObject {
 
     dynamic var displayName : String {
         return (isPart ? "" : "📁") + name
+    }
+
+    func setDataSheets(sheets: [String]) {
+        if sheets.count > 0 {
+            // Just delete and rebuild them all
+            let newSheets = mutableOrderedSetValueForKey("sheets")
+            newSheets.removeAllObjects()
+            for sheet in sheets {
+                let newSheet = NSEntityDescription.insertNewObjectForEntityForName("OctDataSheet", inManagedObjectContext: OctItem.managedObjectContext)
+                newSheet.setValue(sheet, forKey: "url")
+                newSheets.addObject(newSheet)
+            }
+        } else {
+            self.sheets = nil
+        }
     }
 }

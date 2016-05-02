@@ -936,7 +936,7 @@ CA
                                                                             <subviews>
                                                                                 <button horizontalHuggingPriority="750" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="s0k-83-QQf">
                                                                                     <rect key="frame" x="-4" y="-2" width="29" height="26"/>
-                                                                                    <buttonCell key="cell" type="disclosure" bezelStyle="roundedDisclosure" image="D7C3AAE9-967F-48D6-8FAD-E36DE550CCD0" imagePosition="only" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Ljf-uA-tJW">
+                                                                                    <buttonCell key="cell" type="disclosure" bezelStyle="roundedDisclosure" image="A64767C2-7DA1-4057-9C78-0DBBF451BB92" imagePosition="only" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Ljf-uA-tJW">
                                                                                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES" changeBackground="YES" changeGray="YES"/>
                                                                                         <font key="font" metaFont="system"/>
                                                                                     </buttonCell>
@@ -1132,7 +1132,7 @@ CA
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="131" y="158" width="480" height="305"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
-            <view key="contentView" id="49e-Kj-Nc2">
+            <view key="contentView" wantsLayer="YES" id="49e-Kj-Nc2">
                 <rect key="frame" x="0.0" y="0.0" width="480" height="305"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
@@ -1229,7 +1229,7 @@ CA
                         </textFieldCell>
                         <connections>
                             <binding destination="pLF-ZX-5Ys" name="value" keyPath="desc" id="Wn4-pY-lf6"/>
-                            <outlet property="nextKeyView" destination="hSY-qK-vao" id="EEr-VN-xe4"/>
+                            <outlet property="nextKeyView" destination="Mcl-eR-l9B" id="7fB-gM-8xD"/>
                         </connections>
                     </textField>
                     <scrollView autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Mcl-eR-l9B">
@@ -1238,7 +1238,7 @@ CA
                             <rect key="frame" x="1" y="0.0" width="438" height="79"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
-                                <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" headerView="PQZ-LM-fku" id="hSY-qK-vao">
+                                <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" columnReordering="NO" columnResizing="NO" autosaveColumns="NO" headerView="PQZ-LM-fku" id="hSY-qK-vao" customClass="OctCustomPartSheets" customModule="Octarine" customModuleProvider="target">
                                     <rect key="frame" x="0.0" y="0.0" width="438" height="56"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <size key="intercellSpacing" width="3" height="2"/>
@@ -1256,12 +1256,11 @@ CA
                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
-                                            <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
+                                            <tableColumnResizingMask key="resizingMask" resizeWithTable="YES"/>
                                         </tableColumn>
                                     </tableColumns>
                                     <connections>
                                         <outlet property="dataSource" destination="pLF-ZX-5Ys" id="0EH-PJ-Ap2"/>
-                                        <outlet property="nextKeyView" destination="Z0d-pM-GJI" id="OMz-CL-Dzh"/>
                                     </connections>
                                 </tableView>
                             </subviews>
@@ -1378,7 +1377,7 @@ DQ
         </window>
     </objects>
     <resources>
-        <image name="D7C3AAE9-967F-48D6-8FAD-E36DE550CCD0" width="1" height="1">
+        <image name="A64767C2-7DA1-4057-9C78-0DBBF451BB92" width="1" height="1">
             <mutableData key="keyedArchiveRepresentation">
 YnBsaXN0MDDUAQIDBAUGPT5YJHZlcnNpb25YJG9iamVjdHNZJGFyY2hpdmVyVCR0b3ASAAGGoK4HCBMU
 GR4fIyQrLjE3OlUkbnVsbNUJCgsMDQ4PEBESVk5TU2l6ZVYkY2xhc3NcTlNJbWFnZUZsYWdzVk5TUmVw
