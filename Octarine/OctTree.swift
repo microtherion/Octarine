@@ -437,6 +437,10 @@ class OctTree : NSObject, NSOutlineViewDataSource, NSOutlineViewDelegate {
         octApp.startingRequest()
         task.resume()
     }
+
+    func selectedItem() -> OctItem {
+        return (outline.itemAtRow(outline.selectedRow) as! OctTreeNode).item
+    }
 }
 
 class OctOutlineView : NSOutlineView {
