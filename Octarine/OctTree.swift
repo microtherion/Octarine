@@ -115,6 +115,9 @@ class OctTreeNode : NSObject {
     }
 }
 
+var OCT_FOLDER  : NSImage?
+var OCT_PART    : NSImage?
+
 class OctTree : NSObject, NSOutlineViewDataSource, NSOutlineViewDelegate {
     @IBOutlet weak var outline : NSOutlineView!
     @IBOutlet weak var search: OctSearch!
@@ -242,36 +245,36 @@ class OctTree : NSObject, NSOutlineViewDataSource, NSOutlineViewDelegate {
         }
     }
 
-    func outlineView(outlineView: NSOutlineView, objectValueForTableColumn tableColumn: NSTableColumn?, byItem item: AnyObject?) -> AnyObject? {
-        guard let octItem = (item as? OctTreeNode)?.item,
-              let column = tableColumn?.identifier
-        else {
-            return nil
-        }
-        switch column {
-        case "name":
-            return octItem.name
-        case "desc":
-            return octItem.desc
-        default:
-            return nil
-        }
-    }
+    func outlineView(outlineView: NSOutlineView, viewForTableColumn tableColumn: NSTableColumn?, item: AnyObject) -> NSView? {
+        guard let tableColumn = tableColumn else { return nil }
+        let view = outlineView.makeViewWithIdentifier(tableColumn.identifier, owner: self) as! NSTableCellView
 
-    func outlineView(outlineView: NSOutlineView, setObjectValue object: AnyObject?, forTableColumn tableColumn: NSTableColumn?, byItem item: AnyObject?) {
-        guard let octItem = (item as? OctTreeNode)?.item,
-              let column = tableColumn?.identifier
-        else {
-                return
-        }
-        switch column {
+        guard let octItem = (item as? OctTreeNode)?.item else { return nil }
+
+        switch tableColumn.identifier {
         case "name":
-            octItem.name = object as? String ?? ""
+            view.textField?.stringValue = octItem.name
+            if OCT_FOLDER == nil {
+                let frameSize   = view.imageView!.frame.size
+                OCT_FOLDER      = NSImage(named: "oct_folder")
+                let folderSize  = OCT_FOLDER!.size
+                OCT_FOLDER!.size =  NSMakeSize(folderSize.width*(frameSize.height/folderSize.height), frameSize.height)
+                OCT_PART        = NSImage(named: "oct_part")
+                let partSize    = OCT_PART!.size
+                OCT_PART!.size  =  NSMakeSize(partSize.width*(frameSize.height/partSize.height), frameSize.height)
+            }
+            if octItem.isPart {
+                view.imageView?.image   = OCT_PART
+            } else {
+                view.imageView?.image   = OCT_FOLDER
+            }
         case "desc":
-            octItem.desc = object as? String ?? ""
+            view.textField?.stringValue = octItem.desc
         default:
-            return
+            break
         }
+
+        return view
     }
 
     var draggedItems = [OctItem]()
