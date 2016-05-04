@@ -87,24 +87,24 @@ class OctSheets : NSObject, NSOutlineViewDataSource, NSSearchFieldDelegate, NSSh
         dataSheetDocs       = []
         dataSheetSelection  = 0
         hideSelectionMenu   = true
-        octApp.startingRequest()
         for sheet in dataSheets {
             if let url = NSURL(string: sheet) {
                 var task : NSURLSessionTask? = nil
                 task = OctarineSession.dataTaskWithURL(url) { (data: NSData?, _: NSURLResponse?, error: NSError?) in
                     let doc = PDFDocument(data: data)
                     doc.establishTitle(url)
+                    self.octApp.endingRequest()
                     dispatch_async(dispatch_get_main_queue()) {
                         self.dataSheetDocs.append(doc)
                         self.hideSelectionMenu = self.dataSheetDocs.count < 2
                         self.dataSheetTasks = self.dataSheetTasks.filter({ $0 != task })
                         if self.dataSheetTasks.count == 0 {
-                            self.octApp.endingRequest()
                             self.dataSheetSelection  = 0
                         }
                     }
                 }
                 dataSheetTasks.append(task!)
+                octApp.startingRequest()
                 task!.resume()
             }
         }
