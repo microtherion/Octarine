@@ -245,6 +245,39 @@ class OctTree : NSObject, NSOutlineViewDataSource, NSOutlineViewDelegate {
         }
     }
 
+    func outlineView(outlineView: NSOutlineView, objectValueForTableColumn tableColumn: NSTableColumn?, byItem item: AnyObject?) -> AnyObject? {
+        guard let tableColumn = tableColumn else { return nil }
+        guard let octItem = (item as? OctTreeNode)?.item else { return nil }
+
+        switch tableColumn.identifier {
+        case "name":
+            return octItem.name
+        case "desc":
+            return octItem.desc
+        default:
+            return nil
+        }
+    }
+
+    @IBAction func updateOutlineValue(sender: AnyObject) {
+        guard let view = sender as? NSView else { return }
+        let row = outline.rowForView(view)
+        let col = outline.columnForView(view)
+
+        guard let octItem = (outline.itemAtRow(row) as? OctTreeNode)?.item else { return }
+        guard let value   = (sender as? NSTextField)?.stringValue else { return }
+        let tableColumn = outline.tableColumns[col]
+
+        switch tableColumn.identifier {
+        case "name":
+            octItem.name    = value
+        case "desc":
+            octItem.desc    = value
+        default:
+            break
+        }
+    }
+
     func outlineView(outlineView: NSOutlineView, viewForTableColumn tableColumn: NSTableColumn?, item: AnyObject) -> NSView? {
         guard let tableColumn = tableColumn else { return nil }
         let view = outlineView.makeViewWithIdentifier(tableColumn.identifier, owner: self) as! NSTableCellView
@@ -253,7 +286,6 @@ class OctTree : NSObject, NSOutlineViewDataSource, NSOutlineViewDelegate {
 
         switch tableColumn.identifier {
         case "name":
-            view.textField?.stringValue = octItem.name
             if OCT_FOLDER == nil {
                 let frameSize   = view.imageView!.frame.size
                 OCT_FOLDER      = NSImage(named: "oct_folder")
@@ -268,8 +300,6 @@ class OctTree : NSObject, NSOutlineViewDataSource, NSOutlineViewDelegate {
             } else {
                 view.imageView?.image   = OCT_FOLDER
             }
-        case "desc":
-            view.textField?.stringValue = octItem.desc
         default:
             break
         }
