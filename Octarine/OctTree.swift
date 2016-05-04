@@ -276,6 +276,8 @@ class OctTree : NSObject, NSOutlineViewDataSource, NSOutlineViewDelegate {
         default:
             break
         }
+
+        outlineViewSelectionDidChange(NSNotification(name:"dummy", object:self))
     }
 
     func outlineView(outlineView: NSOutlineView, viewForTableColumn tableColumn: NSTableColumn?, item: AnyObject) -> NSView? {
@@ -451,11 +453,14 @@ class OctTree : NSObject, NSOutlineViewDataSource, NSOutlineViewDelegate {
             if response != nil {
                 let results    = response as! [String: AnyObject]
                 for (_,result) in results {
-                    let part    = OctSearch.partFromJSON(result)
+                    var part    = OctSearch.partFromJSON(result)
                     let index   = try? newResults.indexOf { (result: [String : AnyObject]) throws -> Bool in
                         return result["ident"] as! String == part["ident"] as! String
                     }
                     if let index = index ?? nil {
+                        let storedPart  = newResults[index]
+                        part["name"]    = storedPart["name"]
+                        part["desc"]    = storedPart["desc"]
                         newResults[index] = part
                     } else {
                         newResults.append(part)
