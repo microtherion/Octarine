@@ -834,7 +834,7 @@ CA
                                                                                     </binding>
                                                                                 </connections>
                                                                             </tableColumn>
-                                                                            <tableColumn editable="NO" width="116" minWidth="40" maxWidth="1000" id="XGn-tv-mLa">
+                                                                            <tableColumn identifier="name" editable="NO" width="116" minWidth="40" maxWidth="1000" id="XGn-tv-mLa">
                                                                                 <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" title="Part No">
                                                                                     <font key="font" metaFont="smallSystem"/>
                                                                                     <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -847,15 +847,19 @@ CA
                                                                                 </textFieldCell>
                                                                                 <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                                                 <connections>
-                                                                                    <binding destination="7hJ-8R-Ym9" name="value" keyPath="arrangedObjects.name" id="3qL-Pn-tY3">
+                                                                                    <binding destination="7hJ-8R-Ym9" name="textColor" keyPath="arrangedObjects.purl" id="fTI-cC-1dg">
+                                                                                        <dictionary key="options">
+                                                                                            <string key="NSValueTransformerName">LinkTransformer</string>
+                                                                                        </dictionary>
+                                                                                    </binding>
+                                                                                    <binding destination="7hJ-8R-Ym9" name="value" keyPath="arrangedObjects.name" id="7pM-Ip-71k">
                                                                                         <dictionary key="options">
                                                                                             <bool key="NSConditionallySetsEditable" value="YES"/>
-                                                                                            <string key="NSValueTransformerName">LinkTransformer</string>
                                                                                         </dictionary>
                                                                                     </binding>
                                                                                 </connections>
                                                                             </tableColumn>
-                                                                            <tableColumn editable="NO" width="100" minWidth="40" maxWidth="1000" id="gOz-gJ-brp">
+                                                                            <tableColumn identifier="manu" editable="NO" width="100" minWidth="40" maxWidth="1000" id="gOz-gJ-brp">
                                                                                 <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" title="Manufacturer">
                                                                                     <font key="font" metaFont="smallSystem"/>
                                                                                     <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -868,10 +872,14 @@ CA
                                                                                 </textFieldCell>
                                                                                 <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                                                 <connections>
-                                                                                    <binding destination="7hJ-8R-Ym9" name="value" keyPath="arrangedObjects.manu" id="j8R-vt-Piu">
+                                                                                    <binding destination="7hJ-8R-Ym9" name="textColor" keyPath="arrangedObjects.murl" id="5Zk-g7-A7o">
+                                                                                        <dictionary key="options">
+                                                                                            <string key="NSValueTransformerName">LinkTransformer</string>
+                                                                                        </dictionary>
+                                                                                    </binding>
+                                                                                    <binding destination="7hJ-8R-Ym9" name="value" keyPath="arrangedObjects.manu" id="au1-VE-qgo">
                                                                                         <dictionary key="options">
                                                                                             <bool key="NSConditionallySetsEditable" value="YES"/>
-                                                                                            <string key="NSValueTransformerName">LinkTransformer</string>
                                                                                         </dictionary>
                                                                                     </binding>
                                                                                 </connections>
@@ -1002,7 +1010,7 @@ CA
                                                                             <subviews>
                                                                                 <button horizontalHuggingPriority="750" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="s0k-83-QQf">
                                                                                     <rect key="frame" x="-4" y="-2" width="29" height="26"/>
-                                                                                    <buttonCell key="cell" type="disclosure" bezelStyle="roundedDisclosure" image="9B1C31B2-B3A0-4FCE-9F10-BAD35132219F" imagePosition="only" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Ljf-uA-tJW">
+                                                                                    <buttonCell key="cell" type="disclosure" bezelStyle="roundedDisclosure" image="9E20F4DC-1E98-4202-9391-673DC673A58D" imagePosition="only" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Ljf-uA-tJW">
                                                                                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES" changeBackground="YES" changeGray="YES"/>
                                                                                         <font key="font" metaFont="system"/>
                                                                                     </buttonCell>
@@ -1455,7 +1463,7 @@ DQ
         </window>
     </objects>
     <resources>
-        <image name="9B1C31B2-B3A0-4FCE-9F10-BAD35132219F" width="1" height="1">
+        <image name="9E20F4DC-1E98-4202-9391-673DC673A58D" width="1" height="1">
             <mutableData key="keyedArchiveRepresentation">
 YnBsaXN0MDDUAQIDBAUGPT5YJHZlcnNpb25YJG9iamVjdHNZJGFyY2hpdmVyVCR0b3ASAAGGoK4HCBMU
 GR4fIyQrLjE3OlUkbnVsbNUJCgsMDQ4PEBESVk5TU2l6ZVYkY2xhc3NcTlNJbWFnZUZsYWdzVk5TUmVw

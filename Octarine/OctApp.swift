@@ -53,31 +53,9 @@ func stringRep(o: AnyObject?) -> String
 
     override func transformedValue(value: AnyObject?) -> AnyObject? {
         if let s = value as? String where s != "" {
-            return "🔍"+s
+            return NSColor.blueColor()
         } else {
-            return value
-        }
-    }
-}
-
-@objc class FolderTransformer : NSValueTransformer {
-    override class func allowsReverseTransformation() -> Bool {
-        return true
-    }
-
-    override func transformedValue(value: AnyObject?) -> AnyObject? {
-        if let s = value as? String where s != "" {
-            return "🔍"+s
-        } else {
-            return value
-        }
-    }
-
-    override func reverseTransformedValue(value: AnyObject?) -> AnyObject? {
-        if let s = value as? String where s != "" {
-            return s.substringFromIndex(s.startIndex.successor())
-        } else {
-            return value
+            return NSColor.blackColor()
         }
     }
 }
