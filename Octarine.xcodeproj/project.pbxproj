@@ -17,6 +17,7 @@
 		95520ACC1CC4E2A600266FB7 /* OctDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95520ACB1CC4E2A600266FB7 /* OctDetails.swift */; };
 		95520ACE1CC4E34000266FB7 /* OctSheets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95520ACD1CC4E34000266FB7 /* OctSheets.swift */; };
 		955BDD3D1CD3B3B80055E553 /* OctCustomPart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 955BDD3C1CD3B3B80055E553 /* OctCustomPart.swift */; };
+		9563C13E1CDE70690052A3A1 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 9563C13D1CDE70690052A3A1 /* Credits.rtf */; };
 		9575B9AE1CCC69C700DAEF11 /* Help.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 9575B9AD1CCC69C700DAEF11 /* Help.pdf */; };
 		9575B9B01CCC6A1200DAEF11 /* Help.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9575B9AF1CCC6A1200DAEF11 /* Help.xib */; };
 		9575B9B21CCC6C2C00DAEF11 /* OctHelp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9575B9B11CCC6C2C00DAEF11 /* OctHelp.swift */; };
@@ -63,6 +64,7 @@
 		95520ACB1CC4E2A600266FB7 /* OctDetails.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OctDetails.swift; sourceTree = "<group>"; };
 		95520ACD1CC4E34000266FB7 /* OctSheets.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OctSheets.swift; sourceTree = "<group>"; };
 		955BDD3C1CD3B3B80055E553 /* OctCustomPart.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OctCustomPart.swift; sourceTree = "<group>"; };
+		9563C13D1CDE70690052A3A1 /* Credits.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = Credits.rtf; sourceTree = "<group>"; };
 		9575B9AD1CCC69C700DAEF11 /* Help.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = Help.pdf; path = Documentation/Help.pdf; sourceTree = SOURCE_ROOT; };
 		9575B9AF1CCC6A1200DAEF11 /* Help.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Help.xib; sourceTree = "<group>"; };
 		9575B9B11CCC6C2C00DAEF11 /* OctHelp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OctHelp.swift; sourceTree = "<group>"; };
@@ -125,6 +127,7 @@
 		9566EC071CC91EFA0052529D /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				9563C13D1CDE70690052A3A1 /* Credits.rtf */,
 				95E5B3341C8BB2F20099F479 /* Assets.xcassets */,
 				95E5B3361C8BB2F20099F479 /* MainMenu.xib */,
 				95E5B3391C8BB2F20099F479 /* Info.plist */,
@@ -184,8 +187,8 @@
 				955BDD3C1CD3B3B80055E553 /* OctCustomPart.swift */,
 				952477F51CD4BABC00E8D65B /* OctURLTextField.swift */,
 				951DCC841CDB960B0011EA76 /* OctBOM.swift */,
-				9566EC071CC91EFA0052529D /* Resources */,
 				951DCC861CDB96D30011EA76 /* Octarine-Bridging-Header.h */,
+				9566EC071CC91EFA0052529D /* Resources */,
 			);
 			path = Octarine;
 			sourceTree = "<group>";
@@ -315,6 +318,7 @@
 				95DFB6281CCC460300B831DB /* powered.pdf in Resources */,
 				95A57A911CD90FBE00874407 /* oct_folder.png in Resources */,
 				9575B9B01CCC6A1200DAEF11 /* Help.xib in Resources */,
+				9563C13E1CDE70690052A3A1 /* Credits.rtf in Resources */,
 				9575B9AE1CCC69C700DAEF11 /* Help.pdf in Resources */,
 				95E5B3351C8BB2F20099F479 /* Assets.xcassets in Resources */,
 				95E5B3381C8BB2F20099F479 /* MainMenu.xib in Resources */,
