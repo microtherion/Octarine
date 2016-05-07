@@ -188,7 +188,15 @@ class OctTree : NSObject, NSOutlineViewDataSource, NSOutlineViewDelegate {
         }
         outline.endUpdates()
         reloadTree()
-        outline.editColumn(0, row: insertAt, withEvent: nil, select: true)
+        OctTreeNode.map { (node: OctTreeNode) -> Bool in
+            if node.item == group {
+                self.outline.editColumn(0, row: self.outline.rowForItem(node), withEvent: nil, select: true)
+
+                return false
+            } else {
+                return !node.item.isPart
+            }
+        }
     }
 
     func newCustomPart(part: OctItem) {
@@ -205,6 +213,12 @@ class OctTree : NSObject, NSOutlineViewDataSource, NSOutlineViewDelegate {
         kids.insertObject(part, atIndex: insertAt)
         outline.endUpdates()
         reloadTree()
+        OctTreeNode.map { (node: OctTreeNode) -> Bool in
+            if node.item == part {
+                self.outline.selectRowIndexes(NSIndexSet(index: self.outline.rowForItem(node)), byExtendingSelection: false)
+            }
+            return !node.item.isPart
+        }
     }
     
     func outlineView(outlineView: NSOutlineView, persistentObjectForItem item: AnyObject?) -> AnyObject? {
