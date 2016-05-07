@@ -17,6 +17,7 @@ class OctCustomPart : NSObject, NSTableViewDataSource {
     @IBOutlet weak var octApp: OctApp!
     @IBOutlet weak var mainWindow: NSWindow!
     @IBOutlet weak var partTree: OctTree!
+    @IBOutlet weak var search: OctSearch!
     @IBOutlet weak var dataSheets: NSTableView!
 
     dynamic var name    = "New Part"
@@ -198,35 +199,19 @@ class OctCustomPart : NSObject, NSTableViewDataSource {
     }
 
     func fetchPartInfo(ident: String) {
-        let urlComponents = NSURLComponents(string: "https://octopart.com/api/v3/parts/get_multi")!
-        let queryItems = [
-            NSURLQueryItem(name: "apikey", value: OCTOPART_API_KEY),
-            NSURLQueryItem(name: "include[]", value: "datasheets"),
-            NSURLQueryItem(name: "uid[]", value: ident)
-        ]
-        urlComponents.queryItems = queryItems
-
-        let task = OctarineSession.dataTaskWithURL(urlComponents.URL!) { (data: NSData?, response: NSURLResponse?, error: NSError?) in
-            let response = try? NSJSONSerialization.JSONObjectWithData(data!, options: [])
-            if response != nil {
-                let results    = response as! [String: AnyObject]
-                for (_,result) in results {
-                    let part    = OctSearch.partFromJSON(result)
-                    if part["ident"] as! String == ident {
-                        dispatch_async(dispatch_get_main_queue()) {
-                            self.purl   = stringRep(part["purl"])
-                            self.manu   = stringRep(part["manu"])
-                            self.murl   = stringRep(part["murl"])
-                            self.sheets = (part["sheets"] as? [String]) ?? []
-                            self.dataSheets.reloadData()
-                        }
+        search.partsFromUIDs([ident]) { (parts: [[String : AnyObject]]) in
+            for part in parts {
+                if part["ident"] as! String == ident {
+                    dispatch_async(dispatch_get_main_queue()) {
+                        self.purl   = stringRep(part["purl"])
+                        self.manu   = stringRep(part["manu"])
+                        self.murl   = stringRep(part["murl"])
+                        self.sheets = (part["sheets"] as? [String]) ?? []
+                        self.dataSheets.reloadData()
                     }
                 }
             }
-            self.octApp.endingRequest()
         }
-        octApp.startingRequest()
-        task.resume()
     }
 }
 

@@ -65,7 +65,15 @@
                 <outlet property="mainWindow" destination="QvC-M9-y7g" id="O5s-Gd-FST"/>
                 <outlet property="octApp" destination="Voe-Tx-rLC" id="kCD-aD-9Kp"/>
                 <outlet property="partTree" destination="O3g-iW-BPy" id="P1I-HO-AFM"/>
+                <outlet property="search" destination="uCz-kw-AJg" id="UQH-en-k9u"/>
                 <outlet property="sheet" destination="hr6-yv-g7I" id="jiI-K1-gvd"/>
+            </connections>
+        </customObject>
+        <customObject id="jzO-eB-XjC" customClass="OctBOM" customModule="Octarine" customModuleProvider="target">
+            <connections>
+                <outlet property="octApp" destination="Voe-Tx-rLC" id="Mh1-EA-4Nr"/>
+                <outlet property="octTree" destination="O3g-iW-BPy" id="bJo-Iv-v4J"/>
+                <outlet property="search" destination="uCz-kw-AJg" id="zyt-im-Vrc"/>
             </connections>
         </customObject>
         <menu title="Main Menu" systemMenu="main" id="AYu-sK-qS6">
@@ -177,6 +185,19 @@
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="revertDocumentToSaved:" target="-1" id="iJ3-Pv-kwq"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="Pvp-4S-plj"/>
+                            <menuItem title="Match Part List…" id="Hqc-s8-3ro">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="importBOM:" target="jzO-eB-XjC" id="Lfp-PD-mud"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Export Part List…" id="ygw-2d-8xn">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="exportBOM:" target="jzO-eB-XjC" id="29V-EL-zcB"/>
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="aJh-i4-bef"/>
@@ -1010,7 +1031,7 @@ CA
                                                                             <subviews>
                                                                                 <button horizontalHuggingPriority="750" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="s0k-83-QQf">
                                                                                     <rect key="frame" x="-4" y="-2" width="29" height="26"/>
-                                                                                    <buttonCell key="cell" type="disclosure" bezelStyle="roundedDisclosure" image="03B6E59F-9126-44B5-A53E-E740B2F65223" imagePosition="only" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Ljf-uA-tJW">
+                                                                                    <buttonCell key="cell" type="disclosure" bezelStyle="roundedDisclosure" image="6FE94339-AED8-4125-A0AD-B17175DEC00D" imagePosition="only" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Ljf-uA-tJW">
                                                                                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES" changeBackground="YES" changeGray="YES"/>
                                                                                         <font key="font" metaFont="system"/>
                                                                                     </buttonCell>
@@ -1463,7 +1484,7 @@ DQ
         </window>
     </objects>
     <resources>
-        <image name="03B6E59F-9126-44B5-A53E-E740B2F65223" width="1" height="1">
+        <image name="6FE94339-AED8-4125-A0AD-B17175DEC00D" width="1" height="1">
             <mutableData key="keyedArchiveRepresentation">
 YnBsaXN0MDDUAQIDBAUGPT5YJHZlcnNpb25YJG9iamVjdHNZJGFyY2hpdmVyVCR0b3ASAAGGoK4HCBMU
 GR4fIyQrLjE3OlUkbnVsbNUJCgsMDQ4PEBESVk5TU2l6ZVYkY2xhc3NcTlNJbWFnZUZsYWdzVk5TUmVw
