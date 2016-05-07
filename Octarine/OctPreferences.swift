@@ -46,6 +46,7 @@ class OctPreferences: NSWindowController, NSOpenSavePanelDelegate {
         let openPanel = NSOpenPanel()
         openPanel.canChooseFiles            = false
         openPanel.canChooseDirectories      = true
+        openPanel.canCreateDirectories      = true
         openPanel.allowsMultipleSelection   = false
         openPanel.allowedFileTypes          = [kUTTypeDirectory as String]
         openPanel.delegate                  = nil
