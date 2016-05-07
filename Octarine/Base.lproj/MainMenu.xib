@@ -76,6 +76,11 @@
                 <outlet property="search" destination="uCz-kw-AJg" id="zyt-im-Vrc"/>
             </connections>
         </customObject>
+        <customObject id="Zyu-Rw-Nh6" customClass="OctPreferences" customModule="Octarine" customModuleProvider="target">
+            <connections>
+                <outlet property="octApp" destination="Voe-Tx-rLC" id="wLz-c7-7E5"/>
+            </connections>
+        </customObject>
         <menu title="Main Menu" systemMenu="main" id="AYu-sK-qS6">
             <items>
                 <menuItem title="Octarine" id="1Xt-HY-uBw">
@@ -89,7 +94,11 @@
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="VOq-y0-SEH"/>
-                            <menuItem title="Preferences…" keyEquivalent="," id="BOF-NM-1cW"/>
+                            <menuItem title="Preferences…" keyEquivalent="," id="BOF-NM-1cW">
+                                <connections>
+                                    <action selector="showWindow:" target="Zyu-Rw-Nh6" id="1fX-pd-jBE"/>
+                                </connections>
+                            </menuItem>
                             <menuItem isSeparatorItem="YES" id="wFC-TO-SCJ"/>
                             <menuItem title="Services" id="NMo-om-nkz">
                                 <modifierMask key="keyEquivalentModifierMask"/>
@@ -1031,7 +1040,7 @@ CA
                                                                             <subviews>
                                                                                 <button horizontalHuggingPriority="750" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="s0k-83-QQf">
                                                                                     <rect key="frame" x="-4" y="-2" width="29" height="26"/>
-                                                                                    <buttonCell key="cell" type="disclosure" bezelStyle="roundedDisclosure" image="240B50EF-B703-4AE0-9F23-44E0A713CF81" imagePosition="only" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Ljf-uA-tJW">
+                                                                                    <buttonCell key="cell" type="disclosure" bezelStyle="roundedDisclosure" image="C997C6A4-91E1-4054-B1B4-325FADCEB7B9" imagePosition="only" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Ljf-uA-tJW">
                                                                                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES" changeBackground="YES" changeGray="YES"/>
                                                                                         <font key="font" metaFont="system"/>
                                                                                     </buttonCell>
@@ -1484,7 +1493,7 @@ DQ
         </window>
     </objects>
     <resources>
-        <image name="240B50EF-B703-4AE0-9F23-44E0A713CF81" width="1" height="1">
+        <image name="C997C6A4-91E1-4054-B1B4-325FADCEB7B9" width="1" height="1">
             <mutableData key="keyedArchiveRepresentation">
 YnBsaXN0MDDUAQIDBAUGPT5YJHZlcnNpb25YJG9iamVjdHNZJGFyY2hpdmVyVCR0b3ASAAGGoK4HCBMU
 GR4fIyQrLjE3OlUkbnVsbNUJCgsMDQ4PEBESVk5TU2l6ZVYkY2xhc3NcTlNJbWFnZUZsYWdzVk5TUmVw

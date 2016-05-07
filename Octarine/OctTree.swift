@@ -129,6 +129,12 @@ class OctTree : NSObject, NSOutlineViewDataSource, NSOutlineViewDelegate {
         outline.registerForDraggedTypes([kOctPasteboardType])
         outline.setDraggingSourceOperationMask([.Move, .Copy], forLocal: true)
         outline.setDraggingSourceOperationMask([.Delete], forLocal: false)
+
+        NSNotificationCenter.defaultCenter().addObserverForName(OCTARINE_DATABASE_RESET, object: nil, queue: NSOperationQueue.mainQueue()) { (_: NSNotification) in
+            gOctTreeRoots = []
+
+            self.outline.reloadData()
+        }
     }
 
     var oldTreeRoots = [OctTreeNode]()

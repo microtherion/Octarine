@@ -112,6 +112,7 @@ class OctCustomPart : NSObject, NSTableViewDataSource {
             }
         }
     }
+    
     func deleteSelectedSheets() {
         for row in dataSheets.selectedRowIndexes.reverse() {
             sheets.removeAtIndex(row)

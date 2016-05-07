@@ -12,6 +12,7 @@ import Quartz
 let OCTOPART_API_KEY = "d0347dc3"
 let OctarineSession = NSURLSession(configuration:NSURLSessionConfiguration.defaultSessionConfiguration())
 
+let OCTARINE_DATABASE_RESET = "OctDBReset"
 
 class NSTempURL {
     let url : NSURL
@@ -94,7 +95,12 @@ class OctApp: NSObject, NSApplicationDelegate {
     // MARK: - Core Data stack
 
     lazy var applicationDocumentsDirectory: NSURL = {
-        // The directory the application uses to store the Core Data store file. This code uses a directory named "org.aereperennius.Octarine" in the user's Application Support directory.
+        // The directory the application uses to store the Core Data store file.
+        let defaults = NSUserDefaults.standardUserDefaults()
+        if let customPath = defaults.stringForKey("DatabasePath") {
+            return NSURL(fileURLWithPath: customPath)
+        }
+        // Default to a directory named "org.aereperennius.Octarine" in the user's Application Support directory.
         let urls = NSFileManager.defaultManager().URLsForDirectory(.ApplicationSupportDirectory, inDomains: .UserDomainMask)
         let appSupportURL = urls[urls.count - 1]
         return appSupportURL.URLByAppendingPathComponent("org.aereperennius.Octarine")
