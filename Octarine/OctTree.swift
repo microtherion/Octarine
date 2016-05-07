@@ -438,41 +438,25 @@ class OctTree : NSObject, NSOutlineViewDataSource, NSOutlineViewDelegate {
 
         guard standardParts.count > 0 else { return }
 
-        let urlComponents = NSURLComponents(string: "https://octopart.com/api/v3/parts/get_multi")!
-        let queryItems = [
-            NSURLQueryItem(name: "apikey", value: OCTOPART_API_KEY),
-            NSURLQueryItem(name: "include[]", value: "datasheets"),
-            NSURLQueryItem(name: "include[]", value: "short_description"),
-            ] + standardParts.map() { (item: OctItem) -> NSURLQueryItem in
-                NSURLQueryItem(name: "uid[]", value: item.ident)
-        }
-        urlComponents.queryItems = queryItems
-
-        let task = OctarineSession.dataTaskWithURL(urlComponents.URL!) { (data: NSData?, response: NSURLResponse?, error: NSError?) in
-            let response = try? NSJSONSerialization.JSONObjectWithData(data!, options: [])
-            if let results = response as? [String: AnyObject] where results["class"] == nil {
-                for (_,result) in results {
-                    var part    = OctSearch.partFromJSON(result)
-                    let index   = try? newResults.indexOf { (result: [String : AnyObject]) throws -> Bool in
-                        return result["ident"] as! String == part["ident"] as! String
-                    }
-                    if let index = index ?? nil {
-                        let storedPart  = newResults[index]
-                        part["name"]    = storedPart["name"]
-                        part["desc"]    = storedPart["desc"]
-                        newResults[index] = part
-                    } else {
-                        newResults.append(part)
-                    }
+        search.partsFromUIDs(standardParts.map {$0.ident}) { (parts: [[String : AnyObject]]) in
+            for part in parts {
+                let index   = try? newResults.indexOf { (result: [String : AnyObject]) throws -> Bool in
+                    return result["ident"] as! String == part["ident"] as! String
+                }
+                if let index = index ?? nil {
+                    let storedPart      = newResults[index]
+                    var newPart         = part
+                    newPart["name"]     = storedPart["name"]
+                    newPart["desc"]     = storedPart["desc"]
+                    newResults[index]   = newPart
+                } else {
+                    newResults.append(part)
                 }
             }
-            self.octApp.endingRequest()
             dispatch_async(dispatch_get_main_queue()) {
                 self.search.searchResults = newResults
             }
         }
-        octApp.startingRequest()
-        task.resume()
     }
 
     func selectedItem() -> OctItem {

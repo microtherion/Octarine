@@ -53,6 +53,60 @@ class OctSearch : NSObject, NSTableViewDataSource, NSTableViewDelegate {
         return newItem
     }
 
+    var partFromUIDCache = [String: [String: AnyObject]]()
+    var cacheExpiry = NSDate(timeIntervalSinceNow: 86400)
+
+    func partsFromCachedUIDs(uids: [String], completion:([[String: AnyObject]]) -> Void) {
+        var results = [[String: AnyObject]]()
+        for uid in uids {
+            if let cached = partFromUIDCache[uid] {
+                results.append(cached)
+            }
+        }
+        completion(results)
+    }
+
+    func partsFromUIDs(uids: [String], completion:([[String: AnyObject]]) -> Void) {
+        let now = NSDate()
+        if now.compare(cacheExpiry) == .OrderedDescending {
+            // Flush cache to comply with Octopart terms of use
+            partFromUIDCache = [:]
+            cacheExpiry = NSDate(timeIntervalSinceNow: 86400)
+        }
+        let uidsToFetch = uids.filter { (uid: String) -> Bool in
+            return partFromUIDCache.indexForKey(uid) == nil
+        }
+
+        guard uidsToFetch.count > 0 else {
+            partsFromCachedUIDs(uids, completion: completion)
+            return
+        }
+
+        let urlComponents = NSURLComponents(string: "https://octopart.com/api/v3/parts/get_multi")!
+        let queryItems = [
+            NSURLQueryItem(name: "apikey", value: OCTOPART_API_KEY),
+            NSURLQueryItem(name: "include[]", value: "datasheets"),
+            NSURLQueryItem(name: "include[]", value: "short_description"),
+            ] + uidsToFetch.map() { (uid: String) -> NSURLQueryItem in
+                NSURLQueryItem(name: "uid[]", value: uid)
+        }
+        urlComponents.queryItems = queryItems
+
+        let task = OctarineSession.dataTaskWithURL(urlComponents.URL!) { (data: NSData?, response: NSURLResponse?, error: NSError?) in
+            let response = try? NSJSONSerialization.JSONObjectWithData(data!, options: [])
+            if let results = response as? [String: AnyObject] where results["class"] == nil {
+                for (_,result) in results {
+                    var part    = OctSearch.partFromJSON(result)
+                    self.partFromUIDCache[part["ident"] as! String] = part
+                }
+            }
+            self.octApp.endingRequest()
+            self.partsFromCachedUIDs(uids, completion: completion)
+        }
+        octApp.startingRequest()
+        task.resume()
+    }
+
     @IBAction func searchComponents(sender: NSSearchField!) {
         let urlComponents = NSURLComponents(string: "https://octopart.com/api/v3/parts/search")!
         urlComponents.queryItems = [
