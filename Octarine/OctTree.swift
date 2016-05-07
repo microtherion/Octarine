@@ -450,8 +450,7 @@ class OctTree : NSObject, NSOutlineViewDataSource, NSOutlineViewDelegate {
 
         let task = OctarineSession.dataTaskWithURL(urlComponents.URL!) { (data: NSData?, response: NSURLResponse?, error: NSError?) in
             let response = try? NSJSONSerialization.JSONObjectWithData(data!, options: [])
-            if response != nil {
-                let results    = response as! [String: AnyObject]
+            if let results = response as? [String: AnyObject] where results["class"] == nil {
                 for (_,result) in results {
                     var part    = OctSearch.partFromJSON(result)
                     let index   = try? newResults.indexOf { (result: [String : AnyObject]) throws -> Bool in
