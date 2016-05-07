@@ -150,6 +150,7 @@ class OctBOM : NSObject, CHCSVParserDelegate {
 
     func parserDidEndDocument(_: CHCSVParser!) {
         dispatch_async(dispatch_get_main_queue(), {
+            self.search.focusSearchResults()
             self.search.searchResults = []
         })
         firstSKUInquiry = 0

@@ -20,7 +20,6 @@ class OctSearch : NSObject, NSTableViewDataSource, NSTableViewDelegate {
 
     dynamic var searchResults = [[String: AnyObject]]() {
         didSet {
-            octApp.window.makeFirstResponder(resultTable)
             if searchResults.count == 1 {
                 resultTable.selectRowIndexes(NSIndexSet(index: 0), byExtendingSelection: false)
                 updateDataSheets()
@@ -28,6 +27,10 @@ class OctSearch : NSObject, NSTableViewDataSource, NSTableViewDelegate {
         }
     }
 
+    func focusSearchResults() {
+        self.octApp.window.makeFirstResponder(resultTable)
+    }
+    
     class func partFromJSON(item: AnyObject?) -> [String: AnyObject] {
         let item = item as! [String: AnyObject]
         let manu = item["manufacturer"] as! [String: AnyObject]
@@ -129,6 +132,7 @@ class OctSearch : NSObject, NSTableViewDataSource, NSTableViewDelegate {
             }
             self.octApp.endingRequest()
             dispatch_async(dispatch_get_main_queue(), {
+                self.focusSearchResults()
                 self.searchResults = newResults
             })
         }
