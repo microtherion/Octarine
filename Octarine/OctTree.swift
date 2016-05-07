@@ -422,14 +422,18 @@ class OctTree : NSObject, NSOutlineViewDataSource, NSOutlineViewDelegate {
         }
     }
 
-    func outlineViewSelectionDidChange(_: NSNotification) {
-        let selectedItems = outline.selectedRowIndexes.map() { (row: Int) -> OctItem in
+    func selectedItems() -> [OctItem] {
+        return outline.selectedRowIndexes.map() { (row: Int) -> OctItem in
             (outline.itemAtRow(row) as! OctTreeNode).item
         }
-        let standardParts = selectedItems.filter { (item: OctItem) -> Bool in
+    }
+
+    func outlineViewSelectionDidChange(_: NSNotification) {
+        let selection = selectedItems()
+        let standardParts = selection.filter { (item: OctItem) -> Bool in
             !item.isCustomPart
         }
-        var newResults = selectedItems.map { (item: OctItem) -> [String: AnyObject] in
+        var newResults = selection.map { (item: OctItem) -> [String: AnyObject] in
             item.serialized()
         }
         dispatch_async(dispatch_get_main_queue()) {

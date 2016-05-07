@@ -11,6 +11,7 @@ import AppKit
 class OctBOM : NSObject, CHCSVParserDelegate {
     @IBOutlet weak var octApp: OctApp!
     @IBOutlet weak var search: OctSearch!
+    @IBOutlet weak var octTree: OctTree!
 
     @IBAction func importBOM(_: AnyObject) {
         let openPanel = NSOpenPanel()
@@ -55,6 +56,47 @@ class OctBOM : NSObject, CHCSVParserDelegate {
                     parser.parse()
                 }
             }
+        }
+    }
+
+    @IBAction func exportBOM(_: AnyObject) {
+        let savePanel = NSSavePanel()
+        savePanel.allowedFileTypes = ["csv"]
+        savePanel.beginSheetModalForWindow(NSApp.mainWindow!) { (response: Int) in
+            if response == NSFileHandlingPanelOKButton {
+                var items       = [OctItem]()
+                var uids        = [String]()
+                var selection   = self.octTree.selectedItems()
+
+                // Flatten selection
+                while selection.count > 0 {
+                    let item = selection.removeFirst()
+                    if item.isPart && items.indexOf(item) == nil {
+                        items.append(item)
+                        if !item.isCustomPart {
+                            uids.append(item.ident)
+                        }
+                    } else if let kids = item.children?.array as? [OctItem] {
+                        selection += kids
+                    }
+                }
+
+                self.search.partsFromUIDs(uids, completion: { (_: [[String : AnyObject]]) in
+                    self.writeBOM(savePanel.URL!.path!, items: items)
+                })
+            }
+        }
+    }
+
+    func writeBOM(path: String, items: [OctItem]) {
+        let writer = CHCSVWriter(forWritingToCSVFile: path)
+        writer.writeLineOfFields(["Part Number", "Manufacturer", "Description"])
+        for item in items {
+            let part : [String : AnyObject]? = item.isCustomPart ? nil : search.partFromUIDCache[item.ident]
+            writer.writeField(part?["name"] ?? item.name)
+            writer.writeField(part?["manu"] ?? item.manufacturer ?? "")
+            writer.writeField(item.desc)
+            writer.finishLine()
         }
     }
 
