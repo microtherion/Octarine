@@ -20,6 +20,7 @@ class OctSearch : NSObject, NSTableViewDataSource, NSTableViewDelegate {
 
     dynamic var searchResults = [[String: AnyObject]]() {
         didSet {
+            octApp.window.makeFirstResponder(resultTable)
             if searchResults.count == 1 {
                 resultTable.selectRowIndexes(NSIndexSet(index: 0), byExtendingSelection: false)
                 updateDataSheets()
