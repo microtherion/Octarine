@@ -10,5 +10,8 @@ Octarine is an application for OS X 10.10 and later that helps to manage a colle
 ![Search screenshot]
 (https://github.com/microtherion/Octarine/raw/master/Documentation/Screenshots/Search.png)
 
+![Datasheets screenshot]
+(https://github.com/microtherion/Octarine/raw/master/Documentation/Screenshots/Datasheet.png)
+
 ![Organize screenshot]
 (https://github.com/microtherion/Octarine/raw/master/Documentation/Screenshots/Organize.png)
