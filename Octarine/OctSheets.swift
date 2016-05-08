@@ -81,10 +81,12 @@ class OctSheets : NSObject, NSOutlineViewDataSource, NSSearchFieldDelegate, NSSh
     dynamic var hideSelectionMenu : Bool = true
     dynamic var dataSheets        = [String]() { didSet { loadDataSheets() } }
     dynamic var dataSheetDocs     = [PDFDocument]()
+    dynamic var dataSheetURLs     = [NSURL]()
 
     var dataSheetTasks            = [NSURLSessionTask]()
     func loadDataSheets() {
         dataSheetDocs       = []
+        dataSheetURLs       = []
         dataSheetSelection  = 0
         hideSelectionMenu   = true
         for sheet in dataSheets {
@@ -96,6 +98,7 @@ class OctSheets : NSObject, NSOutlineViewDataSource, NSSearchFieldDelegate, NSSh
                         doc.establishTitle(url)
                         dispatch_async(dispatch_get_main_queue()) {
                             self.dataSheetDocs.append(doc)
+                            self.dataSheetURLs.append(url)
                             self.hideSelectionMenu = self.dataSheetDocs.count < 2
                             self.dataSheetTasks = self.dataSheetTasks.filter({ $0 != task })
                             if self.dataSheetTasks.count == 0 {
@@ -290,7 +293,7 @@ class OctSheets : NSObject, NSOutlineViewDataSource, NSSearchFieldDelegate, NSSh
     @IBAction func sheetShareMenu(_: AnyObject) {
         var items = [AnyObject]()
         if let doc = sheetView.document() {
-            let docURL = dataSheetDocs[dataSheetSelection].documentURL()
+            let docURL = dataSheetURLs[dataSheetSelection]
             let tempURL = OctTemp.url.URLByAppendingPathComponent(docURL.lastPathComponent!)
             doc.dataRepresentation().writeToURL(tempURL, atomically: true)
             items.append(docURL)

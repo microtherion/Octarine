@@ -42,8 +42,11 @@
                             <string key="keyEquivalent"></string>
                             <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                         </buttonCell>
+                        <connections>
+                            <action selector="goToNextPage:" target="jG0-A1-dve" id="aJC-68-ElI"/>
+                        </connections>
                     </button>
-                    <button misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="z2f-6n-Uzv">
+                    <button translatesAutoresizingMaskIntoConstraints="NO" id="z2f-6n-Uzv">
                         <rect key="frame" x="10" y="634" width="32" height="31"/>
                         <constraints>
                             <constraint firstAttribute="width" secondItem="z2f-6n-Uzv" secondAttribute="height" multiplier="1:1" id="QMK-sc-cf4"/>
