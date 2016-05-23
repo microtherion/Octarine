@@ -122,7 +122,8 @@ class OctSearch : NSObject, NSTableViewDataSource, NSTableViewDelegate {
         ]
 
         let task = OctarineSession.dataTaskWithURL(urlComponents.URL!) { (data: NSData?, response: NSURLResponse?, error: NSError?) in
-            let response = try? NSJSONSerialization.JSONObjectWithData(data!, options: [])
+            guard let data = data else { return }
+            let response = try? NSJSONSerialization.JSONObjectWithData(data, options: [])
             var newResults = [[String: AnyObject]]()
             if response != nil {
                 let results    = response!["results"] as! [[String: AnyObject]]

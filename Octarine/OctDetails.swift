@@ -23,7 +23,8 @@ class OctDetails : NSObject {
                     NSURLQueryItem(name: "include[]", value: "specs"),
                 ]
                 let task = OctarineSession.dataTaskWithURL(urlComponents.URL!) { (data: NSData?, response: NSURLResponse?, error: NSError?) in
-                    let response = try? NSJSONSerialization.JSONObjectWithData(data!, options: [])
+                    guard let data = data else { return }
+                    let response = try? NSJSONSerialization.JSONObjectWithData(data, options: [])
                     var specMap = [[String:String]]()
                     if let resp  = response as? [String: AnyObject],
                         let specs = resp["specs"] as? [String: AnyObject]
