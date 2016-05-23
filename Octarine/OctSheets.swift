@@ -82,35 +82,48 @@ class OctSheets : NSObject, NSOutlineViewDataSource, NSSearchFieldDelegate, NSSh
     dynamic var dataSheets        = [String]() { didSet { loadDataSheets() } }
     dynamic var dataSheetDocs     = [PDFDocument]()
     dynamic var dataSheetURLs     = [NSURL]()
+    var         nextSheetToLoad   = 0
 
-    var dataSheetTasks            = [NSURLSessionTask]()
+
     func loadDataSheets() {
         dataSheetDocs       = []
         dataSheetURLs       = []
         dataSheetSelection  = 0
         hideSelectionMenu   = true
-        for sheet in dataSheets {
-            if let url = NSURL(string: sheet) {
-                var task : NSURLSessionTask? = nil
-                task = OctarineSession.dataTaskWithURL(url) { (data: NSData?, _: NSURLResponse?, error: NSError?) in
-                    self.octApp.endingRequest()
-                    if let doc = PDFDocument(data: data) {
-                        doc.establishTitle(url)
-                        dispatch_async(dispatch_get_main_queue()) {
+        nextSheetToLoad     = -1
+        loadNextSheet()
+    }
+
+    func loadNextSheet() {
+        nextSheetToLoad += 1
+        guard nextSheetToLoad < dataSheets.count else { return }
+        if let url = NSURL(string: dataSheets[nextSheetToLoad]) {
+            var task : NSURLSessionTask? = nil
+            task = OctarineSession.dataTaskWithURL(url) { (data: NSData?, _: NSURLResponse?, error: NSError?) in
+                self.octApp.endingRequest()
+                if let doc = PDFDocument(data: data) {
+                    doc.establishTitle(url)
+                    dispatch_async(dispatch_get_main_queue()) {
+                        if !self.dataSheetURLs.contains(url) {
                             self.dataSheetDocs.append(doc)
                             self.dataSheetURLs.append(url)
                             self.hideSelectionMenu = self.dataSheetDocs.count < 2
-                            self.dataSheetTasks = self.dataSheetTasks.filter({ $0 != task })
-                            if self.dataSheetTasks.count == 0 {
-                                self.dataSheetSelection  = 0
+                            if self.dataSheetDocs.count == 1 {
+                                self.dataSheetSelection = 0
                             }
                         }
+                        self.loadNextSheet()
+                    }
+                } else {
+                    dispatch_async(dispatch_get_main_queue()) {
+                        self.loadNextSheet()
                     }
                 }
-                dataSheetTasks.append(task!)
-                octApp.startingRequest()
-                task!.resume()
             }
+            octApp.startingRequest()
+            task!.resume()
+        } else {
+            loadNextSheet()
         }
     }
 
