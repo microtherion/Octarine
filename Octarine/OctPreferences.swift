@@ -21,28 +21,28 @@ class OctPreferences: NSWindowController, NSOpenSavePanelDelegate {
 
     @IBAction func resetDatabase(_: AnyObject) {
         let alert = NSAlert()
-        alert.alertStyle    = .CriticalAlertStyle
+        alert.alertStyle    = .critical
         alert.messageText   = "Do you really want to reset the database? This will delete all stored items."
-        alert.addButtonWithTitle("Cancel")
-        alert.addButtonWithTitle("Reset")
-        alert.beginSheetModalForWindow(window!) { (response: NSModalResponse) in
+        alert.addButton(withTitle: "Cancel")
+        alert.addButton(withTitle: "Reset")
+        alert.beginSheetModal(for: window!, completionHandler: { (response: NSModalResponse) in
             if response == 1001 {
-                let fetchRequest                    = NSFetchRequest(entityName: "OctItem")
+                let fetchRequest                    = NSFetchRequest<NSFetchRequestResult>(entityName: "OctItem")
                 fetchRequest.predicate  = NSPredicate(format: "ident == ''")
-                let results                         = try? self.octApp.managedObjectContext.executeFetchRequest(fetchRequest)
+                let results                         = try? self.octApp.managedObjectContext.fetch(fetchRequest)
 
                 if let results = results as? [NSManagedObject] {
                     for result in results {
-                        self.octApp.managedObjectContext.deleteObject(result)
+                        self.octApp.managedObjectContext.delete(result)
                     }
-                    NSNotificationCenter.defaultCenter().postNotificationName(OCTARINE_DATABASE_RESET, object: self)
+                    NotificationCenter.default.post(name: Notification.Name(rawValue: OCTARINE_DATABASE_RESET), object: self)
                 }
             }
-        }
+        }) 
     }
 
     @IBAction func migrateDatabase(_: AnyObject) {
-        let defaults = NSUserDefaults.standardUserDefaults()
+        let defaults = UserDefaults.standard
         let openPanel = NSOpenPanel()
         openPanel.canChooseFiles            = false
         openPanel.canChooseDirectories      = true
@@ -50,47 +50,47 @@ class OctPreferences: NSWindowController, NSOpenSavePanelDelegate {
         openPanel.allowsMultipleSelection   = false
         openPanel.allowedFileTypes          = [kUTTypeDirectory as String]
         openPanel.delegate                  = nil
-        if let path = defaults.stringForKey("DatabasePath") {
-            openPanel.directoryURL          = NSURL(fileURLWithPath: path)
+        if let path = defaults.string(forKey: "DatabasePath") {
+            openPanel.directoryURL          = URL(fileURLWithPath: path)
         }
-        openPanel.beginSheetModalForWindow(window!) { (response: Int) in
+        openPanel.beginSheetModal(for: window!) { (response: Int) in
             if response == NSFileHandlingPanelOKButton {
-                let url         = openPanel.URL!.URLByAppendingPathComponent("Octarine.storedata")
+                let url         = openPanel.url!.appendingPathComponent("Octarine.storedata")
                 let coordinator = self.octApp.persistentStoreCoordinator
                 let oldStore    = coordinator.persistentStores[0]
-                if let _ = try? coordinator.migratePersistentStore(oldStore, toURL: url, options: nil, withType: NSSQLiteStoreType) {
-                    defaults.setObject(openPanel.URL?.path, forKey: "DatabasePath")
+                if let _ = try? coordinator.migratePersistentStore(oldStore, to: url, options: nil, withType: NSSQLiteStoreType) {
+                    defaults.set(openPanel.url?.path, forKey: "DatabasePath")
                 }
             }
         }
     }
 
     @IBAction func openDatabase(_: AnyObject) {
-        let defaults = NSUserDefaults.standardUserDefaults()
+        let defaults = UserDefaults.standard
         let openPanel = NSOpenPanel()
         openPanel.canChooseFiles            = true
         openPanel.canChooseDirectories      = false
         openPanel.allowsMultipleSelection   = false
         openPanel.allowedFileTypes          = ["storedata"]
         openPanel.delegate                  = nil
-        if let path = defaults.stringForKey("DatabasePath") {
-            openPanel.directoryURL          = NSURL(fileURLWithPath: path)
+        if let path = defaults.string(forKey: "DatabasePath") {
+            openPanel.directoryURL          = URL(fileURLWithPath: path)
         }
-        openPanel.beginSheetModalForWindow(window!) { (response: Int) in
+        openPanel.beginSheetModal(for: window!) { (response: Int) in
             if response == NSFileHandlingPanelOKButton {
-                let url         = openPanel.URL!
+                let url         = openPanel.url!
                 let coordinator = self.octApp.persistentStoreCoordinator
                 let oldStore    = coordinator.persistentStores[0]
-                if let _ = try? coordinator.addPersistentStoreWithType(NSSQLiteStoreType, configuration: nil, URL: url, options: nil) {
-                    try! coordinator.removePersistentStore(oldStore)
-                    defaults.setObject(url.URLByDeletingLastPathComponent?.path, forKey: "DatabasePath")
-                    NSNotificationCenter.defaultCenter().postNotificationName(OCTARINE_DATABASE_RESET, object: self)
+                if let _ = try? coordinator.addPersistentStore(ofType: NSSQLiteStoreType, configurationName: nil, at: url, options: nil) {
+                    try! coordinator.remove(oldStore)
+                    defaults.set(url.deletingLastPathComponent().path, forKey: "DatabasePath")
+                    NotificationCenter.default.post(name: Notification.Name(rawValue: OCTARINE_DATABASE_RESET), object: self)
                 }
             }
         }
     }
 
-    func panel(sender: AnyObject, shouldEnableURL url: NSURL) -> Bool {
+    func panel(_ sender: Any, shouldEnable url: URL) -> Bool {
         return url.lastPathComponent == "Octarine.storedata"
     }
 }

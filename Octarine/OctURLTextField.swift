@@ -10,17 +10,16 @@ import AppKit
 
 class OctURLTextField : NSTextField {
     override func awakeFromNib() {
-        registerForDraggedTypes(["public.url"])
+        register(forDraggedTypes: ["public.url"])
     }
 
-    override func draggingEntered(sender: NSDraggingInfo) -> NSDragOperation {
-        return NSDragOperation.Copy
+    override func draggingEntered(_ sender: NSDraggingInfo) -> NSDragOperation {
+        return NSDragOperation.copy
     }
 
-    override func performDragOperation(sender: NSDraggingInfo) -> Bool {
-        if let urls = sender.draggingPasteboard().readObjectsForClasses([NSURL.self], options: nil) as? [NSURL] {
-            let url = urls[0].filePathURL ?? urls[0]
-            stringValue = url.absoluteString
+    override func performDragOperation(_ sender: NSDraggingInfo) -> Bool {
+        if let urls = sender.draggingPasteboard().readObjects(forClasses: [NSURL.self], options: nil) as? [URL] {
+            stringValue = urls[0].standardizedFileURL.absoluteString
 
             if let bind = infoForBinding("value") {
                 let boundObj    = bind[NSObservedObjectKey] as! NSObject

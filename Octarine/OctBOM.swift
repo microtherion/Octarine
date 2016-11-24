@@ -19,16 +19,17 @@ class OctBOM : NSObject, CHCSVParserDelegate {
         openPanel.canChooseDirectories      = false
         openPanel.allowsMultipleSelection   = false
         openPanel.allowedFileTypes          = [kUTTypeText as String]
-        openPanel.beginSheetModalForWindow(NSApp.mainWindow!) { (response: Int) in
+        openPanel.beginSheetModal(for: NSApp.mainWindow!) { (response: Int) in
             if response == NSFileHandlingPanelOKButton {
-                if let bom = try? String(contentsOfURL: openPanel.URL!, usedEncoding: nil) {
+                var enc = String.Encoding.utf8
+                if let bom = try? String(contentsOf: openPanel.url!, usedEncoding: &enc) {
                     // Sniff separators
-                    let delimSet = NSCharacterSet(charactersInString: "\t,;")
+                    let delimSet = CharacterSet(charactersIn: "\t,;")
                     var tabCount    = 0
                     var commaCount  = 0
                     var semiCount   = 0
                     var range = bom.startIndex..<bom.endIndex
-                    while let found = bom.rangeOfCharacterFromSet(delimSet, options: [], range: range) {
+                    while let found = bom.rangeOfCharacter(from: delimSet, options: []) {
                         if bom[found] == "\t" {
                             tabCount += 1
                         } else if bom[found] == "," {
@@ -36,7 +37,7 @@ class OctBOM : NSObject, CHCSVParserDelegate {
                         } else {
                             semiCount += 1
                         }
-                        range = found.endIndex..<range.endIndex
+                        range = found.upperBound..<range.upperBound
                     }
                     let delim : unichar
                     if tabCount >= commaCount {
@@ -50,10 +51,11 @@ class OctBOM : NSObject, CHCSVParserDelegate {
                     } else {
                         delim       = unichar(UnicodeScalar(";").value)
                     }
-                    let parser = CHCSVParser(delimitedString: bom, delimiter: delim)
-                    parser.sanitizesFields = true
-                    parser.delegate = self
-                    parser.parse()
+                    if let parser = CHCSVParser(delimitedString: bom, delimiter: delim) {
+                        parser.sanitizesFields = true
+                        parser.delegate = self
+                        parser.parse()
+                    }
                 }
             }
         }
@@ -62,7 +64,7 @@ class OctBOM : NSObject, CHCSVParserDelegate {
     @IBAction func exportBOM(_: AnyObject) {
         let savePanel = NSSavePanel()
         savePanel.allowedFileTypes = ["csv"]
-        savePanel.beginSheetModalForWindow(NSApp.mainWindow!) { (response: Int) in
+        savePanel.beginSheetModal(for: NSApp.mainWindow!) { (response: Int) in
             if response == NSFileHandlingPanelOKButton {
                 var items       = [OctItem]()
                 var uids        = [String]()
@@ -71,7 +73,7 @@ class OctBOM : NSObject, CHCSVParserDelegate {
                 // Flatten selection
                 while selection.count > 0 {
                     let item = selection.removeFirst()
-                    if item.isPart && items.indexOf(item) == nil {
+                    if item.isPart && items.index(of: item) == nil {
                         items.append(item)
                         if !item.isCustomPart {
                             uids.append(item.ident)
@@ -81,18 +83,22 @@ class OctBOM : NSObject, CHCSVParserDelegate {
                     }
                 }
 
-                self.search.partsFromUIDs(uids, completion: { (_: [[String : AnyObject]]) in
-                    self.writeBOM(savePanel.URL!.path!, items: items)
+                self.search.partsFromUIDs(uids, completion: { (_: [[String : Any]]) in
+                    self.writeBOM(savePanel.url!.path, items: items)
                 })
             }
         }
     }
 
-    func writeBOM(path: String, items: [OctItem]) {
-        let writer = CHCSVWriter(forWritingToCSVFile: path)
-        writer.writeLineOfFields(["Part Number", "Manufacturer", "Description"])
+    func writeBOM(_ path: String, items: [OctItem]) {
+        guard let writer = CHCSVWriter(forWritingToCSVFile: path) else { return }
+        let fields : NSArray = ["Part Number", "Manufacturer", "Description"]
+        writer.writeLine(ofFields: fields)
         for item in items {
-            let part : [String : AnyObject]? = item.isCustomPart ? nil : search.partFromUIDCache[item.ident]
+            var part : [String: Any]?
+            if item.isCustomPart {
+                part = search.partFromUIDCache[item.ident]
+            }
             writer.writeField(part?["name"] ?? item.name)
             writer.writeField(part?["manu"] ?? item.manufacturer ?? "")
             writer.writeField(item.desc)
@@ -117,39 +123,39 @@ class OctBOM : NSObject, CHCSVParserDelegate {
         }
         firstSKUInquiry += 20
 
-        let queryData = try! NSJSONSerialization.dataWithJSONObject(queries, options: [])
-        let queryStr  = String(data: queryData, encoding: NSUTF8StringEncoding)!
-        let urlComponents = NSURLComponents(string: "https://octopart.com/api/v3/parts/match")!
+        let queryData = try! JSONSerialization.data(withJSONObject: queries, options: [])
+        let queryStr  = String(data: queryData, encoding: String.Encoding.utf8)!
+        var urlComponents = URLComponents(string: "https://octopart.com/api/v3/parts/match")!
         urlComponents.queryItems = [
-            NSURLQueryItem(name: "apikey", value: OCTOPART_API_KEY),
-            NSURLQueryItem(name: "include[]", value: "datasheets"),
-            NSURLQueryItem(name: "include[]", value: "short_description"),
-            NSURLQueryItem(name: "limit", value: "100"),
-            NSURLQueryItem(name: "queries", value: queryStr),
+            URLQueryItem(name: "apikey", value: OCTOPART_API_KEY),
+            URLQueryItem(name: "include[]", value: "datasheets"),
+            URLQueryItem(name: "include[]", value: "short_description"),
+            URLQueryItem(name: "limit", value: "100"),
+            URLQueryItem(name: "queries", value: queryStr),
         ]
 
-        let task = OctarineSession.dataTaskWithURL(urlComponents.URL!) { (data: NSData?, response: NSURLResponse?, error: NSError?) in
-            let response = try? NSJSONSerialization.JSONObjectWithData(data!, options: [])
-            var newResults = [[String: AnyObject]]()
-            if response != nil, let results = response!["results"] as? [[String: AnyObject]] {
+        let task = OctarineSession.dataTask(with: urlComponents.url!, completionHandler: { (data: Data?, response: URLResponse?, error: Error?) in
+            let response = try? JSONSerialization.jsonObject(with: data!, options: [])
+            var newResults = [[String: Any]]()
+            if let response = response as? [String: Any], let results = response["results"] as? [[String: Any]] {
                 for result in results {
-                    for item in result["items"] as! [[String: AnyObject]] {
+                    for item in result["items"] as! [[String: Any]] {
                         newResults.append(OctSearch.partFromJSON(item))
                     }
                 }
             }
             self.octApp.endingRequest()
-            dispatch_async(dispatch_get_main_queue(), {
+            DispatchQueue.main.async(execute: {
                 self.search.searchResults += newResults
                 self.querySKUs()
             })
-        }
+        }) 
         octApp.startingRequest()
         task.resume()
     }
 
     func parserDidEndDocument(_: CHCSVParser!) {
-        dispatch_async(dispatch_get_main_queue(), {
+        DispatchQueue.main.async(execute: {
             self.search.focusSearchResults()
             self.search.searchResults = []
         })
@@ -162,26 +168,26 @@ class OctBOM : NSObject, CHCSVParserDelegate {
         parsingHeader = recordNumber == 1
     }
 
-    func parser(_: CHCSVParser!, didReadField field: String!, atIndex fieldIndex: Int) {
+    func parser(_: CHCSVParser!, didReadField field: String!, at fieldIndex: Int) {
         if parsingHeader {
-            if field.rangeOfString("Mouser") != nil {
+            if field.range(of: "Mouser") != nil {
                 skuFieldIndex = fieldIndex // Mouser BOM
             } else if skuFieldIndex < 0 {  // Pick the first of these
-                if field.rangeOfString("Part Number") != nil    // Digikey BOM
-                    || field.rangeOfString("partname") != nil   // KiCad BOM
-                    || field.rangeOfString("Value") != nil      // Eagle
+                if field.range(of: "Part Number") != nil    // Digikey BOM
+                    || field.range(of: "partname") != nil   // KiCad BOM
+                    || field.range(of: "Value") != nil      // Eagle
                 {
                     skuFieldIndex = fieldIndex
                 }
             }
         } else if fieldIndex == skuFieldIndex {
-            if skus.indexOf(field) == nil {
+            if skus.index(of: field) == nil {
                 skus.append(field)
             }
         }
     }
 
-    func parser(parser: CHCSVParser!, didFailWithError error: NSError!) {
+    func parser(_ parser: CHCSVParser!, didFailWithError error: Error!) {
         print(error)
     }
 }

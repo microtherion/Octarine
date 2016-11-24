@@ -8,7 +8,7 @@
 
 import AppKit
 
-func optionalString(s: String) -> String? {
+func optionalString(_ s: String) -> String? {
     return s == "" ? nil : s
 }
 
@@ -30,13 +30,13 @@ class OctCustomPart : NSObject, NSTableViewDataSource {
     dynamic var action  = "Add"
 
     override func awakeFromNib() {
-        dataSheets.registerForDraggedTypes(["public.url"])
-        dataSheets.setDraggingSourceOperationMask([.Move], forLocal: true)
-        dataSheets.setDraggingSourceOperationMask([.Delete], forLocal: false)
+        dataSheets.register(forDraggedTypes: ["public.url"])
+        dataSheets.setDraggingSourceOperationMask([.move], forLocal: true)
+        dataSheets.setDraggingSourceOperationMask([.delete], forLocal: false)
     }
 
-    @IBAction func beginPartSheet(sender: AnyObject) {
-        let createPart = sender.tag() == 1
+    @IBAction func beginPartSheet(_ sender: AnyObject) {
+        let createPart = sender.tag == 1
         if createPart {
             // Create custom part
             name    = "New Part"
@@ -61,7 +61,7 @@ class OctCustomPart : NSObject, NSTableViewDataSource {
 
             if let partSheets = part.sheets?.array as? [NSManagedObject] {
                 sheets = partSheets.map { (sheet: NSManagedObject) -> String in
-                    sheet.valueForKey("url") as! String
+                    sheet.value(forKey: "url") as! String
                 }
             }
 
@@ -101,11 +101,11 @@ class OctCustomPart : NSObject, NSTableViewDataSource {
         openPanel.canChooseDirectories      = false
         openPanel.allowsMultipleSelection   = true
         openPanel.allowedFileTypes          = [kUTTypePDF as String]
-        openPanel.beginSheetModalForWindow(sheet) { (response: Int) in
+        openPanel.beginSheetModal(for: sheet) { (response: Int) in
             if response == NSFileHandlingPanelOKButton {
                 var at = self.dataSheets.selectedRow+1
-                for url in openPanel.URLs {
-                    self.sheets.insert(url.filePathURL!.absoluteString, atIndex: at)
+                for url in openPanel.urls {
+                    self.sheets.insert((url as NSURL).filePathURL!.absoluteString, at: at)
                     at += 1
                 }
                 self.dataSheets.reloadData()
@@ -114,71 +114,70 @@ class OctCustomPart : NSObject, NSTableViewDataSource {
     }
     
     func deleteSelectedSheets() {
-        for row in dataSheets.selectedRowIndexes.reverse() {
-            sheets.removeAtIndex(row)
+        for row in dataSheets.selectedRowIndexes.reversed() {
+            sheets.remove(at: row)
         }
         dataSheets.reloadData()
     }
 
-    func numberOfRowsInTableView(tableView: NSTableView) -> Int {
+    func numberOfRows(in tableView: NSTableView) -> Int {
         return sheets.count
     }
 
-    func tableView(tableView: NSTableView, objectValueForTableColumn tableColumn: NSTableColumn?, row: Int) -> AnyObject? {
+    func tableView(_ tableView: NSTableView, objectValueFor tableColumn: NSTableColumn?, row: Int) -> Any? {
         return sheets[row]
     }
 
-    func tableView(tableView: NSTableView, setObjectValue object: AnyObject?, forTableColumn tableColumn: NSTableColumn?, row: Int) {
+    func tableView(_ tableView: NSTableView, setObjectValue object: Any?, for tableColumn: NSTableColumn?, row: Int) {
         if let str = object as? String {
             sheets[row] = str
         }
     }
 
-    var rowsBeingMoved : NSIndexSet?
+    var rowsBeingMoved : IndexSet?
 
-    func tableView(tableView: NSTableView, writeRowsWithIndexes rowIndexes: NSIndexSet, toPasteboard pboard: NSPasteboard) -> Bool {
-        var urls    = [NSURL]()
+    func tableView(_ tableView: NSTableView, writeRowsWith rowIndexes: IndexSet, to pboard: NSPasteboard) -> Bool {
+        var urls    = [URL]()
         for row in rowIndexes {
-            if let url = NSURL(string: sheets[row]) {
+            if let url = URL(string: sheets[row]) {
                 urls.append(url)
             }
         }
-        pboard.writeObjects(urls)
+        pboard.writeObjects(urls as [NSPasteboardWriting])
         rowsBeingMoved = rowIndexes
 
         return urls.count > 0
     }
 
-    func tableView(tableView: NSTableView, validateDrop info: NSDraggingInfo, proposedRow row: Int, proposedDropOperation dropOperation: NSTableViewDropOperation) -> NSDragOperation {
-        guard info.draggingPasteboard().availableTypeFromArray(["public.url"]) != nil else {
-            return .None
+    func tableView(_ tableView: NSTableView, validateDrop info: NSDraggingInfo, proposedRow row: Int, proposedDropOperation dropOperation: NSTableViewDropOperation) -> NSDragOperation {
+        guard info.draggingPasteboard().availableType(from: ["public.url"]) != nil else {
+            return NSDragOperation()
         }
-        if dropOperation == .On {
-            tableView.setDropRow(row, dropOperation: .Above)
+        if dropOperation == .on {
+            tableView.setDropRow(row, dropOperation: .above)
         }
-        guard let draggingSource = info.draggingSource() as? NSTableView
-            where draggingSource == tableView else
+        guard let draggingSource = info.draggingSource() as? NSTableView, draggingSource == tableView else
         {
-            return .Copy  // Drags from outside the view will copy
+            return .copy  // Drags from outside the view will copy
         }
-        return .Move    // Otherwise we're reordering
+        return .move    // Otherwise we're reordering
     }
 
-    func tableView(tableView: NSTableView, acceptDrop info: NSDraggingInfo, row: Int, dropOperation: NSTableViewDropOperation) -> Bool {
+    func tableView(_ tableView: NSTableView, acceptDrop info: NSDraggingInfo, row: Int, dropOperation: NSTableViewDropOperation) -> Bool {
         var at      = row
         tableView.beginUpdates()
-        if info.draggingSourceOperationMask() == [.Move] {
-            for row in rowsBeingMoved!.reverse() {
+        if info.draggingSourceOperationMask() == [.move] {
+            for row in rowsBeingMoved!.reversed() {
                 if row < at {
                     at -= 1
                 }
-                sheets.removeAtIndex(row)
+                sheets.remove(at: row)
             }
         }
-        if let urls = info.draggingPasteboard().readObjectsForClasses([NSURL.self], options: nil) as? [NSURL] {
+        if let urls = info.draggingPasteboard().readObjects(forClasses: [NSURL.self], options: nil) as? [URL] {
             for url in urls {
-                let str = (url.filePathURL ?? url).absoluteString
-                sheets.insert(str, atIndex: at)
+                let str = url.standardizedFileURL.absoluteString
+                sheets.insert(str, at: at)
                 at += 1
             }
         }
@@ -187,11 +186,11 @@ class OctCustomPart : NSObject, NSTableViewDataSource {
         return true
     }
 
-    func tableView(tableView: NSTableView, draggingSession session: NSDraggingSession, endedAtPoint screenPoint: NSPoint, operation: NSDragOperation) {
-        if operation == [.Delete] {
+    func tableView(_ tableView: NSTableView, draggingSession session: NSDraggingSession, endedAt screenPoint: NSPoint, operation: NSDragOperation) {
+        if operation == [.delete] {
             tableView.beginUpdates()
-            for row in rowsBeingMoved!.reverse() {
-                sheets.removeAtIndex(row)
+            for row in rowsBeingMoved!.reversed() {
+                sheets.remove(at: row)
             }
             tableView.reloadData()
             tableView.endUpdates()
@@ -199,11 +198,11 @@ class OctCustomPart : NSObject, NSTableViewDataSource {
         rowsBeingMoved = nil
     }
 
-    func fetchPartInfo(ident: String) {
-        search.partsFromUIDs([ident]) { (parts: [[String : AnyObject]]) in
+    func fetchPartInfo(_ ident: String) {
+        search.partsFromUIDs([ident]) { (parts: [[String : Any]]) in
             for part in parts {
                 if part["ident"] as! String == ident {
-                    dispatch_async(dispatch_get_main_queue()) {
+                    DispatchQueue.main.async {
                         self.purl   = stringRep(part["purl"])
                         self.manu   = stringRep(part["manu"])
                         self.murl   = stringRep(part["murl"])
@@ -218,7 +217,7 @@ class OctCustomPart : NSObject, NSTableViewDataSource {
 
 class OctCustomPartSheets : NSTableView {
     @IBAction func delete(_: AnyObject) {
-        (dataSource() as? OctCustomPart)?.deleteSelectedSheets()
+        (dataSource as? OctCustomPart)?.deleteSelectedSheets()
     }
 
     @IBAction func copy(_: AnyObject) {
@@ -227,8 +226,8 @@ class OctCustomPartSheets : NSTableView {
     @IBAction func paste(_: AnyObject) {
     }
     
-    override func validateUserInterfaceItem(item: NSValidatedUserInterfaceItem) -> Bool {
-        switch item.action() {
+    override func validateUserInterfaceItem(_ item: NSValidatedUserInterfaceItem) -> Bool {
+        switch item.action! {
         case #selector(OctCustomPartSheets.delete(_:)), #selector(OctCustomPartSheets.copy(_:)):
             return selectedRowIndexes.count > 0
         default:

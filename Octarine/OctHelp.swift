@@ -17,8 +17,8 @@ class OctHelp : NSWindowController {
     }
 
     override func windowDidLoad() {
-        let helpURL = NSBundle.mainBundle().URLForResource("Help", withExtension: "pdf")
-        let helpDoc = PDFDocument(URL: helpURL)
-        pdfView.setDocument(helpDoc)
+        let helpURL = Bundle.main.url(forResource: "Help", withExtension: "pdf")
+        let helpDoc = PDFDocument(url: helpURL!)
+        pdfView.document = helpDoc
     }
 }

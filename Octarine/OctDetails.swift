@@ -13,18 +13,18 @@ class OctDetails : NSObject {
     @IBOutlet weak var octApp : OctApp!
 
     dynamic var detailSpecs = [[String: String]]()
-    dynamic var componentSelection = NSIndexSet() {
+    dynamic var componentSelection = IndexSet() {
         didSet {
             if componentSelection.count == 1 {
-                let item = (searchController.arrangedObjects as! [[String: AnyObject]])[componentSelection.firstIndex]
-                let urlComponents = NSURLComponents(string: "https://octopart.com/api/v3/parts/"+(item["ident"] as! String))!
+                let item = (searchController.arrangedObjects as! [[String: AnyObject]])[componentSelection.first!]
+                var urlComponents = URLComponents(string: "https://octopart.com/api/v3/parts/"+(item["ident"] as! String))!
                 urlComponents.queryItems = [
-                    NSURLQueryItem(name: "apikey", value: OCTOPART_API_KEY),
-                    NSURLQueryItem(name: "include[]", value: "specs"),
+                    URLQueryItem(name: "apikey", value: OCTOPART_API_KEY),
+                    URLQueryItem(name: "include[]", value: "specs"),
                 ]
-                let task = OctarineSession.dataTaskWithURL(urlComponents.URL!) { (data: NSData?, response: NSURLResponse?, error: NSError?) in
+                let task = OctarineSession.dataTask(with: urlComponents.url!, completionHandler: { (data: Data?, response: URLResponse?, error: Error?) in
                     guard let data = data else { return }
-                    let response = try? NSJSONSerialization.JSONObjectWithData(data, options: [])
+                    let response = try? JSONSerialization.jsonObject(with: data, options: [])
                     var specMap = [[String:String]]()
                     if let resp  = response as? [String: AnyObject],
                         let specs = resp["specs"] as? [String: AnyObject]
@@ -39,14 +39,14 @@ class OctDetails : NSObject {
                         }
                     }
                     self.octApp.endingRequest()
-                    dispatch_async(dispatch_get_main_queue(), {
+                    DispatchQueue.main.async(execute: {
                         self.detailSpecs = specMap
                     })
-                }
+                }) 
                 octApp.startingRequest()
                 task.resume()
             } else {
-                dispatch_async(dispatch_get_main_queue(), {
+                DispatchQueue.main.async(execute: {
                     self.detailSpecs = [[String:String]]()
                 })
             }

@@ -14,8 +14,8 @@ class OctItem: NSManagedObject {
         return (NSApp.delegate as! OctApp).managedObjectContext
     }
 
-    class func createPart(name: String, desc: String, partID: String) -> OctItem {
-        let newPart = NSEntityDescription.insertNewObjectForEntityForName("OctItem", inManagedObjectContext: managedObjectContext) as! OctItem
+    class func createPart(_ name: String, desc: String, partID: String) -> OctItem {
+        let newPart = NSEntityDescription.insertNewObject(forEntityName: "OctItem", into: managedObjectContext) as! OctItem
         newPart.isPart = true
         newPart.name   = name
         newPart.desc   = desc
@@ -25,32 +25,32 @@ class OctItem: NSManagedObject {
     }
 
     class func createCustomPart() -> OctItem {
-        let newPart = NSEntityDescription.insertNewObjectForEntityForName("OctItem", inManagedObjectContext: managedObjectContext) as! OctItem
+        let newPart = NSEntityDescription.insertNewObject(forEntityName: "OctItem", into: managedObjectContext) as! OctItem
         newPart.isPart = true
-        newPart.ident  = NSUUID().UUIDString
+        newPart.ident  = UUID().uuidString
 
         return newPart
     }
     
-    class func createFolder(name: String) -> OctItem {
-        let newFolder = NSEntityDescription.insertNewObjectForEntityForName("OctItem", inManagedObjectContext: managedObjectContext) as! OctItem
+    class func createFolder(_ name: String) -> OctItem {
+        let newFolder = NSEntityDescription.insertNewObject(forEntityName: "OctItem", into: managedObjectContext) as! OctItem
         newFolder.isPart = false
         newFolder.name   = name
         newFolder.desc   = ""
-        newFolder.ident  = NSUUID().UUIDString
+        newFolder.ident  = UUID().uuidString
 
         return newFolder
     }
 
     class func rootFolder() -> OctItem {
-        let fetchRequest        = NSFetchRequest(entityName: "OctItem")
+        let fetchRequest        = NSFetchRequest<NSFetchRequestResult>(entityName: "OctItem")
         fetchRequest.predicate  = NSPredicate(format: "ident == ''")
-        let results             = try? managedObjectContext.executeFetchRequest(fetchRequest)
+        let results             = try? managedObjectContext.fetch(fetchRequest)
 
-        if let results = results where results.count>0 {
+        if let results = results, results.count>0 {
             return results[0] as! OctItem
         } else {
-            let newFolder = NSEntityDescription.insertNewObjectForEntityForName("OctItem", inManagedObjectContext: managedObjectContext) as! OctItem
+            let newFolder = NSEntityDescription.insertNewObject(forEntityName: "OctItem", into: managedObjectContext) as! OctItem
             newFolder.isPart = false
             newFolder.name   = ""
             newFolder.desc   = ""
@@ -60,19 +60,19 @@ class OctItem: NSManagedObject {
         }
     }
 
-    class func findItemByID(ID: String) -> OctItem? {
-        let fetchRequest        = NSFetchRequest(entityName: "OctItem")
+    class func findItemByID(_ ID: String) -> OctItem? {
+        let fetchRequest        = NSFetchRequest<NSFetchRequestResult>(entityName: "OctItem")
         fetchRequest.predicate  = NSPredicate(format: "ident == %@", ID)
-        let results             = try? managedObjectContext.executeFetchRequest(fetchRequest)
+        let results             = try? managedObjectContext.fetch(fetchRequest)
         
-        if let fetched = results where fetched.count > 0 {
+        if let fetched = results, fetched.count > 0 {
             return fetched[0] as? OctItem
         } else {
             return nil
         }
     }
 
-    class func itemFromSerialized(serialized: [String: AnyObject]) -> OctItem {
+    class func itemFromSerialized(_ serialized: [String: AnyObject]) -> OctItem {
         if let found = findItemByID(serialized["ident"] as! String) {
             return found
         } else if serialized["is_part"] as! Bool {
@@ -94,14 +94,14 @@ class OctItem: NSManagedObject {
         }
     }
 
-    func serialized() -> [String : AnyObject] {
-        var result : [String : AnyObject] = ["is_part": isPart, "name": name, "desc": desc, "ident": ident]
-        result["manu"] = manufacturer
-        result["murl"] = manu_url
-        result["purl"] = part_url
-        result["sheets"] = sheets?.map(){ (sheet: AnyObject) -> String in
-            (sheet as! NSManagedObject).valueForKey("url") as! String
-        }
+    func serialized() -> [String : Any] {
+        var result : [String : Any] = ["is_part": isPart, "name": name, "desc": desc, "ident": ident]
+        result["manu"] = manufacturer as AnyObject?
+        result["murl"] = manu_url as AnyObject?
+        result["purl"] = part_url as AnyObject?
+        result["sheets"] = sheets?.flatMap() { (sheet) in
+            (sheet as? NSManagedObject)?.value(forKey: "url") as? String
+        } ?? [String]()
 
         return result
     }
@@ -112,18 +112,18 @@ class OctItem: NSManagedObject {
 
     dynamic var isCustomPart : Bool {
         // Custom parts have UUIDs, standard parts have hex encoded 64 bit numbers
-        return ident.lengthOfBytesUsingEncoding(NSUTF8StringEncoding) > 16
+        return ident.lengthOfBytes(using: String.Encoding.utf8) > 16
     }
 
-    func setDataSheets(sheets: [String]) {
+    func setDataSheets(_ sheets: [String]) {
         if sheets.count > 0 {
             // Just delete and rebuild them all
-            let newSheets = mutableOrderedSetValueForKey("sheets")
+            let newSheets = mutableOrderedSetValue(forKey: "sheets")
             newSheets.removeAllObjects()
             for sheet in sheets {
-                let newSheet = NSEntityDescription.insertNewObjectForEntityForName("OctDataSheet", inManagedObjectContext: OctItem.managedObjectContext)
+                let newSheet = NSEntityDescription.insertNewObject(forEntityName: "OctDataSheet", into: OctItem.managedObjectContext)
                 newSheet.setValue(sheet, forKey: "url")
-                newSheets.addObject(newSheet)
+                newSheets.add(newSheet)
             }
         } else {
             self.sheets = nil

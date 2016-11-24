@@ -14,14 +14,14 @@ class OctSearch : NSObject, NSTableViewDataSource, NSTableViewDelegate {
     @IBOutlet weak var sheets: OctSheets!
 
     override func awakeFromNib() {
-        resultTable.setDraggingSourceOperationMask(.Copy, forLocal: true)
-        resultTable.setDraggingSourceOperationMask(.Copy, forLocal: false)
+        resultTable.setDraggingSourceOperationMask(.copy, forLocal: true)
+        resultTable.setDraggingSourceOperationMask(.copy, forLocal: false)
     }
 
-    dynamic var searchResults = [[String: AnyObject]]() {
+    dynamic var searchResults = [[String: Any]]() {
         didSet {
             if searchResults.count == 1 {
-                resultTable.selectRowIndexes(NSIndexSet(index: 0), byExtendingSelection: false)
+                resultTable.selectRowIndexes(IndexSet(integer: 0), byExtendingSelection: false)
                 updateDataSheets()
             }
         }
@@ -31,12 +31,11 @@ class OctSearch : NSObject, NSTableViewDataSource, NSTableViewDelegate {
         self.octApp.window.makeFirstResponder(resultTable)
     }
     
-    class func partFromJSON(item: AnyObject?) -> [String: AnyObject] {
-        let item = item as! [String: AnyObject]
-        let manu = item["manufacturer"] as! [String: AnyObject]
+    class func partFromJSON(_ item: [String: Any]) -> [String: Any] {
+        let manu = item["manufacturer"] as! [String: Any]
 
         var datasheets = [String]()
-        if let ds = item["datasheets"] as? [[String: AnyObject]] {
+        if let ds = item["datasheets"] as? [[String: Any]] {
             for sheet in ds {
                 if let url = sheet["url"] as? String {
                     datasheets.append(url)
@@ -44,7 +43,7 @@ class OctSearch : NSObject, NSTableViewDataSource, NSTableViewDelegate {
             }
         }
 
-        let newItem : [String: AnyObject] = [
+        let newItem : [String: Any] = [
             "ident":    stringRep(item["uid"]),
             "name":     stringRep(item["mpn"]),
             "manu":     stringRep(manu["name"]),
@@ -57,11 +56,11 @@ class OctSearch : NSObject, NSTableViewDataSource, NSTableViewDelegate {
         return newItem
     }
 
-    var partFromUIDCache = [String: [String: AnyObject]]()
-    var cacheExpiry = NSDate(timeIntervalSinceNow: 86400)
+    var partFromUIDCache = [String: [String: Any]]()
+    var cacheExpiry = Date(timeIntervalSinceNow: 86400)
 
-    func partsFromCachedUIDs(uids: [String], completion:([[String: AnyObject]]) -> Void) {
-        var results = [[String: AnyObject]]()
+    func partsFromCachedUIDs(_ uids: [String], completion:([[String: Any]]) -> Void) {
+        var results = [[String: Any]]()
         for uid in uids {
             if let cached = partFromUIDCache[uid] {
                 results.append(cached)
@@ -70,15 +69,15 @@ class OctSearch : NSObject, NSTableViewDataSource, NSTableViewDelegate {
         completion(results)
     }
 
-    func partsFromUIDs(uids: [String], completion:([[String: AnyObject]]) -> Void) {
-        let now = NSDate()
-        if now.compare(cacheExpiry) == .OrderedDescending {
+    func partsFromUIDs(_ uids: [String], completion:@escaping ([[String: Any]]) -> Void) {
+        let now = Date()
+        if now.compare(cacheExpiry) == .orderedDescending {
             // Flush cache to comply with Octopart terms of use
             partFromUIDCache = [:]
-            cacheExpiry = NSDate(timeIntervalSinceNow: 86400)
+            cacheExpiry = Date(timeIntervalSinceNow: 86400)
         }
         let uidsToFetch = uids.filter { (uid: String) -> Bool in
-            return partFromUIDCache.indexForKey(uid) == nil
+            return partFromUIDCache.index(forKey: uid) == nil
         }
 
         guard uidsToFetch.count > 0 else {
@@ -86,63 +85,68 @@ class OctSearch : NSObject, NSTableViewDataSource, NSTableViewDelegate {
             return
         }
 
-        let urlComponents = NSURLComponents(string: "https://octopart.com/api/v3/parts/get_multi")!
+        var urlComponents = URLComponents(string: "https://octopart.com/api/v3/parts/get_multi")!
         let queryItems = [
-            NSURLQueryItem(name: "apikey", value: OCTOPART_API_KEY),
-            NSURLQueryItem(name: "include[]", value: "datasheets"),
-            NSURLQueryItem(name: "include[]", value: "short_description"),
-            ] + uidsToFetch.map() { (uid: String) -> NSURLQueryItem in
-                NSURLQueryItem(name: "uid[]", value: uid)
+            URLQueryItem(name: "apikey", value: OCTOPART_API_KEY),
+            URLQueryItem(name: "include[]", value: "datasheets"),
+            URLQueryItem(name: "include[]", value: "short_description"),
+            ] + uidsToFetch.map() { (uid: String) -> URLQueryItem in
+                URLQueryItem(name: "uid[]", value: uid)
         }
         urlComponents.queryItems = queryItems
 
-        let task = OctarineSession.dataTaskWithURL(urlComponents.URL!) { (data: NSData?, response: NSURLResponse?, error: NSError?) in
-            let response = try? NSJSONSerialization.JSONObjectWithData(data!, options: [])
-            if let results = response as? [String: AnyObject] where results["class"] == nil {
+        let task = OctarineSession.dataTask(with: urlComponents.url!, completionHandler: { (data: Data?, response: URLResponse?, error: Error?) in
+            let response = try? JSONSerialization.jsonObject(with: data!, options: [])
+            if let results = response as? [String: Any], results["class"] == nil {
                 for (_,result) in results {
-                    var part    = OctSearch.partFromJSON(result)
-                    self.partFromUIDCache[part["ident"] as! String] = part
+                    if let json = result as? [String: Any] {
+                        var part    = OctSearch.partFromJSON(json)
+                        self.partFromUIDCache[part["ident"] as! String] = part
+                    }
                 }
             }
             self.octApp.endingRequest()
             self.partsFromCachedUIDs(uids, completion: completion)
-        }
+        }) 
         octApp.startingRequest()
         task.resume()
     }
 
-    @IBAction func searchComponents(sender: NSSearchField!) {
-        let urlComponents = NSURLComponents(string: "https://octopart.com/api/v3/parts/search")!
+    @IBAction func searchComponents(_ sender: NSSearchField!) {
+        var urlComponents = URLComponents(string: "https://octopart.com/api/v3/parts/search")!
         urlComponents.queryItems = [
-            NSURLQueryItem(name: "apikey", value: OCTOPART_API_KEY),
-            NSURLQueryItem(name: "q", value: sender.stringValue),
-            NSURLQueryItem(name: "include[]", value: "datasheets"),
-            NSURLQueryItem(name: "include[]", value: "short_description"),
-            NSURLQueryItem(name: "limit", value: "100")
+            URLQueryItem(name: "apikey", value: OCTOPART_API_KEY),
+            URLQueryItem(name: "q", value: sender.stringValue),
+            URLQueryItem(name: "include[]", value: "datasheets"),
+            URLQueryItem(name: "include[]", value: "short_description"),
+            URLQueryItem(name: "limit", value: "100")
         ]
 
-        let task = OctarineSession.dataTaskWithURL(urlComponents.URL!) { (data: NSData?, response: NSURLResponse?, error: NSError?) in
+        let task = OctarineSession.dataTask(with: urlComponents.url!, completionHandler: { (data: Data?, response: URLResponse?, error: Error?) in
             guard let data = data else { return }
-            let response = try? NSJSONSerialization.JSONObjectWithData(data, options: [])
-            var newResults = [[String: AnyObject]]()
-            if response != nil {
-                let results    = response!["results"] as! [[String: AnyObject]]
+            let response = try? JSONSerialization.jsonObject(with: data, options: [])
+            var newResults = [[String: Any]]()
+            if let response = response as? [String: Any],
+               let results  = response["results"] as? [[String: Any]]
+            {
                 for result in results {
-                    newResults.append(OctSearch.partFromJSON(result["item"]))
+                    if let item = result["item"] as? [String: Any] {
+                        newResults.append(OctSearch.partFromJSON(item))
+                    }
                 }
             }
             self.octApp.endingRequest()
-            dispatch_async(dispatch_get_main_queue(), {
+            DispatchQueue.main.async(execute: {
                 self.focusSearchResults()
                 self.searchResults = newResults
             })
-        }
+        }) 
         octApp.startingRequest()
         task.resume()
     }
 
-    func tableView(tableView: NSTableView, writeRowsWithIndexes rowIndexes: NSIndexSet, toPasteboard pboard: NSPasteboard) -> Bool {
-        let serialized = rowIndexes.map({ (index: Int) -> [String : AnyObject] in
+    func tableView(_ tableView: NSTableView, writeRowsWith rowIndexes: IndexSet, to pboard: NSPasteboard) -> Bool {
+        let serialized = rowIndexes.map({ (index: Int) -> [String : Any] in
             let part = searchResults[index]
             return ["is_part": true, "ident": part["ident"]!, "name": part["name"]!, "desc": part["desc"]!]
         })
@@ -172,7 +176,7 @@ class OctSearch : NSObject, NSTableViewDataSource, NSTableViewDelegate {
         }
     }
 
-    func tableViewSelectionDidChange(_: NSNotification) {
+    func tableViewSelectionDidChange(_: Notification) {
         updateDataSheets()
     }
 }
