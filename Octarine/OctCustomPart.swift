@@ -3,7 +3,7 @@
 //  Octarine
 //
 //  Created by Matthias Neeracher on 29/04/16.
-//  Copyright © 2016 Matthias Neeracher. All rights reserved.
+//  Copyright © 2016-2017 Matthias Neeracher. All rights reserved.
 //
 
 import AppKit
@@ -20,17 +20,17 @@ class OctCustomPart : NSObject, NSTableViewDataSource {
     @IBOutlet weak var search: OctSearch!
     @IBOutlet weak var dataSheets: NSTableView!
 
-    dynamic var name    = "New Part"
-    dynamic var purl    = ""
-    dynamic var manu    = ""
-    dynamic var murl    = ""
-    dynamic var desc    = ""
-    dynamic var sheets  = [String]()
-    dynamic var custom  = true
-    dynamic var action  = "Add"
+    @objc dynamic var name    = "New Part"
+    @objc dynamic var purl    = ""
+    @objc dynamic var manu    = ""
+    @objc dynamic var murl    = ""
+    @objc dynamic var desc    = ""
+    @objc dynamic var sheets  = [String]()
+    @objc dynamic var custom  = true
+    @objc dynamic var action  = "Add"
 
     override func awakeFromNib() {
-        dataSheets.register(forDraggedTypes: ["public.url"])
+        dataSheets.registerForDraggedTypes([NSPasteboard.PasteboardType(rawValue: "public.url")])
         dataSheets.setDraggingSourceOperationMask([.move], forLocal: true)
         dataSheets.setDraggingSourceOperationMask([.delete], forLocal: false)
     }
@@ -70,8 +70,8 @@ class OctCustomPart : NSObject, NSTableViewDataSource {
             }
         }
         dataSheets.reloadData()
-        mainWindow.beginSheet(sheet) { (response: NSModalResponse) in
-            if (response > 0) {
+        mainWindow.beginSheet(sheet) { (response: NSApplication.ModalResponse) in
+            if (response.rawValue > 0) {
                 let part = createPart ? OctItem.createCustomPart() : self.partTree.selectedItem()
                 part.name           = self.name
                 part.part_url       = optionalString(self.purl)
@@ -88,7 +88,7 @@ class OctCustomPart : NSObject, NSTableViewDataSource {
     }
 
     @IBAction func add(_: AnyObject) {
-        mainWindow.endSheet(sheet, returnCode:1)
+        mainWindow.endSheet(sheet, returnCode:NSApplication.ModalResponse(rawValue: 1))
     }
 
     @IBAction func dismiss(_: AnyObject) {
@@ -101,8 +101,8 @@ class OctCustomPart : NSObject, NSTableViewDataSource {
         openPanel.canChooseDirectories      = false
         openPanel.allowsMultipleSelection   = true
         openPanel.allowedFileTypes          = [kUTTypePDF as String]
-        openPanel.beginSheetModal(for: sheet) { (response: Int) in
-            if response == NSFileHandlingPanelOKButton {
+        openPanel.beginSheetModal(for: sheet) { (response: NSApplication.ModalResponse) in
+            if response.rawValue == NSFileHandlingPanelOKButton {
                 var at = self.dataSheets.selectedRow+1
                 for url in openPanel.urls {
                     self.sheets.insert((url as NSURL).filePathURL!.absoluteString, at: at)
@@ -149,8 +149,8 @@ class OctCustomPart : NSObject, NSTableViewDataSource {
         return urls.count > 0
     }
 
-    func tableView(_ tableView: NSTableView, validateDrop info: NSDraggingInfo, proposedRow row: Int, proposedDropOperation dropOperation: NSTableViewDropOperation) -> NSDragOperation {
-        guard info.draggingPasteboard().availableType(from: ["public.url"]) != nil else {
+    func tableView(_ tableView: NSTableView, validateDrop info: NSDraggingInfo, proposedRow row: Int, proposedDropOperation dropOperation: NSTableView.DropOperation) -> NSDragOperation {
+        guard info.draggingPasteboard().availableType(from: [NSPasteboard.PasteboardType(rawValue: "public.url")]) != nil else {
             return NSDragOperation()
         }
         if dropOperation == .on {
@@ -163,7 +163,7 @@ class OctCustomPart : NSObject, NSTableViewDataSource {
         return .move    // Otherwise we're reordering
     }
 
-    func tableView(_ tableView: NSTableView, acceptDrop info: NSDraggingInfo, row: Int, dropOperation: NSTableViewDropOperation) -> Bool {
+    func tableView(_ tableView: NSTableView, acceptDrop info: NSDraggingInfo, row: Int, dropOperation: NSTableView.DropOperation) -> Bool {
         var at      = row
         tableView.beginUpdates()
         if info.draggingSourceOperationMask() == [.move] {

@@ -285,16 +285,16 @@
 				TargetAttributes = {
 					95E5B32B1C8BB2F20099F479 = {
 						CreatedOnToolsVersion = 7.3;
-						LastSwiftMigration = 0820;
+						LastSwiftMigration = 0900;
 					};
 					95E5B33D1C8BB2F20099F479 = {
 						CreatedOnToolsVersion = 7.3;
-						LastSwiftMigration = 0820;
+						LastSwiftMigration = 0900;
 						TestTargetID = 95E5B32B1C8BB2F20099F479;
 					};
 					95E5B3481C8BB2F20099F479 = {
 						CreatedOnToolsVersion = 7.3;
-						LastSwiftMigration = 0820;
+						LastSwiftMigration = 0900;
 						TestTargetID = 95E5B32B1C8BB2F20099F479;
 					};
 				};
@@ -514,7 +514,8 @@
 				SDKROOT = macosx;
 				SWIFT_OBJC_BRIDGING_HEADER = "Octarine/Octarine-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Debug;
 		};
@@ -531,7 +532,8 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				SWIFT_OBJC_BRIDGING_HEADER = "Octarine/Octarine-Bridging-Header.h";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Release;
 		};
@@ -544,7 +546,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = org.aereperennius.OctarineTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Octarine.app/Contents/MacOS/Octarine";
 			};
 			name = Debug;
@@ -558,7 +561,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = org.aereperennius.OctarineTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Octarine.app/Contents/MacOS/Octarine";
 			};
 			name = Release;
@@ -571,7 +575,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = org.aereperennius.OctarineUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.0;
 				TEST_TARGET_NAME = Octarine;
 			};
 			name = Debug;
@@ -584,7 +589,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = org.aereperennius.OctarineUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.0;
 				TEST_TARGET_NAME = Octarine;
 			};
 			name = Release;

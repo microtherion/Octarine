@@ -3,7 +3,7 @@
 //  Octarine
 //
 //  Created by Matthias Neeracher on 18/04/16.
-//  Copyright © 2016 Matthias Neeracher. All rights reserved.
+//  Copyright © 2016-2017 Matthias Neeracher. All rights reserved.
 //
 
 import AppKit
@@ -12,8 +12,8 @@ class OctDetails : NSObject {
     @IBOutlet weak var searchController : NSArrayController!
     @IBOutlet weak var octApp : OctApp!
 
-    dynamic var detailSpecs = [[String: String]]()
-    dynamic var componentSelection = IndexSet() {
+    @objc dynamic var detailSpecs = [[String: String]]()
+    @objc dynamic var componentSelection = IndexSet() {
         didSet {
             if componentSelection.count == 1 {
                 let item = (searchController.arrangedObjects as! [[String: AnyObject]])[componentSelection.first!]

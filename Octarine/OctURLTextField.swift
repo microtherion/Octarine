@@ -3,14 +3,14 @@
 //  Octarine
 //
 //  Created by Matthias Neeracher on 30/04/16.
-//  Copyright © 2016 Matthias Neeracher. All rights reserved.
+//  Copyright © 2016-2017 Matthias Neeracher. All rights reserved.
 //
 
 import AppKit
 
 class OctURLTextField : NSTextField {
     override func awakeFromNib() {
-        register(forDraggedTypes: ["public.url"])
+        registerForDraggedTypes([NSPasteboard.PasteboardType(rawValue: "public.url")])
     }
 
     override func draggingEntered(_ sender: NSDraggingInfo) -> NSDragOperation {
@@ -21,9 +21,9 @@ class OctURLTextField : NSTextField {
         if let urls = sender.draggingPasteboard().readObjects(forClasses: [NSURL.self], options: nil) as? [URL] {
             stringValue = urls[0].standardizedFileURL.absoluteString
 
-            if let bind = infoForBinding("value") {
-                let boundObj    = bind[NSObservedObjectKey] as! NSObject
-                let boundPath   = bind[NSObservedKeyPathKey] as! String
+            if let bind = NSObject.infoForBinding(NSBindingName(rawValue: "value")) {
+                let boundObj    = bind[NSBindingInfoKey.observedObject] as! NSObject
+                let boundPath   = bind[NSBindingInfoKey.observedKeyPath] as! String
 
                 boundObj.setValue(stringValue, forKeyPath: boundPath)
             }

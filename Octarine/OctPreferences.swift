@@ -3,7 +3,7 @@
 //  Octarine
 //
 //  Created by Matthias Neeracher on 07/05/16.
-//  Copyright © 2016 Matthias Neeracher. All rights reserved.
+//  Copyright © 2016-2017 Matthias Neeracher. All rights reserved.
 //
 
 import Cocoa
@@ -12,7 +12,7 @@ class OctPreferences: NSWindowController, NSOpenSavePanelDelegate {
     @IBOutlet weak var octApp : OctApp!
 
     convenience init() {
-        self.init(windowNibName: "OctPreferences")
+        self.init(windowNibName: NSNib.Name(rawValue: "OctPreferences"))
     }
 
     override func windowDidLoad() {
@@ -25,11 +25,11 @@ class OctPreferences: NSWindowController, NSOpenSavePanelDelegate {
         alert.messageText   = "Do you really want to reset the database? This will delete all stored items."
         alert.addButton(withTitle: "Cancel")
         alert.addButton(withTitle: "Reset")
-        alert.beginSheetModal(for: window!, completionHandler: { (response: NSModalResponse) in
-            if response == 1001 {
-                let fetchRequest                    = NSFetchRequest<NSFetchRequestResult>(entityName: "OctItem")
+        alert.beginSheetModal(for: window!, completionHandler: { (response: NSApplication.ModalResponse) in
+            if response.rawValue == 1001 {
+                let fetchRequest        = NSFetchRequest<NSFetchRequestResult>(entityName: "OctItem")
                 fetchRequest.predicate  = NSPredicate(format: "ident == ''")
-                let results                         = try? self.octApp.managedObjectContext.fetch(fetchRequest)
+                let results             = try? self.octApp.managedObjectContext.fetch(fetchRequest)
 
                 if let results = results as? [NSManagedObject] {
                     for result in results {
@@ -53,8 +53,8 @@ class OctPreferences: NSWindowController, NSOpenSavePanelDelegate {
         if let path = defaults.string(forKey: "DatabasePath") {
             openPanel.directoryURL          = URL(fileURLWithPath: path)
         }
-        openPanel.beginSheetModal(for: window!) { (response: Int) in
-            if response == NSFileHandlingPanelOKButton {
+        openPanel.beginSheetModal(for: window!) { (response: NSApplication.ModalResponse) in
+            if response.rawValue == NSFileHandlingPanelOKButton {
                 let url         = openPanel.url!.appendingPathComponent("Octarine.storedata")
                 let coordinator = self.octApp.persistentStoreCoordinator
                 let oldStore    = coordinator.persistentStores[0]
@@ -76,8 +76,8 @@ class OctPreferences: NSWindowController, NSOpenSavePanelDelegate {
         if let path = defaults.string(forKey: "DatabasePath") {
             openPanel.directoryURL          = URL(fileURLWithPath: path)
         }
-        openPanel.beginSheetModal(for: window!) { (response: Int) in
-            if response == NSFileHandlingPanelOKButton {
+        openPanel.beginSheetModal(for: window!) { (response: NSApplication.ModalResponse) in
+            if response.rawValue == NSFileHandlingPanelOKButton {
                 let url         = openPanel.url!
                 let coordinator = self.octApp.persistentStoreCoordinator
                 let oldStore    = coordinator.persistentStores[0]

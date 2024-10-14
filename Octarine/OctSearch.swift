@@ -18,7 +18,7 @@ class OctSearch : NSObject, NSTableViewDataSource, NSTableViewDelegate {
         resultTable.setDraggingSourceOperationMask(.copy, forLocal: false)
     }
 
-    dynamic var searchResults = [[String: Any]]() {
+    @objc dynamic var searchResults = [[String: Any]]() {
         didSet {
             if searchResults.count == 1 {
                 resultTable.selectRowIndexes(IndexSet(integer: 0), byExtendingSelection: false)
@@ -153,8 +153,8 @@ class OctSearch : NSObject, NSTableViewDataSource, NSTableViewDelegate {
         let urls = rowIndexes.map({ (index: Int) -> NSPasteboardItem in
             let part = searchResults[index]
             let pbitem = NSPasteboardItem()
-            pbitem.setString(part["purl"] as? String, forType: "public.url")
-            pbitem.setString(part["name"] as? String, forType: "public.url-name")
+            pbitem.setString(part["purl"] as! String, forType: NSPasteboard.PasteboardType(rawValue: "public.url"))
+            pbitem.setString(part["name"] as! String, forType: NSPasteboard.PasteboardType(rawValue: "public.url-name"))
             return pbitem
         })
         pboard.declareTypes([kOctPasteboardType], owner: self)

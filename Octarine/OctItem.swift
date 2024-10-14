@@ -106,11 +106,11 @@ class OctItem: NSManagedObject {
         return result
     }
 
-    dynamic var displayName : String {
+    @objc dynamic var displayName : String {
         return (isPart ? "" : "📁") + name
     }
 
-    dynamic var isCustomPart : Bool {
+    @objc dynamic var isCustomPart : Bool {
         // Custom parts have UUIDs, standard parts have hex encoded 64 bit numbers
         return ident.lengthOfBytes(using: String.Encoding.utf8) > 16
     }

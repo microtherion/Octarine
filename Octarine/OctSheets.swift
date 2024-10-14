@@ -3,7 +3,7 @@
 //  Octarine
 //
 //  Created by Matthias Neeracher on 18/04/16.
-//  Copyright © 2016 Matthias Neeracher. All rights reserved.
+//  Copyright © 2016-2017 Matthias Neeracher. All rights reserved.
 //
 
 import AppKit
@@ -12,18 +12,18 @@ import Quartz
 extension PDFDocument {
     func establishTitle(_ url: URL) {
         var attr = documentAttributes
-        guard nil == attr?[PDFDocumentTitleAttribute] as? String else { return }
+        guard nil == attr?[PDFDocumentAttribute.titleAttribute] as? String else { return }
         let outline = outlineRoot
         if let outlineTitle = outline?.child(at: 0).label {
-            attr?[PDFDocumentTitleAttribute] = outlineTitle
+            attr?[PDFDocumentAttribute.titleAttribute] = outlineTitle
         } else {
-            attr?[PDFDocumentTitleAttribute] = url.deletingPathExtension().lastPathComponent
+            attr?[PDFDocumentAttribute.titleAttribute] = url.deletingPathExtension().lastPathComponent
         }
         documentAttributes = attr
     }
 
     func title() -> String! {
-        return documentAttributes![PDFDocumentTitleAttribute] as! String
+        return documentAttributes![PDFDocumentAttribute.titleAttribute] as! String
     }
 
     func desc() -> String {
@@ -31,7 +31,7 @@ extension PDFDocument {
     }
 }
 
-class OctSheets : NSObject, NSOutlineViewDataSource, NSSearchFieldDelegate, NSSharingServicePickerDelegate {
+class OctSheets : NSObject, NSOutlineViewDataSource, NSSearchFieldDelegate, NSSharingServicePickerDelegate, PDFDocumentDelegate {
     @IBOutlet weak var sheetView : PDFView!
     @IBOutlet weak var sheetStack : NSStackView!
     @IBOutlet weak var thumbnailView : PDFThumbnailView!
@@ -45,8 +45,8 @@ class OctSheets : NSObject, NSOutlineViewDataSource, NSSearchFieldDelegate, NSSh
     var pageChangedObserver : AnyObject?
 
     override func awakeFromNib() {
-        sharingButton.sendAction(on: NSEventMask(rawValue: UInt64(Int(NSEventMask.leftMouseDown.rawValue))))
-        self.sheetStack.setVisibilityPriority(NSStackViewVisibilityPriorityNotVisible,
+        sharingButton.sendAction(on: NSEvent.EventTypeMask.leftMouseDown)
+        self.sheetStack.setVisibilityPriority(NSStackView.VisibilityPriority.notVisible,
                                               for: self.thumbnailView)
         pageChangedObserver = NotificationCenter.default.addObserver(forName: NSNotification.Name.PDFViewPageChanged, object: sheetView, queue: nil) { _ in
             self.pageChanged()
@@ -59,30 +59,30 @@ class OctSheets : NSObject, NSOutlineViewDataSource, NSSearchFieldDelegate, NSSh
         }
     }
 
-    dynamic var showSidebar : Bool = true { didSet { updateSidebar() } }
+    @objc dynamic var showSidebar : Bool = true { didSet { updateSidebar() } }
 
     func updateSidebar() {
         if showSidebar && sheetOutline != nil {
-            sheetStack.setVisibilityPriority(NSStackViewVisibilityPriorityMustHold, for: outlineScroller)
+            sheetStack.setVisibilityPriority(NSStackView.VisibilityPriority.mustHold, for: outlineScroller)
         } else {
-            sheetStack.setVisibilityPriority(NSStackViewVisibilityPriorityNotVisible, for: outlineScroller)
+            sheetStack.setVisibilityPriority(NSStackView.VisibilityPriority.notVisible, for: outlineScroller)
         }
         outlineView.reloadData()
         if showSidebar && sheetOutline == nil {
-            sheetStack.setVisibilityPriority(NSStackViewVisibilityPriorityMustHold, for: thumbnailView)
+            sheetStack.setVisibilityPriority(NSStackView.VisibilityPriority.mustHold, for: thumbnailView)
             DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + Double(Int64(NSEC_PER_SEC)) / Double(NSEC_PER_SEC), execute: {
                 self.thumbnailView.pdfView = self.sheetView
             });
         } else {
-            sheetStack.setVisibilityPriority(NSStackViewVisibilityPriorityNotVisible, for: thumbnailView)
+            sheetStack.setVisibilityPriority(NSStackView.VisibilityPriority.notVisible, for: thumbnailView)
         }
     }
 
-    dynamic var hideSelectionMenu : Bool = true
-    dynamic var dataSheets        = [String]() { didSet { loadDataSheets() } }
-    dynamic var dataSheetDocs     = [PDFDocument]()
-    dynamic var dataSheetURLs     = [URL]()
-    var         nextSheetToLoad   = 0
+    @objc dynamic var hideSelectionMenu : Bool = true
+    @objc dynamic var dataSheets        = [String]() { didSet { loadDataSheets() } }
+    @objc dynamic var dataSheetDocs     = [PDFDocument]()
+    @objc dynamic var dataSheetURLs     = [URL]()
+    var               nextSheetToLoad   = 0
 
 
     func loadDataSheets() {
@@ -127,7 +127,7 @@ class OctSheets : NSObject, NSOutlineViewDataSource, NSSearchFieldDelegate, NSSh
         }
     }
 
-    dynamic var dataSheetSelection = 0 {
+    @objc dynamic var dataSheetSelection = 0 {
         didSet {
             DispatchQueue.main.async(execute: {
                 guard !self.dataSheetDocs.isEmpty else { return }
@@ -226,16 +226,16 @@ class OctSheets : NSObject, NSOutlineViewDataSource, NSSearchFieldDelegate, NSSh
     }
 
     var lastFound : PDFSelection?
-    dynamic var found = [PDFSelection]()
-    dynamic var findCaseInsensitive : Bool = true { didSet { updateSearch() } }
-    dynamic var searchString : String = "" { didSet { updateSearch() } }
+    @objc dynamic var found = [PDFSelection]()
+    @objc dynamic var findCaseInsensitive : Bool = true { didSet { updateSearch() } }
+    @objc dynamic var searchString : String = "" { didSet { updateSearch() } }
 
     override func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
         if menuItem.tag == 0 {
             if findCaseInsensitive {
-                menuItem.state = NSOnState
+                menuItem.state = .on
             } else {
-                menuItem.state = NSOffState
+                menuItem.state = .off
             }
         }
         return true
@@ -256,11 +256,15 @@ class OctSheets : NSObject, NSOutlineViewDataSource, NSSearchFieldDelegate, NSSh
         sheetView.highlightedSelections = nil
 
         if searchString.lengthOfBytes(using: String.Encoding.utf8) > 1 {
-            doc.findString(searchString, withOptions: findCaseInsensitive ? 1 : 0)
+            if findCaseInsensitive {
+                doc.findString(searchString, with: [.caseInsensitive])
+            } else {
+                doc.findString(searchString, with: [])
+            }
         }
     }
 
-    override func didMatchString(_ instance: PDFSelection) {
+    func didMatchString(_ instance: PDFSelection) {
         instance.color = NSColor.yellow
         found.append(instance)
         sheetView.highlightedSelections = found
@@ -328,7 +332,7 @@ class OctSheets : NSObject, NSOutlineViewDataSource, NSSearchFieldDelegate, NSSh
                     extraService.perform(withItems: urlOnly)
             }))
         }
-        let workspace = NSWorkspace.shared()
+        let workspace = NSWorkspace.shared
         if let pdfAppURL = workspace.urlForApplication(toOpen: items[1] as! URL) {
             let icon = workspace.icon(forFile: pdfAppURL.path)
             services.append(NSSharingService(title: (pdfAppURL.deletingPathExtension().lastPathComponent),

@@ -3,12 +3,12 @@
 //  Octarine
 //
 //  Created by Matthias Neeracher on 20/04/16.
-//  Copyright © 2016 Matthias Neeracher. All rights reserved.
+//  Copyright © 2016-2017 Matthias Neeracher. All rights reserved.
 //
 
 import AppKit
 
-let kOctPasteboardType = "OctPasteboardType"
+ let kOctPasteboardType = NSPasteboard.PasteboardType(rawValue:"OctPasteboardType")
 
 var gOctTreeRoots = [OctTreeNode]()
 
@@ -126,7 +126,7 @@ class OctTree : NSObject, NSOutlineViewDataSource, NSOutlineViewDelegate {
     @IBOutlet weak var octApp : OctApp!
 
     override func awakeFromNib() {
-        outline.register(forDraggedTypes: [kOctPasteboardType])
+        outline.registerForDraggedTypes([kOctPasteboardType])
         outline.setDraggingSourceOperationMask([.move, .copy], forLocal: true)
         outline.setDraggingSourceOperationMask([.delete], forLocal: false)
 
@@ -177,7 +177,7 @@ class OctTree : NSObject, NSOutlineViewDataSource, NSOutlineViewDelegate {
             insertAt = parentItem.children?.count ?? 0
         }
         let group       = OctItem.createFolder("")
-        group.name      = "New Group "+group.ident.substring(to: group.ident.characters.index(group.ident.startIndex, offsetBy: 6))
+        group.name      = "New Group "+group.ident[..<group.ident.characters.index(group.ident.startIndex, offsetBy: 6)]
         var contents    = [OctTreeNode]()
         if sender.tag==0 {
             for row in outline.selectedRowIndexes {
@@ -269,7 +269,7 @@ class OctTree : NSObject, NSOutlineViewDataSource, NSOutlineViewDelegate {
         guard let tableColumn = tableColumn else { return nil }
         guard let octItem = (item as? OctTreeNode)?.item else { return nil }
 
-        switch tableColumn.identifier {
+        switch tableColumn.identifier.rawValue {
         case "name":
             return octItem.name
         case "desc":
@@ -288,7 +288,7 @@ class OctTree : NSObject, NSOutlineViewDataSource, NSOutlineViewDelegate {
         guard let value   = (sender as? NSTextField)?.stringValue else { return }
         let tableColumn = outline.tableColumns[col]
 
-        switch tableColumn.identifier {
+        switch tableColumn.identifier.rawValue {
         case "name":
             octItem.name    = value
         case "desc":
@@ -302,18 +302,18 @@ class OctTree : NSObject, NSOutlineViewDataSource, NSOutlineViewDelegate {
 
     func outlineView(_ outlineView: NSOutlineView, viewFor tableColumn: NSTableColumn?, item: Any) -> NSView? {
         guard let tableColumn = tableColumn else { return nil }
-        let view = outlineView.make(withIdentifier: tableColumn.identifier, owner: self) as! NSTableCellView
+        let view = outlineView.makeView(withIdentifier: tableColumn.identifier, owner: self) as! NSTableCellView
 
         guard let octItem = (item as? OctTreeNode)?.item else { return nil }
 
-        switch tableColumn.identifier {
+        switch tableColumn.identifier.rawValue {
         case "name":
             if OCT_FOLDER == nil {
                 let frameSize   = view.imageView!.frame.size
-                OCT_FOLDER      = NSImage(named: "oct_folder")
+                OCT_FOLDER      = NSImage(named: NSImage.Name(rawValue: "oct_folder"))
                 let folderSize  = OCT_FOLDER!.size
                 OCT_FOLDER!.size =  NSMakeSize(folderSize.width*(frameSize.height/folderSize.height), frameSize.height)
-                OCT_PART        = NSImage(named: "oct_part")
+                OCT_PART        = NSImage(named: NSImage.Name(rawValue: "oct_part"))
                 let partSize    = OCT_PART!.size
                 OCT_PART!.size  =  NSMakeSize(partSize.width*(frameSize.height/partSize.height), frameSize.height)
             }
@@ -418,7 +418,7 @@ class OctTree : NSObject, NSOutlineViewDataSource, NSOutlineViewDelegate {
         }
         outlineView.endUpdates()
         reloadTree(expanding: newParentNode)
-        let insertedIndexes = IndexSet(integersIn: NSMakeRange(insertAtRow, draggedItems.count).toRange() ?? 0..<0)
+        let insertedIndexes = IndexSet(integersIn: Range(NSMakeRange(insertAtRow, draggedItems.count)) ?? 0..<0)
         outlineView.selectRowIndexes(insertedIndexes, byExtendingSelection: false)
 
         return true

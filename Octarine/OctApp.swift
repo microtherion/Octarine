@@ -65,7 +65,7 @@ class OctApp: NSObject, NSApplicationDelegate {
     @IBOutlet weak var sheets : OctSheets!
     @IBOutlet weak var help : OctHelp!
 
-    dynamic var requestPending = 0
+    @objc dynamic var requestPending = 0
     func startingRequest() {
         DispatchQueue.main.async {
             self.requestPending += 1
@@ -156,7 +156,7 @@ class OctApp: NSObject, NSApplicationDelegate {
                 dict[NSUnderlyingErrorKey] = failError
             }
             let error = NSError(domain: "YOUR_ERROR_DOMAIN", code: 9999, userInfo: dict)
-            NSApplication.shared().presentError(error)
+            NSApp.presentError(error)
             abort()
         } else {
             return coordinator!
@@ -183,7 +183,7 @@ class OctApp: NSObject, NSApplicationDelegate {
                 try managedObjectContext.save()
             } catch {
                 let nserror = error as NSError
-                NSApplication.shared().presentError(nserror)
+                NSApp.presentError(nserror)
             }
         }
     }
@@ -193,7 +193,7 @@ class OctApp: NSObject, NSApplicationDelegate {
         return managedObjectContext.undoManager
     }
 
-    func applicationShouldTerminate(_ sender: NSApplication) -> NSApplicationTerminateReply {
+    func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
         // Save changes in the application's managed object context before the application terminates.
         
         if !managedObjectContext.commitEditing() {
@@ -226,7 +226,7 @@ class OctApp: NSObject, NSApplicationDelegate {
             alert.addButton(withTitle: cancelButton)
             
             let answer = alert.runModal()
-            if answer == NSAlertFirstButtonReturn {
+            if answer == .alertFirstButtonReturn {
                 return .terminateCancel
             }
         }
@@ -251,12 +251,12 @@ class OctApp: NSObject, NSApplicationDelegate {
             break
         }
         if url != nil {
-            NSWorkspace.shared().open(url!)
+            NSWorkspace.shared.open(url!)
         }
     }
 
     @IBAction func goToOctopart(_: AnyObject!) {
-        NSWorkspace.shared().open(URL(string:"https://octopart.com")!)
+        NSWorkspace.shared.open(URL(string:"https://octopart.com")!)
     }
 
     @IBAction func showHelp(_ sender: AnyObject!) {

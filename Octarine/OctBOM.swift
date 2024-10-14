@@ -19,8 +19,8 @@ class OctBOM : NSObject, CHCSVParserDelegate {
         openPanel.canChooseDirectories      = false
         openPanel.allowsMultipleSelection   = false
         openPanel.allowedFileTypes          = [kUTTypeText as String]
-        openPanel.beginSheetModal(for: NSApp.mainWindow!) { (response: Int) in
-            if response == NSFileHandlingPanelOKButton {
+        openPanel.beginSheetModal(for: NSApp.mainWindow!) { (response: NSApplication.ModalResponse) in
+            if response.rawValue == NSFileHandlingPanelOKButton {
                 var enc = String.Encoding.utf8
                 if let bom = try? String(contentsOf: openPanel.url!, usedEncoding: &enc) {
                     // Sniff separators
@@ -64,8 +64,8 @@ class OctBOM : NSObject, CHCSVParserDelegate {
     @IBAction func exportBOM(_: AnyObject) {
         let savePanel = NSSavePanel()
         savePanel.allowedFileTypes = ["csv"]
-        savePanel.beginSheetModal(for: NSApp.mainWindow!) { (response: Int) in
-            if response == NSFileHandlingPanelOKButton {
+        savePanel.beginSheetModal(for: NSApp.mainWindow!) { (response: NSApplication.ModalResponse) in
+            if response.rawValue == NSFileHandlingPanelOKButton {
                 var items       = [OctItem]()
                 var uids        = [String]()
                 var selection   = self.octTree.selectedItems()

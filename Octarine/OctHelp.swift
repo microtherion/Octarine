@@ -3,7 +3,7 @@
 //  Octarine
 //
 //  Created by Matthias Neeracher on 24/04/16.
-//  Copyright © 2016 Matthias Neeracher. All rights reserved.
+//  Copyright © 2016-2017 Matthias Neeracher. All rights reserved.
 //
 
 import AppKit
@@ -13,7 +13,7 @@ class OctHelp : NSWindowController {
     @IBOutlet weak var pdfView : PDFView!
 
     convenience init() {
-        self.init(windowNibName:"Help")
+        self.init(windowNibName:NSNib.Name(rawValue: "Help"))
     }
 
     override func windowDidLoad() {
